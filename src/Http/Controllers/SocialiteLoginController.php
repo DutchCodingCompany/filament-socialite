@@ -68,34 +68,35 @@ class SocialiteLoginController extends Controller
         }
 
         $registration = config('filament-socialite.registration', false);
-        $exists = User::whereEmail($oauthUser->getEmail())->exists();
         if (! $registration) {
             abort(403);
         }
 
-        if (! $exists) {
-            DB::beginTransaction();
+        $user = User::whereEmail($oauthUser->getEmail())->first();
+        if (! $user) {
+            abort(403);
+        }
 
-            try {
-                $user = User::create(
-                    [
-                        'name' => $oauthUser->getName(),
-                        'email' => $oauthUser->getEmail(),
-                        'password' => null,
-                    ]
-                );
-                SocialiteUser::create([
-                    'user_id' => $user->id,
-                    'provider' => $provider,
-                    'provider_id' => $oauthUser->getId(),
-                ]);
+        DB::beginTransaction();
+        try {
+            $user = User::create(
+                [
+                    'name' => $oauthUser->getName(),
+                    'email' => $oauthUser->getEmail(),
+                    'password' => null,
+                ]
+            );
+            SocialiteUser::create([
+                'user_id' => $user->id,
+                'provider' => $provider,
+                'provider_id' => $oauthUser->getId(),
+            ]);
 
-                DB::commit();
-            } catch (\Throwable $exception) {
-                DB::rollBack();
+            DB::commit();
+        } catch (\Throwable $exception) {
+            DB::rollBack();
 
-                throw $exception;
-            }
+            throw $exception;
         }
 
         $this->guard()->login($user);

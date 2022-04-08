@@ -1,4 +1,3 @@
-
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
 
 ![](https://banners.beyondco.de/Filament%20Socialite.png?theme=light&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group)
@@ -59,8 +58,27 @@ return [
 ];
 ```
 
-You should setup the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them to the providers array in the `filament-socialite.php` config.
-You can specify a Blade Icon, with Font Awesome brand icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome).
+### Providers
+
+You should setup the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them
+to the providers array in the `filament-socialite.php` config. You can specify a Blade Icon, with Font Awesome brand
+icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome).
+
+### Registration flow
+
+This package supports account creation for users. However, to support this flow it is important that the `password`
+attribute on your `User` model is nullable. For example, by adding the following to your users table migration.
+
+```php
+$table->string('password')->nullable();
+```
+
+### Domain Allowlist
+
+This package supports the option to limit the users that can login with the OAuth login to users of a certain domain.
+This can be used to setup SSO for internal use.
+
+### Customizing view
 
 Optionally, you can publish the views using
 
@@ -71,12 +89,14 @@ php artisan vendor:publish --tag="filament-socialite-views"
 ## Usage
 
 Add the buttons component to your login page, just above the `</form>` closing tag:
+
 ```php
     <livewire:filament-socialite.buttons />
 </form>
 ```
 
 You can publish the login page for **vanilla Filament** by running:
+
 ```bash
 php artisan vendor:publish --tag="filament-views"
 ```
@@ -88,6 +108,7 @@ Which produces a login page at `resources/views/vendor/filament/login.blade.php`
 This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.
 
 You can publish the login page for **Filament Fortify** by running:
+
 ```bash
 php artisan vendor:publish --tag="filament-fortify-views"
 ```
@@ -99,6 +120,7 @@ Which produces a login page at `resources/views/vendor/filament-fortify/login.bl
 This component can also be added while using the [Breezy plugin](https://filamentphp.com/plugins/breezy) plugin.
 
 You can publish the login page for **Filament Breezy** by running:
+
 ```bash
 php artisan vendor:publish --tag="filament-breezy-views"
 ```
