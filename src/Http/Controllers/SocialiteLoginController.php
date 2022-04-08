@@ -78,6 +78,7 @@ class SocialiteLoginController extends Controller
         }
 
         DB::beginTransaction();
+
         try {
             $user = User::create(
                 [
