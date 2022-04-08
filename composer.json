@@ -1,24 +1,26 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "dutchcodingcompany/filament-socialite",
+    "description": "Social login for Filament through Laravel Socialite",
     "keywords": [
-        ":vendor_name",
+        "DutchCodingCompany",
         "laravel",
-        ":package_slug"
+        "filament-socialite"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/dutchcodingcompany/filament-socialite",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Marco Boers",
+            "email": "m@rcoboe.rs",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^8.0",
-        "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^9.0"
+        "illuminate/contracts": "^9.0",
+        "laravel/socialite": "^5.5",
+        "owenvoke/blade-fontawesome": "^2.0",
+        "spatie/laravel-package-tools": "^1.9.2"
     },
     "require-dev": {
         "nunomaduro/collision": "^6.0",
@@ -34,13 +36,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "DutchCodingCompany\\FilamentSocialite\\": "src",
+            "DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "DutchCodingCompany\\FilamentSocialite\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -54,10 +56,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "DutchCodingCompany\\FilamentSocialite\\FilamentSocialiteServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "FilamentSocialite": "DutchCodingCompany\\FilamentSocialite\\Facades\\FilamentSocialite"
             }
         }
     },

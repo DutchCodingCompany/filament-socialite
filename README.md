@@ -1,78 +1,131 @@
-
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
 
-# :package_description
+![](https://banners.beyondco.de/Filament%20Socialite.png?theme=light&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group)
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/run-tests?label=tests)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/Check%20&%20fix%20styling?label=code%20style)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+# Social login for Filament through Laravel Socialite
 
-1. Press the "Use template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/dutchcodingcompany/filament-socialite.svg?style=flat-square)](https://packagist.org/packages/dutchcodingcompany/filament-socialite)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/dutchcodingcompany/filament-socialite/run-tests?label=tests)](https://github.com/dutchcodingcompany/filament-socialite/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/dutchcodingcompany/filament-socialite/Check%20&%20fix%20styling?label=code%20style)](https://github.com/dutchcodingcompany/filament-socialite/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/dutchcodingcompany/filament-socialite.svg?style=flat-square)](https://packagist.org/packages/dutchcodingcompany/filament-socialite)
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/:package_name.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/:package_name)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+Add OAuth login through Laravel Socialite to Filament.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
+composer require dutchcodingcompany/filament-socialite
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
+php artisan vendor:publish --tag="filament-socialite-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan vendor:publish --tag="filament-socialite-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
 return [
+    // Allow login, and registration if enabled, for users with an email for one of the following domains.
+    // All domains allowed by default
+    'domain_allowlist' => [],
+
+    // Allow registration through socials
+    'registration' => false,
+
+    // Specify the providers that should be visible on the login.
+    // These should match the socialite providers you have setup in your services.php config.
+    'providers' => [
+//        'gitlab' => [
+//            'label' => 'GitLab',
+//            'icon' => 'fab-gitlab',
+//        ],
+//        'github' => [
+//            'label' => 'GitHub',
+//            'icon' => 'fab-github',
+//        ],
+    ],
 ];
 ```
+
+### Providers
+
+You should setup the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them
+to the providers array in the `filament-socialite.php` config. You can specify a Blade Icon, with Font Awesome brand
+icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome).
+
+### Registration flow
+
+This package supports account creation for users. However, to support this flow it is important that the `password`
+attribute on your `User` model is nullable. For example, by adding the following to your users table migration.
+
+```php
+$table->string('password')->nullable();
+```
+
+### Domain Allowlist
+
+This package supports the option to limit the users that can login with the OAuth login to users of a certain domain.
+This can be used to setup SSO for internal use.
+
+### Customizing view
 
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-views"
+php artisan vendor:publish --tag="filament-socialite-views"
 ```
 
 ## Usage
 
+Add the buttons component to your login page, just above the `</form>` closing tag:
+
 ```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+    <livewire:filament-socialite.buttons />
+</form>
 ```
 
-## Testing
+You can publish the login page for **vanilla Filament** by running:
 
 ```bash
-composer test
+php artisan vendor:publish --tag="filament-views"
 ```
+
+Which produces a login page at `resources/views/vendor/filament/login.blade.php`.
+
+### Filament Fortify
+
+This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.
+
+You can publish the login page for **Filament Fortify** by running:
+
+```bash
+php artisan vendor:publish --tag="filament-fortify-views"
+```
+
+Which produces a login page at `resources/views/vendor/filament-fortify/login.blade.php`.
+
+### Filament Breezy
+
+This component can also be added while using the [Breezy plugin](https://filamentphp.com/plugins/breezy) plugin.
+
+You can publish the login page for **Filament Breezy** by running:
+
+```bash
+php artisan vendor:publish --tag="filament-breezy-views"
+```
+
+Which produces a login page at `resources/views/vendor/filament-breezy/login.blade.php`.
 
 ## Changelog
 
@@ -88,7 +141,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Marco Boers](https://github.com/marcoboers)
 - [All Contributors](../../contributors)
 
 ## License
