@@ -2,12 +2,11 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
+use DutchCodingCompany\FilamentSocialite\Commands\FilamentSocialiteCommand;
 use DutchCodingCompany\FilamentSocialite\Http\Livewire\Buttons;
 use Filament\PluginServiceProvider;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
-use DutchCodingCompany\FilamentSocialite\Commands\FilamentSocialiteCommand;
 
 class FilamentSocialiteServiceProvider extends PluginServiceProvider
 {

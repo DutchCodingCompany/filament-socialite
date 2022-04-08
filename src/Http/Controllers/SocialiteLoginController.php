@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 
-use App\Helpers\GitlabHelper;
 use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Http\Request;
@@ -10,7 +9,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Laravel\Nova\Nova;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
@@ -75,8 +73,9 @@ class SocialiteLoginController extends Controller
             abort(403);
         }
 
-        if (!$exists) {
+        if (! $exists) {
             DB::beginTransaction();
+
             try {
                 $user = User::create(
                     [
@@ -94,6 +93,7 @@ class SocialiteLoginController extends Controller
                 DB::commit();
             } catch (\Throwable $exception) {
                 DB::rollBack();
+
                 throw $exception;
             }
         }

@@ -11,7 +11,7 @@ class Buttons extends Component
         $providers = config('filament-socialite.providers');
 
         return view('filament-socialite::livewire.buttons', [
-            'providers' => $providers
+            'providers' => $providers,
         ]);
     }
 }
