@@ -2,9 +2,9 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
+use DutchCodingCompany\FilamentSocialite\FilamentSocialiteServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use DutchCodingCompany\FilamentSocialite\FilamentSocialiteServiceProvider;
 
 class TestCase extends Orchestra
 {
