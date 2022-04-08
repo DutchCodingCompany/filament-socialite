@@ -4,6 +4,7 @@ namespace DutchCodingCompany\FilamentSocialite\Tests;
 
 use DutchCodingCompany\FilamentSocialite\FilamentSocialiteServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -21,6 +22,7 @@ class TestCase extends Orchestra
     {
         return [
             FilamentSocialiteServiceProvider::class,
+            LivewireServiceProvider::class,
         ];
     }
 

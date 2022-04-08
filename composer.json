@@ -17,8 +17,10 @@
     ],
     "require": {
         "php": "^8.0",
+        "filament/filament": "^2.0",
         "illuminate/contracts": "^9.0",
         "laravel/socialite": "^5.5",
+        "livewire/livewire": "^2.10",
         "owenvoke/blade-fontawesome": "^2.0",
         "spatie/laravel-package-tools": "^1.9.2"
     },
@@ -28,6 +30,7 @@
         "orchestra/testbench": "^7.0",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.1",
+        "pestphp/pest-plugin-livewire": "^1.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
@@ -51,7 +54,11 @@
         "test-coverage": "vendor/bin/pest --coverage"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
     },
     "extra": {
         "laravel": {
