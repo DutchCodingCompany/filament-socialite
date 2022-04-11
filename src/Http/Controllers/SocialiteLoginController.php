@@ -73,7 +73,7 @@ class SocialiteLoginController extends Controller
         }
 
         $user = User::whereEmail($oauthUser->getEmail())->first();
-        if (! $user) {
+        if ($user) {
             abort(403);
         }
 
