@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
-use DutchCodingCompany\FilamentSocialite\Commands\FilamentSocialiteCommand;
 use DutchCodingCompany\FilamentSocialite\Http\Livewire\Buttons;
 use Filament\PluginServiceProvider;
 use Livewire\Livewire;
