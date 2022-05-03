@@ -2,6 +2,19 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 0.1.2 - 2022-05-03
+
+## What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.0 to 1.3.1 by @dependabot in https://github.com/DutchCodingCompany/filament-socialite/pull/2
+- Add Laravel 8 support and make fontawesome icons optional by @marcoboers in https://github.com/DutchCodingCompany/filament-socialite/pull/4
+
+## New Contributors
+
+- @marcoboers made their first contribution in https://github.com/DutchCodingCompany/filament-socialite/pull/4
+
+**Full Changelog**: https://github.com/DutchCodingCompany/filament-socialite/compare/0.1.1...0.1.2
+
 ## 0.1.1 - 2022-04-11
 
 ## What's Changed
