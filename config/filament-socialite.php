@@ -11,6 +11,7 @@ return [
 
     // Specify the providers that should be visible on the login.
     // These should match the socialite providers you have setup in your services.php config.
+    // Uses blade UI icons, for example: https://github.com/owenvoke/blade-fontawesome
     'providers' => [
 //        'gitlab' => [
 //            'label' => 'GitLab',
