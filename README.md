@@ -127,6 +127,15 @@ php artisan vendor:publish --tag="filament-breezy-views"
 
 Which produces a login page at `resources/views/vendor/filament-breezy/login.blade.php`.
 
+## Events
+
+There are a few events dispatched during the authentication process:
+
+* `SocialiteUserDomainFailed`: When a user tries to login with an email which domain is not on the allowlist
+* `SocialiteUserRegistrationFailed`: When a user tries to login with an unknown account and registration is not enabled
+* `SocialiteUserLogin`: When a user successfully logs in
+* `SocialiteUserRegistered`: When a user is successfully registered and logged in (when enabled in config)
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
