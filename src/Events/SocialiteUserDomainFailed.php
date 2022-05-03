@@ -8,7 +8,8 @@ use Laravel\Socialite\Contracts\User;
 
 class SocialiteUserDomainFailed
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
@@ -16,5 +17,6 @@ class SocialiteUserDomainFailed
      * @return void
      */
     public function __construct(public User $socialiteUser)
-    {}
+    {
+    }
 }

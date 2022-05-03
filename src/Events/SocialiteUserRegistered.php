@@ -8,7 +8,8 @@ use Illuminate\Queue\SerializesModels;
 
 class SocialiteUserRegistered
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * Create a new event instance.
@@ -16,5 +17,6 @@ class SocialiteUserRegistered
      * @return void
      */
     public function __construct(public SocialiteUser $socialiteUser)
-    {}
+    {
+    }
 }
