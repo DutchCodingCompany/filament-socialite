@@ -10,7 +10,7 @@
         @foreach($providers as $key => $provider)
             <x-filament::button
                 color="secondary"
-                icon="{{ $provider['icon'] }}"
+                icon="{{ $provider['icon'] ?? null }}"
                 tag="a"
                 :href="route('socialite.oauth.redirect', $key)"
             >
