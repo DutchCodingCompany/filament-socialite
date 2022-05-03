@@ -61,8 +61,15 @@ return [
 ### Providers
 
 You should setup the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them
-to the providers array in the `filament-socialite.php` config. You can specify a Blade Icon, with Font Awesome brand
-icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome).
+to the providers array in the `filament-socialite.php` config.
+
+### Icons
+
+You can specify a Blade Icon. You can add Font Awesome brand
+icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome) by running:
+```
+composer require owenvoke/blade-fontawesome
+```
 
 ### Registration flow
 

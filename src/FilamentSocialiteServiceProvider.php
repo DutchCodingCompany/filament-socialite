@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
-use DutchCodingCompany\FilamentSocialite\Commands\FilamentSocialiteCommand;
 use DutchCodingCompany\FilamentSocialite\Http\Livewire\Buttons;
 use Filament\PluginServiceProvider;
 use Livewire\Livewire;
@@ -18,8 +17,7 @@ class FilamentSocialiteServiceProvider extends PluginServiceProvider
             ->hasTranslations()
             ->hasViews()
             ->hasRoute('web')
-            ->hasMigration('create_socialite_users_table')
-            ->hasCommand(FilamentSocialiteCommand::class);
+            ->hasMigration('create_socialite_users_table');
     }
 
     public function packageBooted(): void
