@@ -76,6 +76,7 @@ class SocialiteLoginController extends Controller
 
         if ($user) {
             $this->guard()->login($user);
+
             return redirect()->intended();
         }
 
