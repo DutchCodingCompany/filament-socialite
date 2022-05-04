@@ -81,8 +81,11 @@ class SocialiteLoginController extends Controller
         }
 
         $user = User::whereEmail($oauthUser->getEmail())->first();
+
         if ($user) {
-            abort(403);
+            $this->guard()->login($user);
+
+            return redirect()->intended();
         }
 
         DB::beginTransaction();
