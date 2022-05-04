@@ -1,10 +1,10 @@
 blank_issues_enabled: false
 contact_links:
   - name: Ask a question
-    url: https://github.com/DutchCodingCompany/filament-socialite/discussions/new?category=q-a
+    url: https://discord.com/channels/883083792112300104/962299008259342366
     about: Ask the community for help
   - name: Request a feature
-    url: https://github.com/DutchCodingCompany/filament-socialite/discussions/new?category=ideas
+    url: https://discord.com/channels/883083792112300104/962299008259342366
     about: Share ideas for new features
   - name: Report a security issue
     url: https://github.com/DutchCodingCompany/filament-socialite/security/policy
