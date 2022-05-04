@@ -2,6 +2,18 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 0.1.3 - 2022-05-04
+
+## What's Changed
+
+- Bugfix: Avoid returning 403 when a user exists based on the oauth-email . by @oyepez003 in https://github.com/DutchCodingCompany/filament-socialite/pull/7
+
+## New Contributors
+
+- @oyepez003 made their first contribution in https://github.com/DutchCodingCompany/filament-socialite/pull/7
+
+**Full Changelog**: https://github.com/DutchCodingCompany/filament-socialite/compare/0.1.2...0.1.3
+
 ## 0.1.2 - 2022-05-03
 
 ## What's Changed
