@@ -2,11 +2,11 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Events;
 
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Laravel\Socialite\Contracts\User;
 
-class SocialiteUserDomainFailed
+class Login
 {
     use Dispatchable;
     use SerializesModels;
@@ -16,7 +16,7 @@ class SocialiteUserDomainFailed
      *
      * @return void
      */
-    public function __construct(public User $socialiteUser)
+    public function __construct(public SocialiteUser $socialiteUser)
     {
     }
 }

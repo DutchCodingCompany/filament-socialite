@@ -6,7 +6,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Laravel\Socialite\Contracts\User;
 
-class SocialiteUserRegistrationFailed
+class DomainFailed
 {
     use Dispatchable;
     use SerializesModels;

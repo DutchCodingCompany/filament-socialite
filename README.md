@@ -138,10 +138,10 @@ Which produces a login page at `resources/views/vendor/filament-breezy/login.bla
 
 There are a few events dispatched during the authentication process:
 
-* `SocialiteUserDomainFailed`: When a user tries to login with an email which domain is not on the allowlist
-* `SocialiteUserRegistrationFailed`: When a user tries to login with an unknown account and registration is not enabled
-* `SocialiteUserLogin`: When a user successfully logs in
-* `SocialiteUserRegistered`: When a user is successfully registered and logged in (when enabled in config)
+* `DomainFailed`: When a user tries to login with an email which domain is not on the allowlist
+* `RegistrationFailed`: When a user tries to login with an unknown account and registration is not enabled
+* `Login`: When a user successfully logs in
+* `Registered`: When a user is successfully registered and logged in (when enabled in config)
 
 ## Changelog
 
