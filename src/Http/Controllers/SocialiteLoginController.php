@@ -3,6 +3,10 @@
 namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 
 use App\Models\User;
+use DutchCodingCompany\FilamentSocialite\Events\DomainFailed;
+use DutchCodingCompany\FilamentSocialite\Events\Login;
+use DutchCodingCompany\FilamentSocialite\Events\Registered;
+use DutchCodingCompany\FilamentSocialite\Events\RegistrationFailed;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -49,6 +53,8 @@ class SocialiteLoginController extends Controller
         $domains = config('filament-socialite.domain_allowlist', []);
         if (count($domains) > 0) {
             if (! in_array(Str::afterLast($oauthUser->getEmail(), '@'), $domains)) {
+                DomainFailed::dispatch($oauthUser);
+
                 return redirect()->route(config('filament.auth.login'))
                     ->withErrors([
                         'email' => [
@@ -63,12 +69,14 @@ class SocialiteLoginController extends Controller
             ->first();
         if ($socialiteUser) {
             $this->guard()->login($socialiteUser->user);
+            Login::dispatch($socialiteUser);
 
             return redirect()->intended();
         }
 
         $registration = config('filament-socialite.registration', false);
         if (! $registration) {
+            RegistrationFailed::dispatch($oauthUser);
             abort(403);
         }
 
@@ -97,6 +105,8 @@ class SocialiteLoginController extends Controller
             ]);
 
             DB::commit();
+
+            Registered::dispatch($socialiteUser);
         } catch (\Throwable $exception) {
             DB::rollBack();
 
