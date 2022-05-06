@@ -98,7 +98,7 @@ php artisan vendor:publish --tag="filament-socialite-views"
 Add the buttons component to your login page, just above the `</form>` closing tag:
 
 ```php
-    <livewire:filament-socialite.buttons />
+    <x-filament-socialite::buttons />
 </form>
 ```
 
