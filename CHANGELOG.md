@@ -2,6 +2,15 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 0.1.4 - 2022-05-06
+
+## What's Changed
+
+- Feature: Adds buttons blade component by @oyepez003 in https://github.com/DutchCodingCompany/filament-socialite/pull/8
+- Feature: Add login events dispatching by @marcoboers in https://github.com/DutchCodingCompany/filament-socialite/pull/5
+
+**Full Changelog**: https://github.com/DutchCodingCompany/filament-socialite/compare/0.1.3...0.1.4
+
 ## 0.1.3 - 2022-05-04
 
 ## What's Changed
@@ -43,4 +52,3 @@ All notable changes to `filament-socialite` will be documented in this file.
 - Support domain allowlist for internal use
 - Dark mode support
 - Blade Font Awesome brand icons
-
