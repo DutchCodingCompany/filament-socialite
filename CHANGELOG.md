@@ -44,6 +44,3 @@ All notable changes to `filament-socialite` will be documented in this file.
 - Dark mode support
 - Blade Font Awesome brand icons
 
-## 1.0.0 - 202X-XX-XX
-
-- initial release
