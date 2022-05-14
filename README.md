@@ -86,7 +86,7 @@ attribute on your `User` model must be nullable. For example, by adding the foll
 $table->string('password')->nullable();
 ```
 
-However, if you need to keep the user password column not nullable, you can set in the config file (filament-socialite.php) the option `keep_null_password` to false and the registration flow will create the user with a strong-random password.
+However, if you need to keep the user password column not nullable, you can set in the config file (filament-socialite.php) the option `keep_null_password` to `false`, so the registration flow will create the user with a strong-random password.
 
 ```php
 return [
