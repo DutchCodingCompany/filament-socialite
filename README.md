@@ -43,6 +43,12 @@ return [
     // Allow registration through socials
     'registration' => false,
 
+    // If you set this config to true, the `users.password` column must be nullable
+    // or an error will be thrown when the user is created.
+    // If you set this config to false, the user will be registered using a strong
+    // random password.
+    'keep_null_password' => true,
+
     // Specify the providers that should be visible on the login.
     // These should match the socialite providers you have setup in your services.php config.
     'providers' => [
@@ -73,11 +79,21 @@ composer require owenvoke/blade-fontawesome
 
 ### Registration flow
 
-This package supports account creation for users. However, to support this flow it is important that the `password`
-attribute on your `User` model is nullable. For example, by adding the following to your users table migration.
+This package supports account creation for users. The default registration flow requires the `password`
+attribute on your `User` model must be nullable. For example, by adding the following to your users table migration or creating a new one:
 
 ```php
 $table->string('password')->nullable();
+```
+
+However, if you need to keep the user password column not nullable, you can set in the config file (filament-socialite.php) the option `keep_null_password` to false and the registration flow will create the user with a strong-random password.
+
+```php
+return [
+    ...
+    'keep_null_password' => true,
+    ...
+];
 ```
 
 ### Domain Allowlist

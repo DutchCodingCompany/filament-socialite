@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -95,10 +96,12 @@ class SocialiteLoginController extends Controller
                 [
                     'name' => $oauthUser->getName(),
                     'email' => $oauthUser->getEmail(),
-                    'password' => null,
+                    'password' => config('filament-socialite.keep_null_password', true) 
+                        ? null
+                        : Hash::make(Str::random(64))
                 ]
             );
-            SocialiteUser::create([
+            $socialiteUser = SocialiteUser::create([
                 'user_id' => $user->id,
                 'provider' => $provider,
                 'provider_id' => $oauthUser->getId(),
