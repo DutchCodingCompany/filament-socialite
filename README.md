@@ -91,7 +91,7 @@ However, if you need to keep the user password column not nullable, you can set 
 ```php
 return [
     ...
-    'keep_null_password' => true,
+    'keep_null_password' => false,
     ...
 ];
 ```
