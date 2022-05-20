@@ -2,6 +2,14 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 0.1.5 - 2022-05-20
+
+## What's Changed
+
+- Fix missing variable for registered event by @marcoboers in https://github.com/DutchCodingCompany/filament-socialite/pull/11
+
+**Full Changelog**: https://github.com/DutchCodingCompany/filament-socialite/compare/0.1.4...0.1.5
+
 ## 0.1.4 - 2022-05-06
 
 ## What's Changed
