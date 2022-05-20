@@ -98,7 +98,7 @@ class SocialiteLoginController extends Controller
                     'password' => null,
                 ]
             );
-            SocialiteUser::create([
+            $socialiteUser = SocialiteUser::create([
                 'user_id' => $user->id,
                 'provider' => $provider,
                 'provider_id' => $oauthUser->getId(),
