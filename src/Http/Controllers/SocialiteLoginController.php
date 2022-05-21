@@ -6,6 +6,7 @@ use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Events\DomainFailed;
 use DutchCodingCompany\FilamentSocialite\Events\Login;
 use DutchCodingCompany\FilamentSocialite\Events\Registered;
+use DutchCodingCompany\FilamentSocialite\Events\Transfered;
 use DutchCodingCompany\FilamentSocialite\Events\RegistrationFailed;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Http\Request;
@@ -83,10 +84,18 @@ class SocialiteLoginController extends Controller
         $user = User::whereEmail($oauthUser->getEmail())->first();
 
         if ($user) {
-            $this->guard()->login($user);
 
-            return redirect()->intended();
-        }
+            $socialiteUser = SocialiteUser::create([
+               'user_id' => $user->id,
+               'provider' => $provider,
+               'provider_id' => $oauthUser->getId(),
+           ]);
+           Transfered::dispatch($socialiteUser);
+           $this->guard()->login($user);
+           Login::dispatch($socialiteUser);
+
+           return redirect()->intended();
+       }
 
         DB::beginTransaction();
 
