@@ -72,7 +72,9 @@ class SocialiteLoginController extends Controller
             $this->guard()->login($socialiteUser->user);
             Login::dispatch($socialiteUser);
 
-            return redirect()->intended();
+            return redirect()->intended(
+                route('filament.pages.dashboard')
+            );
         }
 
         $registration = config('filament-socialite.registration', false);
@@ -94,7 +96,9 @@ class SocialiteLoginController extends Controller
            $this->guard()->login($user);
            Login::dispatch($socialiteUser);
 
-           return redirect()->intended();
+           return redirect()->intended(
+            route('filament.pages.dashboard')
+        );
        }
 
         DB::beginTransaction();
@@ -124,7 +128,9 @@ class SocialiteLoginController extends Controller
 
         $this->guard()->login($user);
 
-        return redirect()->intended();
+        return redirect()->intended(
+            route('filament.pages.dashboard')
+        );
     }
 
     /**
