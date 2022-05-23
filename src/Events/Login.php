@@ -16,7 +16,8 @@ class Login
      *
      * @return void
      */
-    public function __construct(public SocialiteUser $socialiteUser)
-    {
+    public function __construct(
+        public SocialiteUser $socialiteUser,
+    ) {
     }
 }
