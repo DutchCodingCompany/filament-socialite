@@ -22,4 +22,6 @@ return [
 //            'icon' => 'fab-github',
 //        ],
     ],
+
+    'user_model' => \App\Models\User::class,
 ];
