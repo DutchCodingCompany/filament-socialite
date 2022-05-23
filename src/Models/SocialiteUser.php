@@ -2,6 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Models;
 
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,6 @@ class SocialiteUser extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(config('filament-socialite.user_model'));
+        return $this->belongsTo(FilamentSocialite::getUserModelClass());
     }
 }
