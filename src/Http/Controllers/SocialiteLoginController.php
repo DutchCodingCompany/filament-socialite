@@ -6,7 +6,7 @@ use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Events\DomainFailed;
 use DutchCodingCompany\FilamentSocialite\Events\Login;
 use DutchCodingCompany\FilamentSocialite\Events\Registered;
-use DutchCodingCompany\FilamentSocialite\Events\Transfered;
+use DutchCodingCompany\FilamentSocialite\Events\SocialAccountLinked;
 use DutchCodingCompany\FilamentSocialite\Events\RegistrationFailed;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Http\Request;
@@ -92,7 +92,7 @@ class SocialiteLoginController extends Controller
                'provider' => $provider,
                'provider_id' => $oauthUser->getId(),
            ]);
-           Transfered::dispatch($socialiteUser);
+           SocialAccountLinked::dispatch($socialiteUser);
            $this->guard()->login($user);
            Login::dispatch($socialiteUser);
 

@@ -6,7 +6,7 @@ use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class Transfered
+class SocialAccountLinked
 {
     use Dispatchable;
     use SerializesModels;
