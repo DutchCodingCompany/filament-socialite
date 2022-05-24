@@ -3,7 +3,6 @@
 namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
@@ -96,7 +95,9 @@ class SocialiteLoginController extends Controller
         Events\Login::dispatch($socialiteUser);
 
         // Redirect as intended
-        return redirect()->intended();
+        return redirect()->intended(
+            route($this->socialite->getLoginRedirectRoute())
+        );
     }
 
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Model $user)

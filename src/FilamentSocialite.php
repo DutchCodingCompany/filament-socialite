@@ -59,6 +59,11 @@ class FilamentSocialite
         return $this->getConfig()['domain_allowlist'] ?? [];
     }
 
+    public function getLoginRedirectRoute(): string
+    {
+        return $this->getConfig()['login_redirect_route'] ?? 'filament.pages.dashboard';
+    }
+
     public function getUserModelClass(): string
     {
         return $this->getConfig()['user_model'] ?? \App\Models\User::class;
