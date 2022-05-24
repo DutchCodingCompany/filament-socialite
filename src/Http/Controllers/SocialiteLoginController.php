@@ -102,7 +102,7 @@ class SocialiteLoginController extends Controller
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Model $user)
     {
         // Create a socialite user
-        $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), compact('provider', 'oauthUser', 'user'));
+        $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
 
         // Dispatch the registered event
         Events\Registered::dispatch($socialiteUser);
@@ -115,10 +115,10 @@ class SocialiteLoginController extends Controller
     {
         $socialiteUser = DB::transaction(function () use ($provider, $oauthUser) {
             // Create a user
-            $user = app()->call($this->socialite->getCreateUserCallback(), compact('provider', 'oauthUser'));
+            $user = app()->call($this->socialite->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
             // Create a socialite user
-            return app()->call($this->socialite->getCreateSocialiteUserCallback(), compact('provider', 'oauthUser', 'user'));
+            return app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
         });
 
         // Dispatch the registered event
@@ -162,7 +162,7 @@ class SocialiteLoginController extends Controller
         }
 
         // See if a user already exists, but not for this socialite provider
-        $user = app()->call($this->socialite->getUserResolver(), compact('provider', 'oauthUser'));
+        $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
         // Handle registration
         return $user

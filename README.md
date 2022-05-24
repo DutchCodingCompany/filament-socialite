@@ -32,31 +32,8 @@ You can publish the config file with:
 php artisan vendor:publish --tag="filament-socialite-config"
 ```
 
-This is the contents of the published config file:
+See the contents of the [config file here](config/filament-socialite.php).
 
-```php
-return [
-    // Allow login, and registration if enabled, for users with an email for one of the following domains.
-    // All domains allowed by default
-    'domain_allowlist' => [],
-
-    // Allow registration through socials
-    'registration' => false,
-
-    // Specify the providers that should be visible on the login.
-    // These should match the socialite providers you have setup in your services.php config.
-    'providers' => [
-//        'gitlab' => [
-//            'label' => 'GitLab',
-//            'icon' => 'fab-gitlab',
-//        ],
-//        'github' => [
-//            'label' => 'GitHub',
-//            'icon' => 'fab-github',
-//        ],
-    ],
-];
-```
 
 ### Providers
 
@@ -92,6 +69,23 @@ Optionally, you can publish the views using
 ```bash
 php artisan vendor:publish --tag="filament-socialite-views"
 ```
+
+### Changing how a (socialite) user is create or retrieved
+
+In your AppServiceProvider.php, add in the boot method
+```php
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Laravel\Socialite\Contracts\User as UserContract;
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+
+// Default
+FilamentSocialite::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
+    'name' => $oauthUser->getName(),
+    'email' => $oauthUser->getEmail(),
+]);
+```
+
+One can also set a callback to create the socialite user, or resolve the regular user. See [FilamentSocialite.php](src/FilamentSocialite.php).
 
 ## Usage
 
@@ -138,10 +132,10 @@ Which produces a login page at `resources/views/vendor/filament-breezy/login.bla
 
 There are a few events dispatched during the authentication process:
 
-* `DomainFailed`: When a user tries to login with an email which domain is not on the allowlist
-* `RegistrationFailed`: When a user tries to login with an unknown account and registration is not enabled
 * `Login`: When a user successfully logs in
 * `Registered`: When a user is successfully registered and logged in (when enabled in config)
+* `UserNotAllowed`: When a user tries to login with an email which domain is not on the allowlist
+* `RegistrationNotEnabled`: When a user tries to login with an unknown account and registration is not enabled
 
 ## Changelog
 
@@ -158,6 +152,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## Credits
 
 - [Marco Boers](https://github.com/marcoboers)
+- [Tom Janssen](https://github.com/dododedodonl)
 - [All Contributors](../../contributors)
 
 ## License

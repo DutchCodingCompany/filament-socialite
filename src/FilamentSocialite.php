@@ -14,7 +14,9 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 class FilamentSocialite
 {
     protected ?Closure $userResolver = null;
+
     protected ?Closure $createSocialiteUserCallback = null;
+
     protected ?Closure $createUserCallback = null;
 
     public function __construct(
@@ -67,6 +69,27 @@ class FilamentSocialite
         return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where('email', $oauthUser->getEmail())->first();
     }
 
+    public function setCreateSocialiteUserCallback(Closure $callback = null): static
+    {
+        $this->createSocialiteUserCallback = $callback;
+
+        return $this;
+    }
+
+    public function setCreateUserCallback(Closure $callback = null): static
+    {
+        $this->createUserCallback = $callback;
+
+        return $this;
+    }
+
+    public function setUserResolver(Closure $callback = null): static
+    {
+        $this->userResolver = $callback;
+
+        return $this;
+    }
+
     public function getCreateSocialiteUserCallback(): Closure
     {
         return $this->createSocialiteUserCallback ?? fn (string $provider, SocialiteUserContract $oauthUser, Model $user) => SocialiteUser::create([
@@ -75,9 +98,10 @@ class FilamentSocialite
             'provider_id' => $oauthUser->getId(),
         ]);
     }
+
     public function getCreateUserCallback(): Closure
     {
-        return $this->createUserCallback ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModelClass()::create([
+        return $this->createUserCallback ?? fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
             'name' => $oauthUser->getName(),
             'email' => $oauthUser->getEmail(),
         ]);
