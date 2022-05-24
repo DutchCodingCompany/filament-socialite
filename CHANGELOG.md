@@ -2,6 +2,23 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 0.2.0 - 2022-05-24
+
+## Breaking changes
+
+- `Events\DomainFailed` renamed to `Events\UserNotAllowed`
+- `Events\RegistrationFailed` renamed to `Events\RegistrationNotEnabled`
+
+## What's Changed
+
+- Refactor the controller for extendability and customization by @dododedodonl in https://github.com/DutchCodingCompany/filament-socialite/pull/13
+
+## New Contributors
+
+- @dododedodonl made their first contribution in https://github.com/DutchCodingCompany/filament-socialite/pull/13
+
+**Full Changelog**: https://github.com/DutchCodingCompany/filament-socialite/compare/0.1.5...0.2.0
+
 ## 0.1.5 - 2022-05-20
 
 ## What's Changed
