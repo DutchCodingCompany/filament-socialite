@@ -4,9 +4,9 @@ namespace DutchCodingCompany\FilamentSocialite\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Laravel\Socialite\Contracts\User;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
-class RegistrationFailed
+class UserNotAllowed
 {
     use Dispatchable;
     use SerializesModels;
@@ -16,7 +16,8 @@ class RegistrationFailed
      *
      * @return void
      */
-    public function __construct(public User $socialiteUser)
-    {
+    public function __construct(
+        public SocialiteUserContract $oauthUser,
+    ) {
     }
 }

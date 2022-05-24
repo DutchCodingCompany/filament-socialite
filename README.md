@@ -1,6 +1,9 @@
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
 
-![](https://banners.beyondco.de/Filament%20Socialite.png?theme=light&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://banners.beyondco.de/Filament%20Socialite.png?theme=dark&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group">
+  <img src="https://banners.beyondco.de/Filament%20Socialite.png?theme=light&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group">
+</picture>
 
 # Social login for Filament through Laravel Socialite
 
@@ -32,31 +35,8 @@ You can publish the config file with:
 php artisan vendor:publish --tag="filament-socialite-config"
 ```
 
-This is the contents of the published config file:
+See the contents of the [config file here](config/filament-socialite.php).
 
-```php
-return [
-    // Allow login, and registration if enabled, for users with an email for one of the following domains.
-    // All domains allowed by default
-    'domain_allowlist' => [],
-
-    // Allow registration through socials
-    'registration' => false,
-
-    // Specify the providers that should be visible on the login.
-    // These should match the socialite providers you have setup in your services.php config.
-    'providers' => [
-//        'gitlab' => [
-//            'label' => 'GitLab',
-//            'icon' => 'fab-gitlab',
-//        ],
-//        'github' => [
-//            'label' => 'GitHub',
-//            'icon' => 'fab-github',
-//        ],
-    ],
-];
-```
 
 ### Providers
 
@@ -75,6 +55,7 @@ composer require owenvoke/blade-fontawesome
 
 This package supports account creation for users. However, to support this flow it is important that the `password`
 attribute on your `User` model is nullable. For example, by adding the following to your users table migration.
+Or you could opt for customizing the user creation, see below.
 
 ```php
 $table->string('password')->nullable();
@@ -92,6 +73,28 @@ Optionally, you can publish the views using
 ```bash
 php artisan vendor:publish --tag="filament-socialite-views"
 ```
+
+### Changing how a (socialite) user is created or retrieved
+
+In your AppServiceProvider.php, add in the boot method
+```php
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Laravel\Socialite\Contracts\User as UserContract;
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+
+// Default
+FilamentSocialite::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
+    'name' => $oauthUser->getName(),
+    'email' => $oauthUser->getEmail(),
+]);
+```
+
+One can set a callback to customize the following actions:
+* Create the filament user: `FilamentSocialite::setCreateUserCallback()`
+* Create the socialite user: `FilamentSocialite::setCreateSocialiteUserCallback()`
+* Resolve the regular user: `FilamentSocialite::setUserResolver()`
+
+See [FilamentSocialite.php](src/FilamentSocialite.php).
 
 ## Usage
 
@@ -138,10 +141,11 @@ Which produces a login page at `resources/views/vendor/filament-breezy/login.bla
 
 There are a few events dispatched during the authentication process:
 
-* `DomainFailed`: When a user tries to login with an email which domain is not on the allowlist
-* `RegistrationFailed`: When a user tries to login with an unknown account and registration is not enabled
 * `Login`: When a user successfully logs in
 * `Registered`: When a user is successfully registered and logged in (when enabled in config)
+* `UserNotAllowed`: When a user tries to login with an email which domain is not on the allowlist
+* `RegistrationNotEnabled`: When a user tries to login with an unknown account and registration is not enabled
+* `InvalidState`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
 
 ## Changelog
 
@@ -158,6 +162,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## Credits
 
 - [Marco Boers](https://github.com/marcoboers)
+- [Tom Janssen](https://github.com/dododedodonl)
 - [All Contributors](../../contributors)
 
 ## License

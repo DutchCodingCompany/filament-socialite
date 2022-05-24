@@ -4,6 +4,7 @@
 return [
     // Allow login, and registration if enabled, for users with an email for one of the following domains.
     // All domains allowed by default
+    // Only use lower case
     'domain_allowlist' => [],
 
     // Allow registration through socials
@@ -22,4 +23,9 @@ return [
 //            'icon' => 'fab-github',
 //        ],
     ],
+
+    'user_model' => \App\Models\User::class,
+
+    // Specify the default redirect route for successful logins
+    'login_redirect_route' => 'filament.pages.dashboard',
 ];

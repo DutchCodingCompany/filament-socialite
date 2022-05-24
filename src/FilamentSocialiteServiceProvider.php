@@ -10,6 +10,14 @@ use Spatie\LaravelPackageTools\Package;
 
 class FilamentSocialiteServiceProvider extends PluginServiceProvider
 {
+    public function packageRegistered(): void
+    {
+        $this->app->singleton(FilamentSocialite::class);
+        $this->app->alias(FilamentSocialite::class, 'filament-socialite');
+
+        parent::packageRegistered();
+    }
+
     public function configurePackage(Package $package): void
     {
         $package
