@@ -105,8 +105,8 @@ class SocialiteLoginController extends Controller
         // Create a socialite user
         $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
 
-        // Dispatch the registered event
-        Events\Registered::dispatch($socialiteUser);
+        // Dispatch the socialite user connected event
+        Events\SocialiteUserConnected::dispatch($socialiteUser);
 
         // Login the user
         return $this->loginUser($socialiteUser);
