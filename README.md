@@ -136,6 +136,7 @@ There are a few events dispatched during the authentication process:
 * `Registered`: When a user is successfully registered and logged in (when enabled in config)
 * `UserNotAllowed`: When a user tries to login with an email which domain is not on the allowlist
 * `RegistrationNotEnabled`: When a user tries to login with an unknown account and registration is not enabled
+* `InvalidState`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
 
 ## Changelog
 
