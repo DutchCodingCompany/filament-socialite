@@ -3,13 +3,13 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use Closure;
-use Illuminate\Contracts\Auth\Factory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Config\Repository;
-use Illuminate\Contracts\Auth\StatefulGuard;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Illuminate\Contracts\Auth\Factory;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Config\Repository;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class FilamentSocialite
 {

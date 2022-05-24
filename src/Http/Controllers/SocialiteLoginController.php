@@ -2,18 +2,18 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 
-use Illuminate\Support\Str;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\RedirectResponse;
-use Laravel\Socialite\Facades\Socialite;
 use DutchCodingCompany\FilamentSocialite\Events;
-use Laravel\Socialite\Two\InvalidStateException;
+use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
-use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class SocialiteLoginController extends Controller
 {
