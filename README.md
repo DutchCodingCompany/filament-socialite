@@ -55,6 +55,7 @@ composer require owenvoke/blade-fontawesome
 
 This package supports account creation for users. However, to support this flow it is important that the `password`
 attribute on your `User` model is nullable. For example, by adding the following to your users table migration.
+Or you could opt for customizing the user creation, see below.
 
 ```php
 $table->string('password')->nullable();
@@ -73,7 +74,7 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-socialite-views"
 ```
 
-### Changing how a (socialite) user is create or retrieved
+### Changing how a (socialite) user is created or retrieved
 
 In your AppServiceProvider.php, add in the boot method
 ```php
@@ -88,7 +89,12 @@ FilamentSocialite::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, F
 ]);
 ```
 
-One can also set a callback to create the socialite user, or resolve the regular user. See [FilamentSocialite.php](src/FilamentSocialite.php).
+One can set a callback to customize the following actions:
+* Create the filament user: `FilamentSocialite::setCreateUserCallback()`
+* Create the socialite user: `FilamentSocialite::setCreateSocialiteUserCallback()`
+* Resolve the regular user: `FilamentSocialite::setUserResolver()`
+
+See [FilamentSocialite.php](src/FilamentSocialite.php).
 
 ## Usage
 
