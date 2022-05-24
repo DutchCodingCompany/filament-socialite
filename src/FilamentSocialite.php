@@ -49,6 +49,11 @@ class FilamentSocialite
         return $this->config->get('filament-socialite', []);
     }
 
+    public function getProviderButtons(): array
+    {
+        return $this->getConfig()['providers'] ?? [];
+    }
+
     public function getDomainAllowList(): array
     {
         return $this->getConfig()['domain_allowlist'] ?? [];

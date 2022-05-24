@@ -2,6 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite\View\Components;
 
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use Illuminate\View\Component;
 
 class Buttons extends Component
@@ -22,7 +23,7 @@ class Buttons extends Component
      */
     public function __construct(?array $providers = null)
     {
-        $this->providers = $providers ?? config('filament-socialite.providers');
+        $this->providers = $providers ?? FilamentSocialite::getProviderButtons();
     }
 
     /**
