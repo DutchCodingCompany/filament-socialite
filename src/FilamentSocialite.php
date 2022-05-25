@@ -71,7 +71,7 @@ class FilamentSocialite
 
     public function getUserModel(): Model
     {
-        return new $this->getUserModelClass();
+        return new ($this->getUserModelClass());
     }
 
     public function getUserResolver(): Closure
