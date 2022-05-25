@@ -2,6 +2,14 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 0.2.1 - 2022-05-25
+
+## What's Changed
+
+- Fix user model instantiating by @marcoboers in https://github.com/DutchCodingCompany/filament-socialite/pull/14
+
+**Full Changelog**: https://github.com/DutchCodingCompany/filament-socialite/compare/0.2.0...0.2.1
+
 ## 0.2.0 - 2022-05-24
 
 ## Breaking changes
