@@ -78,9 +78,8 @@ php artisan vendor:publish --tag="filament-socialite-views"
 
 In your AppServiceProvider.php, add in the boot method
 ```php
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
-use Laravel\Socialite\Contracts\User as UserContract;
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 
 // Default
 FilamentSocialite::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
