@@ -117,13 +117,18 @@ Which produces a login page at `resources/views/vendor/filament/login.blade.php`
 
 This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.
 
-You can publish the login page for **Filament Fortify** by running:
-
-```bash
-php artisan vendor:publish --tag="filament-fortify-views"
+```php
+## in Service Provider file
+public function boot()
+{
+    //...
+    
+    Filament::registerRenderHook(
+        'filament-fortify.login.end',
+        fn (): string => Blade::render('@livewire(\'filament-socialite.buttons\')'),
+    );
+}
 ```
-
-Which produces a login page at `resources/views/vendor/filament-fortify/login.blade.php`.
 
 ### Filament Breezy
 
