@@ -2,6 +2,19 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 0.2.2 - 2022-06-14
+
+### What's Changed
+
+- Fix readme by @dododedodonl in https://github.com/DutchCodingCompany/filament-socialite/pull/15
+- use Filament-fortify render hook by @wychoong in https://github.com/DutchCodingCompany/filament-socialite/pull/16
+
+### New Contributors
+
+- @wychoong made their first contribution in https://github.com/DutchCodingCompany/filament-socialite/pull/16
+
+**Full Changelog**: https://github.com/DutchCodingCompany/filament-socialite/compare/0.2.1...0.2.2
+
 ## 0.2.1 - 2022-05-25
 
 ## What's Changed
