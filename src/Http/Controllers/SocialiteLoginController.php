@@ -55,7 +55,7 @@ class SocialiteLoginController extends Controller
     protected function redirectToLogin(string $message): RedirectResponse
     {
         // Redirect back to the login route with an error message attached
-        return redirect()->route(config('filament.auth.login'))
+        return redirect()->route(config('filament-socialite.login_page_route'))
                 ->withErrors([
                     'email' => [
                         __($message),
