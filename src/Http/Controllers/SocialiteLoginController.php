@@ -29,7 +29,7 @@ class SocialiteLoginController extends Controller
         }
 
         return Socialite::with($provider)
-            ->scopes($this->socialite->getProviderScopes($provider))
+            ->setScopes($this->socialite->getProviderScopes($provider))
             ->redirect();
     }
 
