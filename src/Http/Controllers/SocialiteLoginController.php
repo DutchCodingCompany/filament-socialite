@@ -89,7 +89,7 @@ class SocialiteLoginController extends Controller
     protected function loginUser(SocialiteUser $socialiteUser)
     {
         // Log the user in
-        $this->socialite->getGuard()->login($socialiteUser->user);
+        $this->socialite->getGuard()->login($socialiteUser->user, config('filament-socialite.remember_login', false));
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
