@@ -86,7 +86,7 @@ use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 FilamentSocialiteFacade::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
     'name' => $oauthUser->getName(),
     'email' => $oauthUser->getEmail(),
-]);
+]));
 ```
 
 One can set a callback to customize the following actions:
