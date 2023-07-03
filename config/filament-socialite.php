@@ -31,4 +31,7 @@ return [
 
     // Specify the route name for the socialite login page
     'login_page_route' => 'filament.auth.login',
+    
+    // Should the user stay logged in?
+    'remember_login' => false,
 ];
