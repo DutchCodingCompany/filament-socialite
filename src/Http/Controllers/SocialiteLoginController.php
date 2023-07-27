@@ -155,19 +155,21 @@ class SocialiteLoginController extends Controller
             return $this->loginUser($socialiteUser);
         }
 
-        // See if registration is allowed
-        if (! $this->socialite->isRegistrationEnabled()) {
-            Events\RegistrationNotEnabled::dispatch($provider, $oauthUser);
-
-            return $this->redirectToLogin('auth.registration-not-enabled');
-        }
-
+        
         // See if a user already exists, but not for this socialite provider
         $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
+        // If no user found, See if registration is allowed
+        if (is_null($user)) {
+            if ($this->socialite->isRegistrationEnabled()) {
+                return $this->registerOauthUser($provider, $oauthUser);
+            } else {
+                Events\RegistrationNotEnabled::dispatch($provider, $oauthUser);
+                return $this->redirectToLogin('auth.registration-not-enabled');
+            }
+        }
+
         // Handle registration
-        return $user
-            ? $this->registerSocialiteUser($provider, $oauthUser, $user)
-            : $this->registerOauthUser($provider, $oauthUser);
+        return $this->registerSocialiteUser($provider, $oauthUser, $user);
     }
 }
