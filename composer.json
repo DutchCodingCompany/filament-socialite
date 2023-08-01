@@ -46,20 +46,12 @@
             "DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\": "database/factories"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "DutchCodingCompany\\FilamentSocialite\\Tests\\": "tests"
-        }
-    },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage"
+        "analyse": "vendor/bin/phpstan analyse"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
             "phpstan/extension-installer": true
         }
     },
