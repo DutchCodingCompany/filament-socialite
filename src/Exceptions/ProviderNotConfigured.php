@@ -8,6 +8,6 @@ class ProviderNotConfigured extends LogicException
 {
     public static function make(string $provider): static
     {
-        return new static('Provider "'.$provider.'" is not configured.');
+        return new static('Provider "'.$provider.'" is not configured, please configure it in config/services.php.');
     }
 }

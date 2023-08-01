@@ -8,17 +8,16 @@ use Illuminate\View\Component;
 class Buttons extends Component
 {
     /**
-     * The alert type.
+     * The providers available.
      *
-     * @var string
+     * @var array
      */
     public $providers;
 
     /**
      * Create the component instance.
      *
-     * @param  string  $type
-     * @param  string  $message
+     * @param  null|array  $providers
      * @return void
      */
     public function __construct(?array $providers = null)

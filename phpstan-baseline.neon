@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Class App\\\\Models\\\\User not found\\.$#"
+			count: 1
+			path: config/filament-socialite.php
+
+		-
+			message: "#^Class App\\\\Models\\\\User not found\\.$#"
+			count: 1
+			path: src/FilamentSocialite.php

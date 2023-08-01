@@ -3,6 +3,7 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use Closure;
+use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Contracts\Auth\Factory;
@@ -119,9 +120,15 @@ class FilamentSocialite
 
     public function getGuard(): StatefulGuard
     {
-        return $this->auth->guard(
-            $this->config->get('filament.auth.guard')
+        $guard = $this->auth->guard(
+            $guardName = $this->config->get('filament.auth.guard')
         );
+
+        if ($guard instanceof StatefulGuard) {
+            return $guard;
+        }
+
+        throw GuardNotStateful::make($guardName);
     }
 
     public function isRegistrationEnabled(): bool

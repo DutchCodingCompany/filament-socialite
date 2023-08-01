@@ -22,7 +22,7 @@ jobs:
           - laravel: 9.*
             testbench: 7.*
 
-    name: phpstan${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
