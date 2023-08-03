@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Facade;
  */
 class FilamentSocialite extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
-        return 'filament-socialite';
+        return \DutchCodingCompany\FilamentSocialite\FilamentSocialite::class;
     }
 }
