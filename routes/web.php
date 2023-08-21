@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 $panel = Filament::getDefaultPanel();
 
-Route::domain($panel->getDomain())
+Route::domain('')
     ->middleware($panel->getMiddleWare())
     ->name('socialite.')
     ->group(function () {
