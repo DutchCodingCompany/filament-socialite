@@ -6,6 +6,7 @@ use DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
@@ -55,9 +56,10 @@ class SocialiteLoginController extends Controller
     protected function redirectToLogin(string $message): RedirectResponse
     {
         // Redirect back to the login route with an error message attached
-        return redirect()->route(config('filament-socialite.login_page_route', 'filament.auth.login'))
+        return redirect()->route(Filament::getCurrentPanel()->getPlugin('filament-socialite')->getLoginRouteName())
+                // @TODO - This does not work at the moment, the errorBag in the view is empty after being redirected.
                 ->withErrors([
-                    'email' => [
+                    'data.email' => [
                         __($message),
                     ],
                 ]);

@@ -9,6 +9,8 @@ class FilamentSocialitePlugin implements Plugin
 {
     protected array $providers = [];
 
+    protected string $loginRouteName = 'filament.admin.auth.login';
+
     public static function make(): static
     {
         return app(static::class);
@@ -44,5 +46,17 @@ class FilamentSocialitePlugin implements Plugin
     public function getProviders(): array
     {
         return $this->providers;
+    }
+
+    public function setLoginRouteName(string $loginRouteName): static
+    {
+        $this->loginRouteName = $loginRouteName;
+
+        return $this;
+    }
+
+    public function getLoginRouteName(): string
+    {
+        return $this->loginRouteName;
     }
 }
