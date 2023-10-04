@@ -3,6 +3,7 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use DutchCodingCompany\FilamentSocialite\Http\Livewire\Buttons;
+use Filament\Support\Facades\FilamentView;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
@@ -33,5 +34,10 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
     {
         Livewire::component('filament-socialite.buttons', Buttons::class);
         Blade::componentNamespace('DutchCodingCompany\\FilamentSocialite\\View\\Components', 'filament-socialite');
+
+        FilamentView::renderHook(
+            'panels::auth.login.form.after',
+            static fn (): string => Blade::render('@livewire(\'filament-socialite.buttons\')'),
+        );
     }
 }
