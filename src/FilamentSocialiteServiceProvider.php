@@ -35,7 +35,7 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
         Livewire::component('filament-socialite.buttons', Buttons::class);
         Blade::componentNamespace('DutchCodingCompany\\FilamentSocialite\\View\\Components', 'filament-socialite');
 
-        FilamentView::renderHook(
+        FilamentView::registerRenderHook(
             'panels::auth.login.form.after',
             static fn (): string => Blade::render('@livewire(\'filament-socialite.buttons\')'),
         );
