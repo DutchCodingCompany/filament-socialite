@@ -11,6 +11,8 @@ class FilamentSocialitePlugin implements Plugin
 
     protected string $loginRouteName = 'filament.admin.auth.login';
 
+    protected bool $rememberLogin = false;
+
     public static function make(): static
     {
         return app(static::class);
@@ -58,5 +60,17 @@ class FilamentSocialitePlugin implements Plugin
     public function getLoginRouteName(): string
     {
         return $this->loginRouteName;
+    }
+
+    public function setRememberLogin(bool $value): static
+    {
+        $this->rememberLogin = $value;
+
+        return $this;
+    }
+
+    public function getRememberLogin(): bool
+    {
+        return $this->rememberLogin;
     }
 }
