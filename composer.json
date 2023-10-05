@@ -18,6 +18,11 @@
             "name": "Tom Janssen",
             "email": "dododedodonl@thor.edu",
             "role": "Developer"
+        },
+        {
+            "name": "Bram Raaijmakers",
+            "email": "b.raaijmakers@hotmail.com",
+            "role": "Developer"
         }
     ],
     "require": {

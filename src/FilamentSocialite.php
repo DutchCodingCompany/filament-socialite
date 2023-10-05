@@ -6,6 +6,7 @@ use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
@@ -50,24 +51,9 @@ class FilamentSocialite
         return $this->config->get('filament-socialite', []);
     }
 
-    public function getProviderButtons(): array
-    {
-        return $this->getConfig()['providers'] ?? [];
-    }
-
-    public function getDomainAllowList(): array
-    {
-        return $this->getConfig()['domain_allowlist'] ?? [];
-    }
-
-    public function getLoginRedirectRoute(): string
-    {
-        return $this->getConfig()['login_redirect_route'] ?? 'filament.pages.dashboard';
-    }
-
     public function getUserModelClass(): string
     {
-        return $this->getConfig()['user_model'] ?? \App\Models\User::class;
+        return Filament::getCurrentPanel()->getPlugin('filament-socialite')->getUserModelClass();
     }
 
     public function getUserModel(): Model
@@ -121,7 +107,7 @@ class FilamentSocialite
     public function getGuard(): StatefulGuard
     {
         $guard = $this->auth->guard(
-            $guardName = $this->config->get('filament.auth.guard')
+            $guardName = Filament::getCurrentPanel()->getAuthGuard()
         );
 
         if ($guard instanceof StatefulGuard) {
@@ -129,10 +115,5 @@ class FilamentSocialite
         }
 
         throw GuardNotStateful::make($guardName);
-    }
-
-    public function isRegistrationEnabled(): bool
-    {
-        return $this->getConfig()['registration'] == true;
     }
 }
