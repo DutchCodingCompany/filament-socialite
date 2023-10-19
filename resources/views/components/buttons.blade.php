@@ -1,4 +1,10 @@
 <div>
+    @if ($messageBag->isNotEmpty())
+        @foreach($messageBag->all() as $value)
+            <p class="fi-fo-field-wrp-error-message text-danger-600 dark:text-danger-400">{{ __($value) }}</p>
+        @endforeach
+    @endif
+
     @if (count($providers))
         <div class="relative flex items-center justify-center text-center">
             <div class="absolute border-t border-gray-200 w-full h-px"></div>

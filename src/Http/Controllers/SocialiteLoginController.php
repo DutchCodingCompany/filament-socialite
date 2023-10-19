@@ -55,14 +55,10 @@ class SocialiteLoginController extends Controller
 
     protected function redirectToLogin(string $message): RedirectResponse
     {
-        // Redirect back to the login route with an error message attached
-        return redirect()->route(Filament::getCurrentPanel()->getPlugin('filament-socialite')->getLoginRouteName())
-                // @TODO - This does not work at the moment, the errorBag in the view is empty after being redirected.
-                ->withErrors([
-                    'data.email' => [
-                        __($message),
-                    ],
-                ]);
+        // Add error message to the session, this way we can show an error message on the form.
+        session()->flash('filament-socialite-login-error', __($message));
+
+        return redirect()->route(Filament::getCurrentPanel()->getPlugin('filament-socialite')->getLoginRouteName());
     }
 
     protected function isUserAllowed(SocialiteUserContract $user): bool
