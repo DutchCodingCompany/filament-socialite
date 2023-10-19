@@ -12,7 +12,7 @@ class Buttons extends Component
     {
         $messageBag = new MessageBag();
         if (session()->has('filament-socialite-login-error')) {
-            $messageBag->add('login-failed', session()->get('filament-socialite-login-error'));
+            $messageBag->add('login-failed', session()->pull('filament-socialite-login-error'));
         }
 
         return view('filament-socialite::livewire.buttons', [
