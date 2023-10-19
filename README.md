@@ -29,19 +29,29 @@ php artisan vendor:publish --tag="filament-socialite-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+You need to register the plugin in the Filament panel provider, the default filename is `AdminPanelProvider.php`. Add the following:
 
-```bash
-php artisan vendor:publish --tag="filament-socialite-config"
+```php
+->plugin(
+    FilamentSocialitePlugin::make()
+);
 ```
-
-See the contents of the [config file here](config/filament-socialite.php).
-
 
 ### Providers
 
-You should setup the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them
-to the providers array in the `filament-socialite.php` config.
+You should set up the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them to the Filament panel.
+
+```php
+->plugin(
+    FilamentSocialitePlugin::make()
+        ->setProviders([
+            'github' => [
+                'label' => 'github',
+                'icon' => 'fab-github',
+            ],
+        ])
+);
+```
 
 ### Icons
 
@@ -66,12 +76,12 @@ $table->string('password')->nullable();
 This package supports the option to limit the users that can login with the OAuth login to users of a certain domain.
 This can be used to setup SSO for internal use.
 
-### Customizing view
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="filament-socialite-views"
+```php
+->plugin(
+    FilamentSocialitePlugin::make()
+        ->setRegistrationEnabled(true)
+        ->setDomainAllowList(['localhost'])
+);
 ```
 
 ### Changing how a (socialite) user is created or retrieved
