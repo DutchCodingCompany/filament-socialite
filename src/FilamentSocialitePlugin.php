@@ -12,9 +12,9 @@ class FilamentSocialitePlugin implements Plugin
 {
     protected array $providers = [];
 
-    protected string $loginRouteName = 'filament.admin.auth.login';
+    protected ?string $loginRouteName = null;
 
-    protected string $dashboardRouteName = 'filament.admin.pages.dashboard';
+    protected ?string $dashboardRouteName = null;
 
     protected bool $rememberLogin = false;
 
@@ -50,6 +50,8 @@ class FilamentSocialitePlugin implements Plugin
         app()->alias(FilamentSocialite::class, 'filament-socialite');
 
         $this->setSlug(Str::slug($panel->getId()));
+        $this->setLoginRouteName("filament.{$panel->getId()}.auth.login");
+        $this->setDashboardRouteName("filament.{$panel->getId()}.pages.dashboard");
     }
 
     public function boot(Panel $panel): void
