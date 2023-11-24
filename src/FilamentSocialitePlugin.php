@@ -2,8 +2,11 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
+use App\Models\User;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class FilamentSocialitePlugin implements Plugin
 {
@@ -19,13 +22,18 @@ class FilamentSocialitePlugin implements Plugin
 
     protected array $domainAllowList = [];
 
-    protected string $userModelClass = \App\Models\User::class;
+    protected string $userModelClass = User::class;
+
+    protected ?string $slug = null;
 
     public static function make(): static
     {
         return app(static::class);
     }
 
+    /**
+     * Get the plugin for the current panel.
+     */
     public static function get(): static
     {
         return filament(static::make()->getId());
@@ -38,7 +46,10 @@ class FilamentSocialitePlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        //
+        app()->singleton(FilamentSocialite::class);
+        app()->alias(FilamentSocialite::class, 'filament-socialite');
+
+        $this->setSlug(Str::slug($panel->getId()));
     }
 
     public function boot(Panel $panel): void
@@ -56,6 +67,23 @@ class FilamentSocialitePlugin implements Plugin
     public function getProviders(): array
     {
         return $this->providers;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getRoute(): string
+    {
+        return "socialite.$this->slug.oauth.redirect";
     }
 
     public function setLoginRouteName(string $value): static
@@ -118,6 +146,9 @@ class FilamentSocialitePlugin implements Plugin
         return $this->domainAllowList;
     }
 
+    /**
+     * @param class-string<Model> $value
+     */
     public function setUserModelClass(string $value): static
     {
         $this->userModelClass = $value;
@@ -125,6 +156,9 @@ class FilamentSocialitePlugin implements Plugin
         return $this;
     }
 
+    /**
+     * @return class-string<Model>
+     */
     public function getUserModelClass(): string
     {
         return $this->userModelClass;

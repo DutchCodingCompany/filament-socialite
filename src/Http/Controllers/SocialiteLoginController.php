@@ -6,7 +6,6 @@ use DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
-use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
@@ -21,6 +20,7 @@ class SocialiteLoginController extends Controller
     public function __construct(
         protected FilamentSocialite $socialite,
     ) {
+        //
     }
 
     public function redirectToProvider(string $provider)
@@ -58,12 +58,12 @@ class SocialiteLoginController extends Controller
         // Add error message to the session, this way we can show an error message on the form.
         session()->flash('filament-socialite-login-error', __($message));
 
-        return redirect()->route(Filament::getCurrentPanel()->getPlugin('filament-socialite')->getLoginRouteName());
+        return redirect()->route($this->socialite->getPlugin()->getLoginRouteName());
     }
 
     protected function isUserAllowed(SocialiteUserContract $user): bool
     {
-        $domains = Filament::getCurrentPanel()->getPlugin('filament-socialite')->getDomainAllowList();
+        $domains = $this->socialite->getPlugin()->getDomainAllowList();
 
         // When no domains are specified, all users are allowed
         if (count($domains) < 1) {
@@ -87,14 +87,14 @@ class SocialiteLoginController extends Controller
     protected function loginUser(SocialiteUser $socialiteUser): RedirectResponse
     {
         // Log the user in
-        $this->socialite->getGuard()->login($socialiteUser->user, Filament::getCurrentPanel()->getPlugin('filament-socialite')->getRememberLogin());
+        $this->socialite->getGuard()->login($socialiteUser->user, $this->socialite->getPlugin()->getRememberLogin());
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
 
         // Redirect as intended
         return redirect()->intended(
-            route(Filament::getCurrentPanel()->getPlugin('filament-socialite')->getDashboardRouteName())
+            route($this->socialite->getPlugin()->getDashboardRouteName())
         );
     }
 
@@ -154,7 +154,7 @@ class SocialiteLoginController extends Controller
         }
 
         // See if registration is allowed
-        if (! Filament::getCurrentPanel()->getPlugin('filament-socialite')->getRegistrationEnabled()) {
+        if (! $this->socialite->getPlugin()->getRegistrationEnabled()) {
             Events\RegistrationNotEnabled::dispatch($provider, $oauthUser);
 
             return $this->redirectToLogin('auth.registration-not-enabled');
