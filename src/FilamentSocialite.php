@@ -7,7 +7,6 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Facades\Filament;
-use GuzzleHttp\Middleware;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
@@ -70,8 +69,10 @@ class FilamentSocialite
 
     public function getUserResolver(): Closure
     {
-        return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where('email',
-            $oauthUser->getEmail())->first();
+        return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where(
+            'email',
+            $oauthUser->getEmail()
+        )->first();
     }
 
     public function setCreateSocialiteUserCallback(Closure $callback = null): static
