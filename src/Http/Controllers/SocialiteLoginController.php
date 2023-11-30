@@ -31,7 +31,6 @@ class SocialiteLoginController extends Controller
         }
 
         $redirect = Socialite::driver($provider)
-            ->stateless()
             ->with([
                 'state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId()),
             ])
