@@ -1,5 +1,3 @@
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://banners.beyondco.de/Filament%20Socialite.png?theme=dark&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group">
   <img src="https://banners.beyondco.de/Filament%20Socialite.png?theme=light&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group">
@@ -21,42 +19,47 @@ Add OAuth login through Laravel Socialite to Filament.
 | 3.x              | 1.x.x           |
 | 2.x              | 0.x.x           |
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require dutchcodingcompany/filament-socialite
 ```
 
-You can publish and run the migrations with:
+Publish and migrate the migration file:
 
 ```bash
 php artisan vendor:publish --tag="filament-socialite-migrations"
 php artisan migrate
 ```
 
-You need to register the plugin in the Filament panel provider, the default filename is `AdminPanelProvider.php`. Add the following:
-
-```php
-->plugin(
-    FilamentSocialitePlugin::make()
-);
+Other configuration files include:
+```bash
+php artisan vendor:publish --tag="filament-socialite-config"
+php artisan vendor:publish --tag="filament-socialite-views"
+php artisan vendor:publish --tag="filament-socialite-translations"
 ```
 
-### Providers
-
-You should set up the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them to the Filament panel.
+You need to register the plugin in the Filament panel provider (the default filename is `app/Providers/Filament/AdminPanelProvider.php`). The following options are available:
 
 ```php
 ->plugin(
     FilamentSocialitePlugin::make()
+        // (required) Add providers corresponding with providers in `config/services.php`. 
         ->setProviders([
             'github' => [
-                'label' => 'github',
+                'label' => 'GitHub',
+                // Custom icon requires an additional package, see below.
                 'icon' => 'fab-github',
             ],
         ])
+        // (optional) Enable or disable registration from OAuth.
+        ->setRegistrationEnabled(true)
+        // (optional) Change the associated model class.
+        ->setUserModelClass(\App\Models\User::class)
 );
 ```
+
+See [Socialite Providers](https://socialiteproviders.com/) for additional Socialite providers.
 
 ### Icons
 
@@ -93,9 +96,9 @@ This can be used to setup SSO for internal use.
 
 In your AppServiceProvider.php, add in the boot method
 ```php
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite as FilamentSocialiteFacade;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 // Default
 FilamentSocialiteFacade::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
@@ -169,9 +172,6 @@ Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTI
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
-
-- [Marco Boers](https://github.com/marcoboers)
-- [Tom Janssen](https://github.com/dododedodonl)
 - [All Contributors](../../contributors)
 
 ## License
