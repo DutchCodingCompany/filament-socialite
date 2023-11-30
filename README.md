@@ -16,6 +16,11 @@ Add OAuth login through Laravel Socialite to Filament.
 
 ## Installation
 
+| Filament version | Package version |
+|------------------|-----------------|
+| 3.x              | 1.x.x           |
+| 2.x              | 0.x.x           |
+
 You can install the package via composer:
 
 ```bash
