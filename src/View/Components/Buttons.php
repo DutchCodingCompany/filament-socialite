@@ -11,8 +11,7 @@ class Buttons extends Component
     public function __construct(
         protected FilamentSocialite $socialite,
         public bool $showDivider = true,
-    )
-    {
+    ) {
         //
     }
 
