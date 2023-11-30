@@ -3,7 +3,6 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use DutchCodingCompany\FilamentSocialite\Http\Livewire\Buttons;
-use Filament\Panel;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
