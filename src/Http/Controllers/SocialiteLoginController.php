@@ -5,7 +5,9 @@ namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 use DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
@@ -29,9 +31,19 @@ class SocialiteLoginController extends Controller
             throw ProviderNotConfigured::make($provider);
         }
 
-        return Socialite::with($provider)
+        $redirect = Socialite::driver($provider)
+            ->with([
+                'state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId()),
+            ])
             ->scopes($this->socialite->getProviderScopes($provider))
             ->redirect();
+
+        // Set state value to be equal to the encrypted panel id. This value is used to
+        // retrieve the panel id once the authentication returns to our application,
+        // and it still prevents CSRF as it is non-guessable value.
+        session()->put('state', $state);
+
+        return $redirect;
     }
 
     protected function retrieveOauthUser(string $provider): ?SocialiteUserContract
@@ -129,22 +141,22 @@ class SocialiteLoginController extends Controller
 
     public function processCallback(string $provider): RedirectResponse
     {
-        // See if provider exists
         if (! $this->socialite->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
         // Try to retrieve existing user
         $oauthUser = $this->retrieveOauthUser($provider);
+
         if (is_null($oauthUser)) {
-            return $this->redirectToLogin('auth.login-failed');
+            return $this->redirectToLogin('filament-socialite::auth.login-failed');
         }
 
         // Verify if user is allowed
         if (! $this->isUserAllowed($oauthUser)) {
             Events\UserNotAllowed::dispatch($oauthUser);
 
-            return $this->redirectToLogin('auth.user-not-allowed');
+            return $this->redirectToLogin('filament-socialite::auth.user-not-allowed');
         }
 
         // Try to find a socialite user
@@ -157,7 +169,7 @@ class SocialiteLoginController extends Controller
         if (! $this->socialite->getPlugin()->getRegistrationEnabled()) {
             Events\RegistrationNotEnabled::dispatch($provider, $oauthUser);
 
-            return $this->redirectToLogin('auth.registration-not-enabled');
+            return $this->redirectToLogin('filament-socialite::auth.registration-not-enabled');
         }
 
         // See if a user already exists, but not for this socialite provider

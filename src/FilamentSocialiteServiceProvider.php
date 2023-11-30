@@ -15,6 +15,7 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('filament-socialite')
+            ->hasConfigFile()
             ->hasTranslations()
             ->hasViews()
             ->hasRoute('web')

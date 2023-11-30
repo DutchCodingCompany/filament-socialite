@@ -30,6 +30,11 @@ class FilamentSocialite
         //
     }
 
+    public function getPanelId(): string
+    {
+        return Filament::getCurrentPanel()->getId();
+    }
+
     public function getPlugin(): FilamentSocialitePlugin
     {
         return Filament::getCurrentPanel()->getPlugin('filament-socialite');
@@ -59,7 +64,7 @@ class FilamentSocialite
      */
     public function getUserModelClass(): string
     {
-        return $this->plugin->getUserModelClass();
+        return $this->getPlugin()->getUserModelClass();
     }
 
     public function getUserModel(): Model

@@ -1,6 +1,7 @@
 <?php
 
 use DutchCodingCompany\FilamentSocialite\Http\Controllers\SocialiteLoginController;
+use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Route;
 
@@ -21,9 +22,12 @@ foreach (Filament::getPanels() as $panel) {
         ->group(function () use ($slug) {
             Route::get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider'])
                 ->name('oauth.redirect');
-
-            Route::get("/$slug/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
-                ->name('oauth.callback');
         })->where(['domain' => $domains]);
 }
 
+Route::get("/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
+    ->middleware([
+        PanelFromUrlQuery::class,
+        ...config('filament-socialite.middleware'),
+    ])
+    ->name('oauth.callback');
