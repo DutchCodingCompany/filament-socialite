@@ -35,12 +35,13 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.8",
-        "nunomaduro/collision": "^6.0",
+        "nunomaduro/collision": "^7.0",
         "nunomaduro/larastan": "^2.0.1",
-        "orchestra/testbench": "^7.0|^8.0",
+        "orchestra/testbench": "^8.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0"
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpunit/phpunit": "^10.0"
     },
     "suggest": {
         "owenvoke/blade-fontawesome": "^2.0"
@@ -52,7 +53,8 @@
         }
     },
     "scripts": {
-        "analyse": "vendor/bin/phpstan analyse"
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/phpunit"
     },
     "config": {
         "sort-packages": true,
@@ -71,5 +73,10 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "autoload-dev": {
+        "psr-4": {
+            "DutchCodingCompany\\FilamentSocialite\\Tests\\": "tests"
+        }
+    }
 }

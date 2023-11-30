@@ -20,7 +20,7 @@
                     :outlined="true"
                     :icon="$provider['icon'] ?? null"
                     tag="a"
-                    :href="route('socialite.oauth.redirect', $key)"
+                    :href="route($socialiteRoute, $key)"
                 >
                     {{ $provider['label'] }}
                 </x-filament::button>

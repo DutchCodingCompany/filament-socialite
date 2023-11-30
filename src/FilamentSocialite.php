@@ -21,10 +21,23 @@ class FilamentSocialite
 
     protected ?Closure $createUserCallback = null;
 
+    protected FilamentSocialitePlugin $plugin;
+
     public function __construct(
         protected Repository $config,
         protected Factory $auth,
     ) {
+        //
+    }
+
+    public function getPanelId(): string
+    {
+        return Filament::getCurrentPanel()->getId();
+    }
+
+    public function getPlugin(): FilamentSocialitePlugin
+    {
+        return Filament::getCurrentPanel()->getPlugin('filament-socialite');
     }
 
     public function isProviderConfigured(string $provider): bool
@@ -41,19 +54,17 @@ class FilamentSocialite
         return $this->config->get('services.'.$provider);
     }
 
-    public function getProviderScopes(string $provider): string|array
+    public function getProviderScopes(string $provider): string | array
     {
         return $this->getProviderConfig($provider)['scopes'] ?? [];
     }
 
-    public function getConfig(): array
-    {
-        return $this->config->get('filament-socialite', []);
-    }
-
+    /**
+     * @return class-string<Model>
+     */
     public function getUserModelClass(): string
     {
-        return Filament::getCurrentPanel()->getPlugin('filament-socialite')->getUserModelClass();
+        return $this->getPlugin()->getUserModelClass();
     }
 
     public function getUserModel(): Model
@@ -63,7 +74,10 @@ class FilamentSocialite
 
     public function getUserResolver(): Closure
     {
-        return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where('email', $oauthUser->getEmail())->first();
+        return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where(
+            'email',
+            $oauthUser->getEmail()
+        )->first();
     }
 
     public function setCreateSocialiteUserCallback(Closure $callback = null): static
@@ -89,7 +103,11 @@ class FilamentSocialite
 
     public function getCreateSocialiteUserCallback(): Closure
     {
-        return $this->createSocialiteUserCallback ?? fn (string $provider, SocialiteUserContract $oauthUser, Model $user) => SocialiteUser::create([
+        return $this->createSocialiteUserCallback ?? fn (
+            string $provider,
+            SocialiteUserContract $oauthUser,
+            Model $user
+        ) => SocialiteUser::create([
             'user_id' => $user->getKey(),
             'provider' => $provider,
             'provider_id' => $oauthUser->getId(),
@@ -98,7 +116,10 @@ class FilamentSocialite
 
     public function getCreateUserCallback(): Closure
     {
-        return $this->createUserCallback ?? fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
+        return $this->createUserCallback ?? fn (
+            SocialiteUserContract $oauthUser,
+            FilamentSocialite $socialite
+        ) => $socialite->getUserModelClass()::create([
             'name' => $oauthUser->getName(),
             'email' => $oauthUser->getEmail(),
         ]);

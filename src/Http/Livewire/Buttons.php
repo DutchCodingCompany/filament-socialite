@@ -2,12 +2,19 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Http\Livewire;
 
-use Filament\Facades\Filament;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use Illuminate\Support\MessageBag;
 use Livewire\Component;
 
 class Buttons extends Component
 {
+    protected FilamentSocialite $socialite;
+
+    public function boot(FilamentSocialite $socialite)
+    {
+        $this->socialite = $socialite;
+    }
+
     public function render()
     {
         $messageBag = new MessageBag();
@@ -16,9 +23,8 @@ class Buttons extends Component
         }
 
         return view('filament-socialite::livewire.buttons', [
-            'providers' => Filament::getCurrentPanel()
-                ->getPlugin('filament-socialite')
-                ->getProviders(),
+            'providers' => $this->socialite->getPlugin()->getProviders(),
+            'socialiteRoute' => $this->socialite->getPlugin()->getRoute(),
             'messageBag' => $messageBag,
         ]);
     }

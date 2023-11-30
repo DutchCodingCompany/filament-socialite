@@ -2,6 +2,10 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 1.0.0 - 2023-xx-xx
+- Added support for Filament v3 through the plugin setup
+- Added support for multiple panels
+
 ## 0.2.2 - 2022-06-14
 
 ### What's Changed

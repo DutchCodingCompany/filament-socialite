@@ -16,6 +16,11 @@ Add OAuth login through Laravel Socialite to Filament.
 
 ## Installation
 
+| Filament version | Package version |
+|------------------|-----------------|
+| 3.x              | 1.x.x           |
+| 2.x              | 0.x.x           |
+
 You can install the package via composer:
 
 ```bash
@@ -106,23 +111,6 @@ One can set a callback to customize the following actions:
 
 See [FilamentSocialite.php](src/FilamentSocialite.php).
 
-## Usage
-
-Add the buttons component to your login page, just above the `</form>` closing tag:
-
-```php
-    <x-filament-socialite::buttons />
-</form>
-```
-
-You can publish the login page for **vanilla Filament** by running:
-
-```bash
-php artisan vendor:publish --tag="filament-views"
-```
-
-Which produces a login page at `resources/views/vendor/filament/login.blade.php`.
-
 ### Filament Fortify
 
 This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.
@@ -142,7 +130,7 @@ public function boot()
 
 ### Filament Breezy
 
-This component can also be added while using the [Breezy plugin](https://filamentphp.com/plugins/breezy) plugin.
+This component can also be added while using the [Breezy plugin](https://filamentphp.com/plugins/jeffgreco-breezy) plugin.
 
 You can publish the login page for **Filament Breezy** by running:
 
@@ -151,6 +139,12 @@ php artisan vendor:publish --tag="filament-breezy-views"
 ```
 
 Which produces a login page at `resources/views/vendor/filament-breezy/login.blade.php`.
+
+You can then add the following snippet in your form:
+
+```html
+<x-filament-socialite::buttons />
+```
 
 ## Events
 
