@@ -26,17 +26,11 @@ class FilamentSocialitePlugin implements Plugin
 
     protected ?string $slug = null;
 
+    protected bool $divider = true;
+
     public static function make(): static
     {
         return app(static::class);
-    }
-
-    /**
-     * Get the plugin for the current panel.
-     */
-    public static function get(): static
-    {
-        return filament(static::make()->getId());
     }
 
     public function getId(): string
@@ -46,9 +40,6 @@ class FilamentSocialitePlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        app()->singleton(FilamentSocialite::class);
-        app()->alias(FilamentSocialite::class, 'filament-socialite');
-
         $this->setSlug(Str::slug($panel->getId()));
         $this->setLoginRouteName("filament.{$panel->getId()}.auth.login");
         $this->setDashboardRouteName("filament.{$panel->getId()}.pages.dashboard");
@@ -164,5 +155,17 @@ class FilamentSocialitePlugin implements Plugin
     public function getUserModelClass(): string
     {
         return $this->userModelClass;
+    }
+
+    public function setUseDivider(bool $divider): static
+    {
+        $this->divider = $divider;
+
+        return $this;
+    }
+
+    public function getUseDivider(): bool
+    {
+        return $this->divider;
     }
 }
