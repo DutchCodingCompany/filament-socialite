@@ -26,7 +26,7 @@ class FilamentSocialitePlugin implements Plugin
 
     protected ?string $slug = null;
 
-    protected bool $divider = true;
+    protected bool $showDivider = true;
 
     public static function make(): static
     {
@@ -157,15 +157,15 @@ class FilamentSocialitePlugin implements Plugin
         return $this->userModelClass;
     }
 
-    public function setUseDivider(bool $divider): static
+    public function setShowDivider(bool $divider): static
     {
-        $this->divider = $divider;
+        $this->showDivider = $divider;
 
         return $this;
     }
 
-    public function getUseDivider(): bool
+    public function getShowDivider(): bool
     {
-        return $this->divider;
+        return $this->showDivider;
     }
 }
