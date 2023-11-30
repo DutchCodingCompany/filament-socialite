@@ -123,7 +123,7 @@ public function boot()
     
     Filament::registerRenderHook(
         'filament-fortify.login.end',
-        fn (): string => Blade::render('@livewire(\'filament-socialite.buttons\')'),
+        fn (): string => Blade::render('<x-filament-socialite::buttons />'),
     );
 }
 ```

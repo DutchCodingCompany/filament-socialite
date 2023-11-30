@@ -37,6 +37,7 @@ class FilamentSocialite
 
     public function getPlugin(): FilamentSocialitePlugin
     {
+        /** @var FilamentSocialitePlugin */
         return Filament::getCurrentPanel()->getPlugin('filament-socialite');
     }
 

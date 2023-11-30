@@ -6,8 +6,8 @@ use LogicException;
 
 class ProviderNotConfigured extends LogicException
 {
-    public static function make(string $provider): static
+    public static function make(string $provider): ProviderNotConfigured
     {
-        return new static('Provider "'.$provider.'" is not configured, please configure it in config/services.php.');
+        return new ProviderNotConfigured('Provider "'.$provider.'" is not configured, please configure it in config/services.php.');
     }
 }

@@ -2,10 +2,9 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
-use DutchCodingCompany\FilamentSocialite\Http\Livewire\Buttons;
+use DutchCodingCompany\FilamentSocialite\View\Components\Buttons;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
-use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -22,13 +21,26 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
             ->hasMigration('create_socialite_users_table');
     }
 
+    public function packageRegistered(): void
+    {
+        $this->app->singleton(FilamentSocialite::class);
+        $this->app->alias(FilamentSocialite::class, 'filament-socialite');
+    }
+
     public function packageBooted(): void
     {
-        Livewire::component('filament-socialite.buttons', Buttons::class);
+        Blade::componentNamespace('DutchCodingCompany\FilamentSocialite\View\Components', 'filament-socialite');
+        Blade::component('buttons', Buttons::class);
 
         FilamentView::registerRenderHook(
             'panels::auth.login.form.after',
-            static fn (): string => Blade::render('@livewire(\'filament-socialite.buttons\')'),
+            static function (): ?string {
+                if (! ($panel = filament()->getCurrentPanel())->hasPlugin('filament-socialite')) {
+                    return null;
+                }
+
+                return Blade::render('<x-filament-socialite::buttons :show-divider="'.($panel->getPlugin('filament-socialite')->getShowDivider() ? 'true' : 'false').'" />');
+            },
         );
     }
 }
