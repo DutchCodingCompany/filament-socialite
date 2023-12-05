@@ -1,5 +1,3 @@
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://banners.beyondco.de/Filament%20Socialite.png?theme=dark&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group">
   <img src="https://banners.beyondco.de/Filament%20Socialite.png?theme=light&packageManager=composer+require&packageName=DutchCodingCompany%2Ffilament-socialite&pattern=architect&style=style_1&description=Add+OAuth+login+through+Laravel+Socialite+to+Filament.&md=1&showWatermark=0&fontSize=100px&images=user-group">
@@ -16,32 +14,52 @@ Add OAuth login through Laravel Socialite to Filament.
 
 ## Installation
 
-You can install the package via composer:
+| Filament version | Package version |
+|------------------|-----------------|
+| 3.x              | 1.x.x           |
+| 2.x              | 0.x.x           |
+
+Install the package via composer:
 
 ```bash
 composer require dutchcodingcompany/filament-socialite
 ```
 
-You can publish and run the migrations with:
+Publish and migrate the migration file:
 
 ```bash
 php artisan vendor:publish --tag="filament-socialite-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
-
+Other configuration files include:
 ```bash
 php artisan vendor:publish --tag="filament-socialite-config"
+php artisan vendor:publish --tag="filament-socialite-views"
+php artisan vendor:publish --tag="filament-socialite-translations"
 ```
 
-See the contents of the [config file here](config/filament-socialite.php).
+You need to register the plugin in the Filament panel provider (the default filename is `app/Providers/Filament/AdminPanelProvider.php`). The following options are available:
 
+```php
+->plugin(
+    FilamentSocialitePlugin::make()
+        // (required) Add providers corresponding with providers in `config/services.php`. 
+        ->setProviders([
+            'github' => [
+                'label' => 'GitHub',
+                // Custom icon requires an additional package, see below.
+                'icon' => 'fab-github',
+            ],
+        ])
+        // (optional) Enable or disable registration from OAuth.
+        ->setRegistrationEnabled(true)
+        // (optional) Change the associated model class.
+        ->setUserModelClass(\App\Models\User::class)
+);
+```
 
-### Providers
-
-You should setup the providers with Socialite and/or [Socialite Providers](https://socialiteproviders.com/) and add them
-to the providers array in the `filament-socialite.php` config.
+See [Socialite Providers](https://socialiteproviders.com/) for additional Socialite providers.
 
 ### Icons
 
@@ -66,21 +84,21 @@ $table->string('password')->nullable();
 This package supports the option to limit the users that can login with the OAuth login to users of a certain domain.
 This can be used to setup SSO for internal use.
 
-### Customizing view
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="filament-socialite-views"
+```php
+->plugin(
+    FilamentSocialitePlugin::make()
+        ->setRegistrationEnabled(true)
+        ->setDomainAllowList(['localhost'])
+);
 ```
 
 ### Changing how a (socialite) user is created or retrieved
 
 In your AppServiceProvider.php, add in the boot method
 ```php
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite as FilamentSocialiteFacade;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 // Default
 FilamentSocialiteFacade::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
@@ -96,23 +114,6 @@ One can set a callback to customize the following actions:
 
 See [FilamentSocialite.php](src/FilamentSocialite.php).
 
-## Usage
-
-Add the buttons component to your login page, just above the `</form>` closing tag:
-
-```php
-    <x-filament-socialite::buttons />
-</form>
-```
-
-You can publish the login page for **vanilla Filament** by running:
-
-```bash
-php artisan vendor:publish --tag="filament-views"
-```
-
-Which produces a login page at `resources/views/vendor/filament/login.blade.php`.
-
 ### Filament Fortify
 
 This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.
@@ -125,14 +126,14 @@ public function boot()
     
     Filament::registerRenderHook(
         'filament-fortify.login.end',
-        fn (): string => Blade::render('@livewire(\'filament-socialite.buttons\')'),
+        fn (): string => Blade::render('<x-filament-socialite::buttons />'),
     );
 }
 ```
 
 ### Filament Breezy
 
-This component can also be added while using the [Breezy plugin](https://filamentphp.com/plugins/breezy) plugin.
+This component can also be added while using the [Breezy plugin](https://filamentphp.com/plugins/jeffgreco-breezy) plugin.
 
 You can publish the login page for **Filament Breezy** by running:
 
@@ -141,6 +142,12 @@ php artisan vendor:publish --tag="filament-breezy-views"
 ```
 
 Which produces a login page at `resources/views/vendor/filament-breezy/login.blade.php`.
+
+You can then add the following snippet in your form:
+
+```html
+<x-filament-socialite::buttons />
+```
 
 ## Events
 
@@ -165,9 +172,6 @@ Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTI
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
-
-- [Marco Boers](https://github.com/marcoboers)
-- [Tom Janssen](https://github.com/dododedodonl)
 - [All Contributors](../../contributors)
 
 ## License

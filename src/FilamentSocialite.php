@@ -3,8 +3,10 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use Closure;
+use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
@@ -19,10 +21,24 @@ class FilamentSocialite
 
     protected ?Closure $createUserCallback = null;
 
+    protected FilamentSocialitePlugin $plugin;
+
     public function __construct(
         protected Repository $config,
         protected Factory $auth,
     ) {
+        //
+    }
+
+    public function getPanelId(): string
+    {
+        return Filament::getCurrentPanel()->getId();
+    }
+
+    public function getPlugin(): FilamentSocialitePlugin
+    {
+        /** @var FilamentSocialitePlugin */
+        return Filament::getCurrentPanel()->getPlugin('filament-socialite');
     }
 
     public function isProviderConfigured(string $provider): bool
@@ -39,34 +55,17 @@ class FilamentSocialite
         return $this->config->get('services.'.$provider);
     }
 
-    public function getProviderScopes(string $provider): string|array
+    public function getProviderScopes(string $provider): string | array
     {
         return $this->getProviderConfig($provider)['scopes'] ?? [];
     }
 
-    public function getConfig(): array
-    {
-        return $this->config->get('filament-socialite', []);
-    }
-
-    public function getProviderButtons(): array
-    {
-        return $this->getConfig()['providers'] ?? [];
-    }
-
-    public function getDomainAllowList(): array
-    {
-        return $this->getConfig()['domain_allowlist'] ?? [];
-    }
-
-    public function getLoginRedirectRoute(): string
-    {
-        return $this->getConfig()['login_redirect_route'] ?? 'filament.pages.dashboard';
-    }
-
+    /**
+     * @return class-string<Model>
+     */
     public function getUserModelClass(): string
     {
-        return $this->getConfig()['user_model'] ?? \App\Models\User::class;
+        return $this->getPlugin()->getUserModelClass();
     }
 
     public function getUserModel(): Model
@@ -76,7 +75,10 @@ class FilamentSocialite
 
     public function getUserResolver(): Closure
     {
-        return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where('email', $oauthUser->getEmail())->first();
+        return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where(
+            'email',
+            $oauthUser->getEmail()
+        )->first();
     }
 
     public function setCreateSocialiteUserCallback(Closure $callback = null): static
@@ -102,7 +104,11 @@ class FilamentSocialite
 
     public function getCreateSocialiteUserCallback(): Closure
     {
-        return $this->createSocialiteUserCallback ?? fn (string $provider, SocialiteUserContract $oauthUser, Model $user) => SocialiteUser::create([
+        return $this->createSocialiteUserCallback ?? fn (
+            string $provider,
+            SocialiteUserContract $oauthUser,
+            Model $user
+        ) => SocialiteUser::create([
             'user_id' => $user->getKey(),
             'provider' => $provider,
             'provider_id' => $oauthUser->getId(),
@@ -111,7 +117,10 @@ class FilamentSocialite
 
     public function getCreateUserCallback(): Closure
     {
-        return $this->createUserCallback ?? fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
+        return $this->createUserCallback ?? fn (
+            SocialiteUserContract $oauthUser,
+            FilamentSocialite $socialite
+        ) => $socialite->getUserModelClass()::create([
             'name' => $oauthUser->getName(),
             'email' => $oauthUser->getEmail(),
         ]);
@@ -119,13 +128,14 @@ class FilamentSocialite
 
     public function getGuard(): StatefulGuard
     {
-        return $this->auth->guard(
-            $this->config->get('filament.auth.guard')
+        $guard = $this->auth->guard(
+            $guardName = Filament::getCurrentPanel()->getAuthGuard()
         );
-    }
 
-    public function isRegistrationEnabled(): bool
-    {
-        return $this->getConfig()['registration'] == true;
+        if ($guard instanceof StatefulGuard) {
+            return $guard;
+        }
+
+        throw GuardNotStateful::make($guardName);
     }
 }

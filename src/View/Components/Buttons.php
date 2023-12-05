@@ -2,28 +2,17 @@
 
 namespace DutchCodingCompany\FilamentSocialite\View\Components;
 
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use Illuminate\Support\MessageBag;
 use Illuminate\View\Component;
 
 class Buttons extends Component
 {
-    /**
-     * The alert type.
-     *
-     * @var string
-     */
-    public $providers;
-
-    /**
-     * Create the component instance.
-     *
-     * @param  string  $type
-     * @param  string  $message
-     * @return void
-     */
-    public function __construct(?array $providers = null)
-    {
-        $this->providers = $providers ?? FilamentSocialite::getProviderButtons();
+    public function __construct(
+        protected FilamentSocialite $socialite,
+        public bool $showDivider = true,
+    ) {
+        //
     }
 
     /**
@@ -31,6 +20,16 @@ class Buttons extends Component
      */
     public function render()
     {
-        return view('filament-socialite::components.buttons');
+        $messageBag = new MessageBag();
+
+        if (session()->has('filament-socialite-login-error')) {
+            $messageBag->add('login-failed', session()->pull('filament-socialite-login-error'));
+        }
+
+        return view('filament-socialite::components.buttons', [
+            'providers' => $this->socialite->getPlugin()->getProviders(),
+            'socialiteRoute' => $this->socialite->getPlugin()->getRoute(),
+            'messageBag' => $messageBag,
+        ]);
     }
 }

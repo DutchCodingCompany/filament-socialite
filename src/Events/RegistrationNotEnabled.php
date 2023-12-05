@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Events;
 
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;

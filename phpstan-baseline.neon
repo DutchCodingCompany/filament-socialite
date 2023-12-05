@@ -1,0 +1,16 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Class App\\\\Models\\\\User not found\\.$#"
+			count: 1
+			path: src/FilamentSocialitePlugin.php
+
+		-
+			message: "#^Call to an undefined method Laravel\\\\Socialite\\\\Contracts\\\\Provider\\:\\:with\\(\\)\\.$#"
+			count: 1
+			path: src/Http/Controllers/SocialiteLoginController.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Contracts\\\\Auth\\\\StatefulGuard\\:\\:login\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, Illuminate\\\\Database\\\\Eloquent\\\\Model\\|null given\\.$#"
+			count: 1
+			path: src/Http/Controllers/SocialiteLoginController.php
