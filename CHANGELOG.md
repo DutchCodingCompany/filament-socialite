@@ -2,6 +2,9 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## 1.0.1 - 2023-12-18
+- Resolve plugin registration issue [#54](https://github.com/DutchCodingCompany/filament-socialite/issues/54)
+
 ## 1.0.0 - 2023-12-05
 - Added support for Filament v3 through the plugin setup
 - Added support for multiple panels
