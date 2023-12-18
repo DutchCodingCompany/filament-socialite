@@ -40,9 +40,17 @@ class FilamentSocialitePlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $this->setSlug(Str::slug($panel->getId()));
-        $this->setLoginRouteName("filament.{$panel->getId()}.auth.login");
-        $this->setDashboardRouteName("filament.{$panel->getId()}.pages.dashboard");
+        if ($this->slug === null) {
+            $this->setSlug(Str::slug($panel->getId()));
+        }
+
+        if ($this->loginRouteName === null) {
+            $this->setLoginRouteName("filament.{$panel->getId()}.auth.login");
+        }
+
+        if ($this->dashboardRouteName === null) {
+            $this->setDashboardRouteName("filament.{$panel->getId()}.pages.dashboard");
+        }
     }
 
     public function boot(Panel $panel): void
