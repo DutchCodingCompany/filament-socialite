@@ -50,6 +50,10 @@ You need to register the plugin in the Filament panel provider (the default file
                 'label' => 'GitHub',
                 // Custom icon requires an additional package, see below.
                 'icon' => 'fab-github',
+                // (optional) Button color override, default: 'gray'.
+                'color' => 'primary',
+                // (optional) Button style override, default: true (outlined).
+                'outlined' => false,
             ],
         ])
         // (optional) Enable or disable registration from OAuth.
