@@ -13,16 +13,17 @@ foreach (Filament::getPanels() as $panel) {
     // Retrieve slug for route name.
     $slug = $panel->getPlugin('filament-socialite')->getSlug();
 
-    // Build domain options if they exist.
-    $domains = ! empty($panel->getDomains()) ? '('.collect($panel->getDomains())->join('|').')' : null;
+    $domains = $panel->getDomains();
 
-    Route::domain($domains)
-        ->middleware($panel->getMiddleware())
-        ->name("socialite.$slug.")
-        ->group(function () use ($slug) {
-            Route::get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider'])
-                ->name('oauth.redirect');
-        })->where(['domain' => $domains]);
+    foreach ((empty($domains) ? [null] : $domains) as $domain) {
+        Route::domain($domain)
+            ->middleware($panel->getMiddleware())
+            ->name("socialite.$slug.")
+            ->group(function () use ($slug) {
+                Route::get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider'])
+                    ->name('oauth.redirect');
+            });
+    }
 }
 
 Route::get("/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
