@@ -163,6 +163,20 @@ There are a few events dispatched during the authentication process:
 * `RegistrationNotEnabled`: When a user tries to login with an unknown account and registration is not enabled
 * `InvalidState`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
 
+## Scopes
+
+Scopes should be added in the `services.php` config file. Example
+
+```php
+'provider' => [
+    'client_id' => '...',
+    'client_secret' => '...',
+    'scopes' => [
+        // Add scopes here.
+    ],
+]
+```
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
