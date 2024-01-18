@@ -2,10 +2,17 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
-## 1.0.1 - 2023-12-18
+## [1.1.1 - 2024-01-18](https://github.com/DutchCodingCompany/filament-socialite/compare/1.1.0...1.1.1)
+- Improve domain routing in https://github.com/DutchCodingCompany/filament-socialite/pull/61
+- Update README in https://github.com/DutchCodingCompany/filament-socialite/pull/64
+
+## [1.1.0 - 2024-01-08](https://github.com/DutchCodingCompany/filament-socialite/compare/1.0.1...1.1.0)
+- Add button customization options in https://github.com/DutchCodingCompany/filament-socialite/pull/59
+
+## [1.0.1 - 2023-12-18](https://github.com/DutchCodingCompany/filament-socialite/compare/1.0.0...1.0.1)
 - Resolve plugin registration issue [#54](https://github.com/DutchCodingCompany/filament-socialite/issues/54)
 
-## 1.0.0 - 2023-12-05
+## [1.0.0 - 2023-12-05](https://github.com/DutchCodingCompany/filament-socialite/compare/0.2.2...1.0.0)
 - Added support for Filament v3 through the plugin setup
 - Added support for multiple panels
 - See [UPGRADE.md](UPGRADE.md)
