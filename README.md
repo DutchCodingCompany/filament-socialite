@@ -165,14 +165,16 @@ There are a few events dispatched during the authentication process:
 
 ## Scopes
 
-Scopes should be added in the `services.php` config file. Example
+Scopes should be added in your `config/services.php` config file, for example:
 
 ```php
-'provider' => [
+'github' => [
     'client_id' => '...',
     'client_secret' => '...',
     'scopes' => [
         // Add scopes here.
+        'read:user',
+        'public_repo',
     ],
 ]
 ```
