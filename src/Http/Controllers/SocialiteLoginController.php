@@ -41,8 +41,6 @@ class SocialiteLoginController extends Controller
             ->scopes($this->socialite->getProviderScopes($provider))
             ->redirect();
 
-        dd($redirect);
-
         // Set state value to be equal to the encrypted panel id. This value is used to
         // retrieve the panel id once the authentication returns to our application,
         // and it still prevents CSRF as it is non-guessable value.
