@@ -2,6 +2,9 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [1.2.0 - 2024-01-31](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.1.1...1.2.0)
+- Add option to add optional parameters in https://github.com/DutchCodingCompany/filament-socialite/pull/69
+
 ## [1.1.1 - 2024-01-18](https://github.com/DutchCodingCompany/filament-socialite/compare/1.1.0...1.1.1)
 - Improve domain routing in https://github.com/DutchCodingCompany/filament-socialite/pull/61
 - Update README in https://github.com/DutchCodingCompany/filament-socialite/pull/64
