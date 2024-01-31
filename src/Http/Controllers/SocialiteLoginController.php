@@ -10,6 +10,7 @@ use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
@@ -31,11 +32,16 @@ class SocialiteLoginController extends Controller
         }
 
         $redirect = Socialite::driver($provider)
-            ->with([
-                'state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId()),
-            ])
+            ->with(
+                array_merge(
+                    Arr::except($this->socialite->getOptionalParameters($provider), ['state']),
+                    ['state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId())],
+                )
+            )
             ->scopes($this->socialite->getProviderScopes($provider))
             ->redirect();
+
+        dd($redirect);
 
         // Set state value to be equal to the encrypted panel id. This value is used to
         // retrieve the panel id once the authentication returns to our application,
