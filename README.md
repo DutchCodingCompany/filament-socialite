@@ -179,6 +179,23 @@ Scopes should be added in your `config/services.php` config file, for example:
 ]
 ```
 
+## Optional parameters
+
+You can add [optional parameters](https://laravel.com/docs/10.x/socialite#optional-parameters) to the request by adding a `with` key to the provider configuration in the `config/services.php` config file, for example:
+
+```php
+'github' => [
+    'client_id' => '...',
+    'client_secret' => '...',
+    'with' => [
+        // Add optional parameters here
+        'hd' => 'example.com',
+    ],
+]
+```
+
+**Note:** you cannot use the `state` parameter, as it is used to determine from which Filament panel the user came from.
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
