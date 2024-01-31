@@ -60,6 +60,11 @@ class FilamentSocialite
         return $this->getProviderConfig($provider)['scopes'] ?? [];
     }
 
+    public function getOptionalParameters(string $provider): array
+    {
+        return $this->getProviderConfig($provider)['with'] ?? [];
+    }
+
     /**
      * @return class-string<Model>
      */
