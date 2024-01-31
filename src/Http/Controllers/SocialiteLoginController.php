@@ -32,12 +32,10 @@ class SocialiteLoginController extends Controller
         }
 
         $redirect = Socialite::driver($provider)
-            ->with(
-                array_merge(
-                    Arr::except($this->socialite->getOptionalParameters($provider), ['state']),
-                    ['state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId())],
-                )
-            )
+            ->with([
+                ...$this->socialite->getOptionalParameters($provider),
+                'state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId()),
+            ])
             ->scopes($this->socialite->getProviderScopes($provider))
             ->redirect();
 
