@@ -7,6 +7,7 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
@@ -103,6 +104,11 @@ class SocialiteLoginController extends Controller
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
+
+        $panel = $this->socialite->getPanel();
+        if ($panel->hasTenancy()) {
+            return app()->call($this->socialite->getRedirectTenantCallback(), ['panel' => $panel, 'socialiteUser' => $socialiteUser]);
+        }
 
         // Redirect as intended
         return redirect()->intended(

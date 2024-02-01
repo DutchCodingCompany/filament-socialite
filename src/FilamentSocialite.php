@@ -7,6 +7,7 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Facades\Filament;
+use Filament\Panel;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
@@ -20,6 +21,7 @@ class FilamentSocialite
     protected ?Closure $createSocialiteUserCallback = null;
 
     protected ?Closure $createUserCallback = null;
+    protected ?Closure $redirectTenantCallback = null;
 
     protected FilamentSocialitePlugin $plugin;
 
@@ -39,6 +41,11 @@ class FilamentSocialite
     {
         /** @var FilamentSocialitePlugin */
         return Filament::getCurrentPanel()->getPlugin('filament-socialite');
+    }
+
+    public function getPanel(): Panel
+    {
+        return Filament::getCurrentPanel();
     }
 
     public function isProviderConfigured(string $provider): bool
@@ -142,5 +149,23 @@ class FilamentSocialite
         }
 
         throw GuardNotStateful::make($guardName);
+    }
+
+    public function setRedirectTenantCallback(Closure $callback): static
+    {
+        $this->redirectTenantCallback = $callback;
+
+        return $this;
+    }
+
+    public function getRedirectTenantCallback(): Closure
+    {
+        return $this->redirectTenantCallback ?? function (Panel $panel, SocialiteUser $socialiteUser) {
+            $tenant = Filament::getUserDefaultTenant($socialiteUser->user);
+
+            return redirect()->intended(
+                $panel->getUrl($tenant)
+            );
+        };
     }
 }
