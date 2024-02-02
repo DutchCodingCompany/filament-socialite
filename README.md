@@ -118,6 +118,28 @@ One can set a callback to customize the following actions:
 
 See [FilamentSocialite.php](src/FilamentSocialite.php).
 
+### Multi-tenancy support
+
+When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to there [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant). If you want to change this behavior, you can add the `setRedirectTenantCallback` method in the boot method of your `AppServiceProvider.php`:
+
+```php
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+
+FilamentSocialite::setRedirectTenantCallback(function (Panel $panel, SocialiteUser $socialiteUser) {
+    // Overwrite tentant redirect logic here.
+});
+```
+
+Default logic:
+```php
+$tenant = Filament::getUserDefaultTenant($socialiteUser->user);
+
+return redirect()->intended(
+    $panel->getUrl($tenant)
+);
+```
+
 ### Filament Fortify
 
 This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.
