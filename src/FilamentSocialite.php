@@ -163,6 +163,10 @@ class FilamentSocialite
         return $this->redirectTenantCallback ?? function (Panel $panel, SocialiteUser $socialiteUser) {
             $tenant = Filament::getUserDefaultTenant($socialiteUser->user);
 
+            if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {
+                return redirect()->intended($tenantRegistrationUrl);
+            }
+
             return redirect()->intended(
                 $panel->getUrl($tenant)
             );
