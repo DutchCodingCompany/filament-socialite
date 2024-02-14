@@ -6,7 +6,6 @@ use DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
@@ -57,9 +56,9 @@ class SocialiteLoginController extends Controller
         return null;
     }
 
-    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $user): ?SocialiteUser
+    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $user): ?Model
     {
-        return SocialiteUser::query()
+        return $this->socialite->getSocialiteUserModelClass()::query()
             ->where('provider', $provider)
             ->where('provider_id', $user->getId())
             ->first();
@@ -96,7 +95,7 @@ class SocialiteLoginController extends Controller
         return false;
     }
 
-    protected function loginUser(SocialiteUser $socialiteUser): RedirectResponse
+    protected function loginUser(Model $socialiteUser): RedirectResponse
     {
         // Log the user in
         $this->socialite->getGuard()->login($socialiteUser->user, $this->socialite->getPlugin()->getRememberLogin());

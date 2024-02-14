@@ -5,7 +5,6 @@ namespace DutchCodingCompany\FilamentSocialite;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -43,16 +42,16 @@ class FilamentSocialite
 
     public function isProviderConfigured(string $provider): bool
     {
-        return $this->config->has('services.'.$provider);
+        return $this->config->has('services.' . $provider);
     }
 
     public function getProviderConfig(string $provider): array
     {
-        if (! $this->isProviderConfigured($provider)) {
+        if (!$this->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
-        return $this->config->get('services.'.$provider);
+        return $this->config->get('services.' . $provider);
     }
 
     public function getProviderScopes(string $provider): string | array
@@ -86,6 +85,19 @@ class FilamentSocialite
         )->first();
     }
 
+    /**
+     * @return class-string<Model>
+     */
+    public function getSocialiteUserModelClass(): string
+    {
+        return $this->getPlugin()->getSocialiteUserModelClass();
+    }
+
+    public function getSocialiteUserModel(): Model
+    {
+        return new ($this->getSocialiteUserModelClass());
+    }
+
     public function setCreateSocialiteUserCallback(Closure $callback = null): static
     {
         $this->createSocialiteUserCallback = $callback;
@@ -113,7 +125,7 @@ class FilamentSocialite
             string $provider,
             SocialiteUserContract $oauthUser,
             Model $user
-        ) => SocialiteUser::create([
+        ) => $this->getSocialiteUserModelClass()::create([
             'user_id' => $user->getKey(),
             'provider' => $provider,
             'provider_id' => $oauthUser->getId(),

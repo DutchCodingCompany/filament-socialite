@@ -3,6 +3,7 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use App\Models\User;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,8 @@ class FilamentSocialitePlugin implements Plugin
     protected array $domainAllowList = [];
 
     protected string $userModelClass = User::class;
+
+    protected string $socialiteUserModelClass = SocialiteUser::class;
 
     protected ?string $slug = null;
 
@@ -162,7 +165,25 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function getUserModelClass(): string
     {
-        return $this->userModelClass;
+        return $this->socialiteUserModelClass;
+    }
+
+    /**
+     * @param class-string<Model> $value
+     */
+    public function setSocialiteUserModelClass(string $value): static
+    {
+        $this->socialiteUserModelClass = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return class-string<Model>
+     */
+    public function getSocialiteUserModelClass(): string
+    {
+        return $this->socialiteUserModelClass;
     }
 
     public function setShowDivider(bool $divider): static
