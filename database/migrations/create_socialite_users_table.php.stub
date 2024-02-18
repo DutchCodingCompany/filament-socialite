@@ -10,17 +10,11 @@ return new class extends Migration {
     {
         Schema::create('socialite_users', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('user_id');
+            $table->morphs('user');
             $table->string('provider');
             $table->string('provider_id');
 
             $table->timestamps();
-
-            $table->unique([
-                'provider',
-                'provider_id',
-            ]);
         });
     }
 
