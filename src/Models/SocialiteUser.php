@@ -5,7 +5,7 @@ namespace DutchCodingCompany\FilamentSocialite\Models;
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property int $user_id
@@ -17,13 +17,13 @@ class SocialiteUser extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'user',
         'provider',
         'provider_id',
     ];
 
-    public function user(): BelongsTo
+    public function user(): MorphTo
     {
-        return $this->belongsTo(FilamentSocialite::getUserModelClass());
+        return $this->morphTo();
     }
 }
