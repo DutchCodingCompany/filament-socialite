@@ -43,16 +43,16 @@ class FilamentSocialite
 
     public function isProviderConfigured(string $provider): bool
     {
-        return $this->config->has('services.'.$provider);
+        return $this->config->has('services.' . $provider);
     }
 
     public function getProviderConfig(string $provider): array
     {
-        if (! $this->isProviderConfigured($provider)) {
+        if (!$this->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
-        return $this->config->get('services.'.$provider);
+        return $this->config->get('services.' . $provider);
     }
 
     public function getProviderScopes(string $provider): string | array
@@ -113,11 +113,10 @@ class FilamentSocialite
             string $provider,
             SocialiteUserContract $oauthUser,
             Model $user
-        ) => SocialiteUser::create([
-            'user_id' => $user->getKey(),
-            'provider' => $provider,
-            'provider_id' => $oauthUser->getId(),
-        ]);
+        ) => $user->socials()->updateOrCreate(
+            ['provider' => $provider],
+            ['provider_id' => $oauthUser->getId()]
+        );
     }
 
     public function getCreateUserCallback(): Closure
