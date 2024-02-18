@@ -8,6 +8,7 @@ use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ class SocialiteLoginController extends Controller
 
     public function redirectToProvider(string $provider)
     {
-        if (! $this->socialite->isProviderConfigured($provider)) {
+        if (!$this->socialite->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
@@ -57,11 +58,11 @@ class SocialiteLoginController extends Controller
         return null;
     }
 
-    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $user): ?SocialiteUser
+    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser, User $user): ?SocialiteUser
     {
-        return SocialiteUser::query()
+        return $user->socials()
             ->where('provider', $provider)
-            ->where('provider_id', $user->getId())
+            ->where('provider_id', $oauthUser->getId())
             ->first();
     }
 
@@ -96,10 +97,10 @@ class SocialiteLoginController extends Controller
         return false;
     }
 
-    protected function loginUser(SocialiteUser $socialiteUser): RedirectResponse
+    protected function loginUser(User $user, SocialiteUser $socialiteUser): RedirectResponse
     {
         // Log the user in
-        $this->socialite->getGuard()->login($socialiteUser->user, $this->socialite->getPlugin()->getRememberLogin());
+        $this->socialite->getGuard()->login($user, $this->socialite->getPlugin()->getRememberLogin());
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
@@ -119,61 +120,65 @@ class SocialiteLoginController extends Controller
         Events\SocialiteUserConnected::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($socialiteUser);
+        return $this->loginUser($user, $socialiteUser);
     }
 
     protected function registerOauthUser(string $provider, SocialiteUserContract $oauthUser): RedirectResponse
     {
-        $socialiteUser = DB::transaction(function () use ($provider, $oauthUser) {
+        $userData = DB::transaction(function () use ($provider, $oauthUser) {
             // Create a user
             $user = app()->call($this->socialite->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
             // Create a socialite user
-            return app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
+            $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
+
+            return ['user' => $user, 'social' => $socialiteUser];
         });
 
         // Dispatch the registered event
-        Events\Registered::dispatch($socialiteUser);
+        Events\Registered::dispatch($userData['social']);
 
         // Login the user
-        return $this->loginUser($socialiteUser);
+        return $this->loginUser($userData['user'], $userData['social']);
     }
 
     public function processCallback(string $provider): RedirectResponse
     {
-        if (! $this->socialite->isProviderConfigured($provider)) {
+        if (!$this->socialite->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
         // Try to retrieve existing user
         $oauthUser = $this->retrieveOauthUser($provider);
 
-        if (is_null($oauthUser)) {
+        if (is_null($oauthUser) || is_null($oauthUser->getEmail())) {
             return $this->redirectToLogin('filament-socialite::auth.login-failed');
         }
 
         // Verify if user is allowed
-        if (! $this->isUserAllowed($oauthUser)) {
+        if (!$this->isUserAllowed($oauthUser)) {
             Events\UserNotAllowed::dispatch($oauthUser);
 
             return $this->redirectToLogin('filament-socialite::auth.user-not-allowed');
         }
 
+        // Try to find a user
+        $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
+
         // Try to find a socialite user
-        $socialiteUser = $this->retrieveSocialiteUser($provider, $oauthUser);
-        if ($socialiteUser) {
-            return $this->loginUser($socialiteUser);
+        if ($user) {
+            $socialiteUser = $this->retrieveSocialiteUser($provider, $oauthUser, $user);
+            if ($socialiteUser) {
+                return $this->loginUser($user, $socialiteUser);
+            }
         }
 
         // See if registration is allowed
-        if (! $this->socialite->getPlugin()->getRegistrationEnabled()) {
+        if (!$this->socialite->getPlugin()->getRegistrationEnabled()) {
             Events\RegistrationNotEnabled::dispatch($provider, $oauthUser);
 
             return $this->redirectToLogin('filament-socialite::auth.registration-not-enabled');
         }
-
-        // See if a user already exists, but not for this socialite provider
-        $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
         // Handle registration
         return $user
