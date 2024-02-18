@@ -83,6 +83,17 @@ Or you could opt for customizing the user creation, see below.
 $table->string('password')->nullable();
 ```
 
+Add morphMany relationship to your Authenticable Models
+
+```
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+
+public function socials(): MorphMany
+{
+    return $this->morphMany(SocialiteUser::class, 'user');
+}
+```
+
 ### Domain Allowlist
 
 This package supports the option to limit the users that can login with the OAuth login to users of a certain domain.
