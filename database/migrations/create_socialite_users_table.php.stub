@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create('socialite_users', function (Blueprint $table) {
             $table->id();
-            $table->morphs('user');
+            $table->morphs('authenticatable');
             $table->string('provider');
             $table->string('provider_id');
 

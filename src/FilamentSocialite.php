@@ -5,13 +5,13 @@ namespace DutchCodingCompany\FilamentSocialite;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialite as FilamentSocialiteContract;
 
 class FilamentSocialite
 {
@@ -78,6 +78,9 @@ class FilamentSocialite
         return new ($this->getUserModelClass());
     }
 
+    /**
+     * @return \Closure(): \Illuminate\Contracts\Auth\Authenticatable
+     */
     public function getUserResolver(): Closure
     {
         return $this->userResolver ?? fn (SocialiteUserContract $oauthUser) => $this->getUserModel()->where(
@@ -107,18 +110,24 @@ class FilamentSocialite
         return $this;
     }
 
+    /**
+     * @return \Closure(): SocialiteUserContract
+     */
     public function getCreateSocialiteUserCallback(): Closure
     {
         return $this->createSocialiteUserCallback ?? fn (
             string $provider,
             SocialiteUserContract $oauthUser,
-            Model $user
-        ) => $user->socials()->updateOrCreate(
+            FilamentSocialiteContract $user
+        ) => $user->socialiteUsers()->updateOrCreate(
             ['provider' => $provider],
             ['provider_id' => $oauthUser->getId()]
         );
     }
 
+    /**
+     * @return \Closure(): \Illuminate\Contracts\Auth\Authenticatable
+     */
     public function getCreateUserCallback(): Closure
     {
         return $this->createUserCallback ?? fn (

@@ -65,6 +65,21 @@ You need to register the plugin in the Filament panel provider (the default file
 
 See [Socialite Providers](https://socialiteproviders.com/) for additional Socialite providers.
 
+Lastly, you'll have to prepare your User model by adding the following interface and trait, which
+will add the necessary methods to your model:
+
+```php
+use DutchCodingCompany\FilamentSocialite\Models\Concerns\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialite as FilamentSocialiteContract;
+
+// Add the interface:
+class User extends Authenticatable implements FilamentSocialiteContract
+{
+    // Add the trait:
+    use FilamentSocialite;
+}
+```
+
 ### Icons
 
 You can specify a Blade Icon. You can add Font Awesome brand

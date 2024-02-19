@@ -7,6 +7,7 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,7 @@ use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialite as FilamentSocialiteContract;
 
 class SocialiteLoginController extends Controller
 {
@@ -58,9 +60,9 @@ class SocialiteLoginController extends Controller
         return null;
     }
 
-    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser, User $user): ?SocialiteUser
+    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser, FilamentSocialiteContract $user): ?SocialiteUser
     {
-        return $user->socials()
+        return $user->socialiteUsers()
             ->where('provider', $provider)
             ->where('provider_id', $oauthUser->getId())
             ->first();
@@ -97,10 +99,10 @@ class SocialiteLoginController extends Controller
         return false;
     }
 
-    protected function loginUser(User $user, SocialiteUser $socialiteUser): RedirectResponse
+    protected function loginUser(SocialiteUser $socialiteUser): RedirectResponse
     {
         // Log the user in
-        $this->socialite->getGuard()->login($user, $this->socialite->getPlugin()->getRememberLogin());
+        $this->socialite->getGuard()->login($socialiteUser->authenticatable, $this->socialite->getPlugin()->getRememberLogin());
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
@@ -111,7 +113,7 @@ class SocialiteLoginController extends Controller
         );
     }
 
-    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Model $user): RedirectResponse
+    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
     {
         // Create a socialite user
         $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
@@ -120,26 +122,27 @@ class SocialiteLoginController extends Controller
         Events\SocialiteUserConnected::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($user, $socialiteUser);
+        return $this->loginUser($socialiteUser);
     }
 
     protected function registerOauthUser(string $provider, SocialiteUserContract $oauthUser): RedirectResponse
     {
-        $userData = DB::transaction(function () use ($provider, $oauthUser) {
-            // Create a user
+        $socialiteUser = DB::transaction(function () use ($provider, $oauthUser) {
+            // Create a user.
+            /** @var Authenticatable $user */
             $user = app()->call($this->socialite->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
-            // Create a socialite user
+            // Create a socialite user.
+            /** @var SocialiteUser $socialiteUser */
             $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
 
-            return ['user' => $user, 'social' => $socialiteUser];
+            return $socialiteUser;
         });
 
-        // Dispatch the registered event
-        Events\Registered::dispatch($userData['social']);
+        // Dispatch the registered event.
+        Events\Registered::dispatch($socialiteUser);
 
-        // Login the user
-        return $this->loginUser($userData['user'], $userData['social']);
+        return $this->loginUser($socialiteUser);
     }
 
     public function processCallback(string $provider): RedirectResponse
@@ -169,7 +172,7 @@ class SocialiteLoginController extends Controller
         if ($user) {
             $socialiteUser = $this->retrieveSocialiteUser($provider, $oauthUser, $user);
             if ($socialiteUser) {
-                return $this->loginUser($user, $socialiteUser);
+                return $this->loginUser($socialiteUser);
             }
         }
 
