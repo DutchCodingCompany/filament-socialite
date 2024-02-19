@@ -169,7 +169,7 @@ class SocialiteLoginController extends Controller
         $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
         // See if socialite registration is allowed
-        if ($user && ! $this->socialite->getPlugin()->getSocialiteRegistrationEnabled()) {
+        if ($user && ! ($this->socialite->getPlugin()->getSocialiteRegistrationEnabled() || $this->socialite->getPlugin()->getRegistrationEnabled())) {
             Events\SocialiteRegistrationNotEnabled::dispatch($provider, $oauthUser);
 
             return $this->redirectToLogin('filament-socialite::auth.registration-not-enabled');
