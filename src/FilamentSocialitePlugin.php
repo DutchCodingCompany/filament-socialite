@@ -18,6 +18,8 @@ class FilamentSocialitePlugin implements Plugin
 
     protected bool $rememberLogin = false;
 
+    protected bool $socialiteRegistrationEnabled = false;
+
     protected bool $registrationEnabled = false;
 
     protected array $domainAllowList = [];
@@ -121,6 +123,18 @@ class FilamentSocialitePlugin implements Plugin
     public function getRememberLogin(): bool
     {
         return $this->rememberLogin;
+    }
+
+    public function setSocialiteRegistrationEnabled(bool $value): static
+    {
+        $this->socialiteRegistrationEnabled = $value;
+
+        return $this;
+    }
+
+    public function getSocialiteRegistrationEnabled(): bool
+    {
+        return $this->socialiteRegistrationEnabled;
     }
 
     public function setRegistrationEnabled(bool $value): static

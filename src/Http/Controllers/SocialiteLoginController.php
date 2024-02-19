@@ -165,6 +165,21 @@ class SocialiteLoginController extends Controller
             return $this->loginUser($socialiteUser);
         }
 
+        // See if a user already exists, but not for this socialite provider
+        $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
+
+        // See if socialite registration is allowed
+        if ($user && ! $this->socialite->getPlugin()->getSocialiteRegistrationEnabled()) {
+            Events\SocialiteRegistrationNotEnabled::dispatch($provider, $oauthUser);
+
+            return $this->redirectToLogin('filament-socialite::auth.registration-not-enabled');
+        }
+
+
+        if ($user) {
+            return $this->registerSocialiteUser($provider, $oauthUser, $user);
+        }
+
         // See if registration is allowed
         if (! $this->socialite->getPlugin()->getRegistrationEnabled()) {
             Events\RegistrationNotEnabled::dispatch($provider, $oauthUser);
@@ -172,12 +187,7 @@ class SocialiteLoginController extends Controller
             return $this->redirectToLogin('filament-socialite::auth.registration-not-enabled');
         }
 
-        // See if a user already exists, but not for this socialite provider
-        $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
-
         // Handle registration
-        return $user
-            ? $this->registerSocialiteUser($provider, $oauthUser, $user)
-            : $this->registerOauthUser($provider, $oauthUser);
+        return $this->registerOauthUser($provider, $oauthUser);
     }
 }

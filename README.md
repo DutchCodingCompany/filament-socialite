@@ -58,6 +58,8 @@ You need to register the plugin in the Filament panel provider (the default file
         ])
         // (optional) Enable or disable registration from OAuth.
         ->setRegistrationEnabled(true)
+        // (optional) Enable or disable socialite registration for existing users from OAuth.
+        ->setSocialiteRegistrationEnabled(true)
         // (optional) Change the associated model class.
         ->setUserModelClass(\App\Models\User::class)
 );
