@@ -165,7 +165,7 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function getUserModelClass(): string
     {
-        return $this->socialiteUserModelClass;
+        return $this->userModelClass;
     }
 
     /**
