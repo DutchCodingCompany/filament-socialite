@@ -15,6 +15,8 @@
             </div>
         @endif
 
+        <div class="h-6"></div>
+
         <div class="grid @if(count($providers) > 1) grid-cols-2 @endif gap-4">
             @foreach($providers as $key => $provider)
                 <x-filament::button
