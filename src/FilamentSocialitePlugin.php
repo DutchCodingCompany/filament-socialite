@@ -6,7 +6,6 @@ use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class FilamentSocialitePlugin implements Plugin
@@ -23,8 +22,14 @@ class FilamentSocialitePlugin implements Plugin
 
     protected array $domainAllowList = [];
 
+    /**
+     * @var class-string
+     */
     protected string $userModelClass = User::class;
 
+    /**
+     * @var class-string
+     */
     protected string $socialiteUserModelClass = SocialiteUser::class;
 
     protected ?string $slug = null;
@@ -151,7 +156,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @param class-string<Model> $value
+     * @param class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $value
      */
     public function setUserModelClass(string $value): static
     {
@@ -161,7 +166,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @return class-string<Model>
+     * @return class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable>
      */
     public function getUserModelClass(): string
     {
@@ -169,7 +174,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @param class-string<Model> $value
+     * @param class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser> $value
      */
     public function setSocialiteUserModelClass(string $value): static
     {
@@ -179,7 +184,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @return class-string<Model>
+     * @return class-string<\Illuminate\Database\Eloquent\Model&\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
     public function getSocialiteUserModelClass(): string
     {

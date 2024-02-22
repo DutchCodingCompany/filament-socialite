@@ -5,8 +5,9 @@ namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 use DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class SocialiteLoginController extends Controller
         //
     }
 
-    public function redirectToProvider(string $provider)
+    public function redirectToProvider(string $provider): RedirectResponse
     {
         if (! $this->socialite->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
@@ -56,12 +57,15 @@ class SocialiteLoginController extends Controller
         return null;
     }
 
-    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $user): ?Model
+    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $user): ?FilamentSocialiteUserContract
     {
-        return $this->socialite->getSocialiteUserModelClass()::query()
+        /** @var ?\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $model */
+        $model = $this->socialite->getSocialiteUserModelClass()::query()
             ->where('provider', $provider)
             ->where('provider_id', $user->getId())
             ->first();
+
+        return $model;
     }
 
     protected function redirectToLogin(string $message): RedirectResponse
@@ -95,10 +99,10 @@ class SocialiteLoginController extends Controller
         return false;
     }
 
-    protected function loginUser(Model $socialiteUser): RedirectResponse
+    protected function loginUser(FilamentSocialiteUserContract $socialiteUser): RedirectResponse
     {
         // Log the user in
-        $this->socialite->getGuard()->login($socialiteUser->user, $this->socialite->getPlugin()->getRememberLogin());
+        $this->socialite->getGuard()->login($socialiteUser->getUser(), $this->socialite->getPlugin()->getRememberLogin());
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
@@ -109,7 +113,7 @@ class SocialiteLoginController extends Controller
         );
     }
 
-    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Model $user): RedirectResponse
+    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
     {
         // Create a socialite user
         $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
