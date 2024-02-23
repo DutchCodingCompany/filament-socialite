@@ -48,6 +48,7 @@
     "autoload": {
         "psr-4": {
             "DutchCodingCompany\\FilamentSocialite\\": "src",
+            "DutchCodingCompany\\FilamentSocialite\\Tests\\": "tests",
             "DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\": "database/factories"
         }
     },
