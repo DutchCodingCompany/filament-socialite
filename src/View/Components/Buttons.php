@@ -16,7 +16,7 @@ class Buttons extends Component
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function render()
     {

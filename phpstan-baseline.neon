@@ -1,6 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Property 'email' does not exist in Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable&Illuminate\\\\Database\\\\Eloquent\\\\Model model\\.$#"
+			count: 1
+			path: src/FilamentSocialite.php
+
+		-
+			message: "#^Property 'name' does not exist in Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable&Illuminate\\\\Database\\\\Eloquent\\\\Model model\\.$#"
+			count: 1
+			path: src/FilamentSocialite.php
+
+		-
 			message: "#^Class App\\\\Models\\\\User not found\\.$#"
 			count: 1
 			path: src/FilamentSocialitePlugin.php

@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 interface FilamentSocialiteUser
 {
-    public function getUser(): Model&Authenticatable;
+    public function getUser(): Model & Authenticatable;
 }

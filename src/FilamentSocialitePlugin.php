@@ -3,9 +3,12 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use App\Models\User;
+use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 
 class FilamentSocialitePlugin implements Plugin
@@ -160,6 +163,10 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function setUserModelClass(string $value): static
     {
+        if (! is_a($value, Authenticatable::class, true)) {
+            throw new ImplementationException('The user model class must implement the "\Illuminate\Contracts\Auth\Authenticatable" interface.');
+        }
+
         $this->userModelClass = $value;
 
         return $this;
@@ -178,6 +185,10 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function setSocialiteUserModelClass(string $value): static
     {
+        if (! is_a($value, FilamentSocialiteUser::class, true)) {
+            throw new ImplementationException('The socialite user model class must implement the "\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser" interface.');
+        }
+
         $this->socialiteUserModelClass = $value;
 
         return $this;

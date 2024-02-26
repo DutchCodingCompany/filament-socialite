@@ -32,7 +32,7 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
         return $this->belongsTo(FilamentSocialite::getUserModelClass());
     }
 
-    public function getUser(): Model&Authenticatable
+    public function getUser(): Model & Authenticatable
     {
         return $this->user;
     }

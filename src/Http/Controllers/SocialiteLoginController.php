@@ -95,11 +95,7 @@ class SocialiteLoginController extends Controller
             ->__toString();
 
         // See if everything after @ is in the domains array
-        if (in_array($emailDomain, $domains)) {
-            return true;
-        }
-
-        return false;
+        return (bool) (in_array($emailDomain, $domains));
     }
 
     protected function loginUser(FilamentSocialiteUserContract $socialiteUser): RedirectResponse
