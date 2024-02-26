@@ -15,6 +15,7 @@ class SocialiteLoginTest extends TestCase
 
     public function testLogin(): void
     {
+
         $response = $this
             ->getJson("/$this->panelName/oauth/github")
             ->assertStatus(302);
