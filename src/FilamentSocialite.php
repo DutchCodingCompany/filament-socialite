@@ -43,11 +43,6 @@ class FilamentSocialite
         return Filament::getCurrentPanel()->getPlugin('filament-socialite');
     }
 
-    public function getPanel(): Panel
-    {
-        return Filament::getCurrentPanel();
-    }
-
     public function isProviderConfigured(string $provider): bool
     {
         return $this->config->has('services.'.$provider);
