@@ -49,7 +49,7 @@ class FilamentSocialite
 
     public function getProviderConfig(string $provider): array
     {
-        if (!$this->isProviderConfigured($provider)) {
+        if (! $this->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
