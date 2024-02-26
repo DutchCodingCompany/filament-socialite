@@ -39,7 +39,10 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
                     return null;
                 }
 
-                return Blade::render('<x-filament-socialite::buttons :show-divider="'.($panel->getPlugin('filament-socialite')->getShowDivider() ? 'true' : 'false').'" />');
+                /** @var \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin */
+                $plugin = $panel->getPlugin('filament-socialite');
+
+                return Blade::render('<x-filament-socialite::buttons :show-divider="'.($plugin->getShowDivider() ? 'true' : 'false').'" />');
             },
         );
     }
