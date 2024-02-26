@@ -6,6 +6,6 @@ parameters:
 			path: src/FilamentSocialitePlugin.php
 
 		-
-			message: "#^Call to an undefined method Laravel\\\\Socialite\\\\Contracts\\\\Provider\\:\\:with\\(\\)\\.$#"
+			message: "#^Property DutchCodingCompany\\\\FilamentSocialite\\\\FilamentSocialitePlugin\\:\\:\\$userModelClass \\(class\\-string\\<Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable&Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\) does not accept default value of type string\\.$#"
 			count: 1
-			path: src/Http/Controllers/SocialiteLoginController.php
+			path: src/FilamentSocialitePlugin.php

@@ -30,7 +30,10 @@ class SocialiteLoginController extends Controller
             throw ProviderNotConfigured::make($provider);
         }
 
-        $redirect = Socialite::driver($provider)
+        /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+        $driver = Socialite::driver($provider);
+
+        $redirect = $driver
             ->with([
                 ...$this->socialite->getOptionalParameters($provider),
                 'state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId()),
