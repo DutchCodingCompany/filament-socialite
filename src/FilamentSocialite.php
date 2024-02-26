@@ -48,7 +48,7 @@ class FilamentSocialite
 
     public function getPlugin(): FilamentSocialitePlugin
     {
-        /** @var FilamentSocialitePlugin */
+        /** @var \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin */
         return Filament::getCurrentPanel()->getPlugin('filament-socialite');
     }
 
@@ -95,7 +95,7 @@ class FilamentSocialite
     public function getUserResolver(): Closure
     {
         return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
-            /** @var \Illuminate\Database\Eloquent\Builder<Model&Authenticatable> $query */
+            /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $query */
             $query = $this->getUserModel()->where(
                 'email',
                 $oauthUser->getEmail()
