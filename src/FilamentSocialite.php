@@ -146,6 +146,9 @@ class FilamentSocialite
         throw GuardNotStateful::make($guardName);
     }
 
+    /**
+     * @param \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\SocialiteUser): \Illuminate\Http\RedirectResponse $callback
+     */
     public function setRedirectTenantCallback(Closure $callback): static
     {
         $this->redirectTenantCallback = $callback;
@@ -153,6 +156,9 @@ class FilamentSocialite
         return $this;
     }
 
+    /**
+     * @return \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\SocialiteUser): \Illuminate\Http\RedirectResponse
+     */
     public function getRedirectTenantCallback(): Closure
     {
         return $this->redirectTenantCallback ?? function (Panel $panel, SocialiteUser $socialiteUser) {

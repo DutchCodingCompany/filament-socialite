@@ -106,6 +106,7 @@ class SocialiteLoginController extends Controller
         Events\Login::dispatch($socialiteUser);
 
         $panel = Filament::getCurrentPanel();
+
         if ($panel->hasTenancy()) {
             return app()->call($this->socialite->getRedirectTenantCallback(), ['panel' => $panel, 'socialiteUser' => $socialiteUser]);
         }
