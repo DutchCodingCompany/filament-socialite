@@ -32,7 +32,8 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName
+            fn (
+                string $modelName
             ) => 'DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
 
@@ -77,7 +78,7 @@ class TestCase extends Orchestra
                             ],
                         ])
                         ->setRegistrationEnabled(true)
-                        ->setUserModelClass(TestUser::class)
+                        ->setUserModelClass(TestUser::class),
                 ]),
         );
     }
@@ -87,8 +88,8 @@ class TestCase extends Orchestra
         config()->set('mysql.driver', ':memory:');
 
         config()->set('app.key', 'base64:'.base64_encode(
-                Encrypter::generateKey('AES-256-CBC')
-            ));
+            Encrypter::generateKey('AES-256-CBC')
+        ));
 
         config()->set('services.github', [
             'client_id' => 'abcdmockedabcd',
