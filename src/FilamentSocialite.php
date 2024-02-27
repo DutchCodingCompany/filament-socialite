@@ -22,6 +22,7 @@ class FilamentSocialite
     protected ?Closure $userResolver = null;
 
     /**
+     * @deprecated This function will be removed in the next major version. Use `setSocialiteUserModelClass()` on the plugin options instead, and implement the `FilamentSocialiteUser` contract on your class.
      * @var ?\Closure(string, \Laravel\Socialite\Contracts\User, \Illuminate\Contracts\Auth\Authenticatable): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser
      */
     protected ?Closure $createSocialiteUserCallback = null;
@@ -127,6 +128,7 @@ class FilamentSocialite
     }
 
     /**
+     * @deprecated This function will be removed in the next major version. Use `setSocialiteUserModelClass()` on the plugin options instead, and implement the `FilamentSocialiteUser` contract on your class.
      * @param ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \Illuminate\Contracts\Auth\Authenticatable $user): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $callback
      * @return $this
      */
@@ -152,6 +154,7 @@ class FilamentSocialite
     }
 
     /**
+     * @deprecated This function will be removed in the next major version. Use `setSocialiteUserModelClass()` on the plugin options instead, and implement the `FilamentSocialiteUser` contract on your class.
      * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \Illuminate\Contracts\Auth\Authenticatable $user): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser
      */
     public function getCreateSocialiteUserCallback(): Closure
