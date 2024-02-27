@@ -6,7 +6,7 @@ use App\Models\User;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
-use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Factory;
@@ -122,7 +122,7 @@ class FilamentSocialite
         return $this->getPlugin()->getSocialiteUserModelClass();
     }
 
-    public function getSocialiteUserModel(): FilamentSocialiteUser
+    public function getSocialiteUserModel(): FilamentSocialiteUserContract
     {
         return new ($this->getSocialiteUserModelClass());
     }
@@ -139,6 +139,9 @@ class FilamentSocialite
         return $this;
     }
 
+    /**
+     * @param \Closure(\Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable $callback
+     */
     public function setCreateUserCallback(Closure $callback = null): static
     {
         $this->createUserCallback = $callback;
@@ -146,6 +149,9 @@ class FilamentSocialite
         return $this;
     }
 
+    /**
+     * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable) $callback
+     */
     public function setUserResolver(Closure $callback = null): static
     {
         $this->userResolver = $callback;

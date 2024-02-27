@@ -4,7 +4,7 @@ namespace DutchCodingCompany\FilamentSocialite;
 
 use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
-use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
@@ -203,7 +203,7 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function setSocialiteUserModelClass(string $value): static
     {
-        if (! is_a($value, FilamentSocialiteUser::class, true)) {
+        if (! is_a($value, FilamentSocialiteUserContract::class, true)) {
             throw new ImplementationException('The socialite user model class must implement the "\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser" interface.');
         }
 
