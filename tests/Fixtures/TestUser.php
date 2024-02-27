@@ -13,22 +13,22 @@ class TestUser extends Model implements Authenticatable
 
     public function getAuthIdentifierName()
     {
-        //
+        return 'test-user-auth-identifier-name';
     }
 
     public function getAuthIdentifier()
     {
-        //
+        return 'test-user-auth-identifier';
     }
 
     public function getAuthPassword()
     {
-        //
+        return 'test-user-auth-password';
     }
 
     public function getRememberToken()
     {
-        //
+        return 'test-user-remember-token';
     }
 
     public function setRememberToken($value)
@@ -38,6 +38,6 @@ class TestUser extends Model implements Authenticatable
 
     public function getRememberTokenName()
     {
-        //
+        return 'test-user-remember-token-name';
     }
 }

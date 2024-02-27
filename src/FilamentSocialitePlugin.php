@@ -13,6 +13,9 @@ use Illuminate\Support\Str;
 
 class FilamentSocialitePlugin implements Plugin
 {
+    /**
+     * @var array<string, mixed>
+     */
     protected array $providers = [];
 
     protected ?string $loginRouteName = null;
@@ -23,6 +26,9 @@ class FilamentSocialitePlugin implements Plugin
 
     protected bool $registrationEnabled = false;
 
+    /**
+     * @var array<string>
+     */
     protected array $domainAllowList = [];
 
     /**
@@ -69,6 +75,9 @@ class FilamentSocialitePlugin implements Plugin
         //
     }
 
+    /**
+     * @param array<string, mixed> $providers
+     */
     public function setProviders(array $providers): static
     {
         $this->providers = $providers;
@@ -76,6 +85,9 @@ class FilamentSocialitePlugin implements Plugin
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getProviders(): array
     {
         return $this->providers;
@@ -146,6 +158,9 @@ class FilamentSocialitePlugin implements Plugin
         return $this->registrationEnabled;
     }
 
+    /**
+     * @param array<string> $values
+     */
     public function setDomainAllowList(array $values): static
     {
         $this->domainAllowList = $values;
@@ -153,6 +168,9 @@ class FilamentSocialitePlugin implements Plugin
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getDomainAllowList(): array
     {
         return $this->domainAllowList;

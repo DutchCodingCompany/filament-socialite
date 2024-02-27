@@ -57,6 +57,9 @@ class FilamentSocialite
         return $this->config->has('services.'.$provider);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getProviderConfig(string $provider): array
     {
         if (! $this->isProviderConfigured($provider)) {
@@ -66,11 +69,17 @@ class FilamentSocialite
         return $this->config->get('services.'.$provider);
     }
 
+    /**
+     * @return string|array<string>
+     */
     public function getProviderScopes(string $provider): string | array
     {
         return $this->getProviderConfig($provider)['scopes'] ?? [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getOptionalParameters(string $provider): array
     {
         return $this->getProviderConfig($provider)['with'] ?? [];

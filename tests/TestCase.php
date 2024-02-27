@@ -15,6 +15,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Livewire\LivewireServiceProvider;
@@ -105,7 +106,7 @@ class TestCase extends Orchestra
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__.'/Fixtures');
 
-        $this->artisan('migrate', ['--database' => 'testing'])->run();
+        Artisan::call('migrate', ['--database' => 'testing']);
 
         Schema::table('users', static function (Blueprint $table): void {
             $table->string('password')->nullable()->change();

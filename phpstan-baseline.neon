@@ -1,16 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Property 'email' does not exist in Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable&Illuminate\\\\Database\\\\Eloquent\\\\Model model\\.$#"
-			count: 2
-			path: src/FilamentSocialite.php
-
-		-
-			message: "#^Property 'name' does not exist in Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable&Illuminate\\\\Database\\\\Eloquent\\\\Model model\\.$#"
-			count: 1
-			path: src/FilamentSocialite.php
-
-		-
 			message: "#^Class App\\\\Models\\\\User not found\\.$#"
 			count: 1
 			path: src/FilamentSocialitePlugin.php
@@ -19,3 +9,13 @@ parameters:
 			message: "#^Property DutchCodingCompany\\\\FilamentSocialite\\\\FilamentSocialitePlugin\\:\\:\\$userModelClass \\(class\\-string\\<Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\>\\) does not accept default value of type string\\.$#"
 			count: 1
 			path: src/FilamentSocialitePlugin.php
+
+		-
+			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:andReturn\\(\\)\\.$#"
+			count: 1
+			path: tests/SocialiteLoginTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of static method Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:guessFactoryNamesUsing\\(\\) expects callable\\(class\\-string\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\)\\: class\\-string\\<Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory\\>, Closure\\(string\\)\\: non\\-falsy\\-string given\\.$#"
+			count: 1
+			path: tests/TestCase.php
