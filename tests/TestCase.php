@@ -106,7 +106,7 @@ class TestCase extends Orchestra
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__.'/Fixtures');
 
-        Artisan::call('migrate', ['--database' => 'testing']);
+        $this->artisan('migrate', ['--database' => 'testing'])->run();
 
         Schema::table('users', static function (Blueprint $table): void {
             $table->string('password')->nullable()->change();

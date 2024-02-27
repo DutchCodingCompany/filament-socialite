@@ -60,15 +60,9 @@ class SocialiteLoginController extends Controller
         return null;
     }
 
-    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $user): ?FilamentSocialiteUserContract
+    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser): ?FilamentSocialiteUserContract
     {
-        /** @var ?\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $model */
-        $model = $this->socialite->getSocialiteUserModelClass()::query()
-            ->where('provider', $provider)
-            ->where('provider_id', $user->getId())
-            ->first();
-
-        return $model;
+        return $this->socialite->getSocialiteUserModel()::findForProvider($provider, $oauthUser);
     }
 
     protected function redirectToLogin(string $message): RedirectResponse
@@ -95,7 +89,7 @@ class SocialiteLoginController extends Controller
             ->__toString();
 
         // See if everything after @ is in the domains array
-        return (bool) (in_array($emailDomain, $domains));
+        return in_array($emailDomain, $domains);
     }
 
     protected function loginUser(FilamentSocialiteUserContract $socialiteUser): RedirectResponse

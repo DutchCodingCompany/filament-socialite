@@ -37,7 +37,7 @@ class FilamentSocialitePlugin implements Plugin
     protected string $userModelClass = User::class;
 
     /**
-     * @var class-string<\Illuminate\Database\Eloquent\Model&\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
+     * @var class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
     protected string $socialiteUserModelClass = SocialiteUser::class;
 
@@ -199,7 +199,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @param class-string<\Illuminate\Database\Eloquent\Model&\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser> $value
+     * @param class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser> $value
      */
     public function setSocialiteUserModelClass(string $value): static
     {
@@ -213,7 +213,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @return class-string<\Illuminate\Database\Eloquent\Model&\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
+     * @return class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
     public function getSocialiteUserModelClass(): string
     {

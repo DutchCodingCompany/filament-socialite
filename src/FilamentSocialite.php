@@ -12,7 +12,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Database\Eloquent\Model;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class FilamentSocialite
@@ -115,14 +114,14 @@ class FilamentSocialite
     }
 
     /**
-     * @return class-string<\Illuminate\Database\Eloquent\Model&\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
+     * @return class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
     public function getSocialiteUserModelClass(): string
     {
         return $this->getPlugin()->getSocialiteUserModelClass();
     }
 
-    public function getSocialiteUserModel(): Model & FilamentSocialiteUser
+    public function getSocialiteUserModel(): FilamentSocialiteUser
     {
         return new ($this->getSocialiteUserModelClass());
     }
@@ -157,21 +156,12 @@ class FilamentSocialite
      */
     public function getCreateSocialiteUserCallback(): Closure
     {
-        return function (
+        return $this->createSocialiteUserCallback ?? function (
             string $provider,
             SocialiteUserContract $oauthUser,
             Authenticatable $user,
         ) {
-            /**
-             * @var \Illuminate\Database\Eloquent\Builder<\DutchCodingCompany\FilamentSocialite\Models\SocialiteUser> $query
-             */
-            $query = $this->getSocialiteUserModel()->query();
-
-            return $query->create([
-                'user_id' => $user->getKey(),
-                'provider' => $provider,
-                'provider_id' => $oauthUser->getId(),
-            ]);
+            return $this->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
         };
     }
 

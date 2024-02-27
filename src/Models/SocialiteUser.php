@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 /**
  * @property int $user_id
@@ -32,8 +33,26 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
         return $this->belongsTo(FilamentSocialite::getUserModelClass());
     }
 
-    public function getUser(): Model & Authenticatable
+    public function getUser(): Authenticatable
     {
         return $this->user;
+    }
+
+    public static function findForProvider(string $provider, SocialiteUserContract $oauthUser): ?self
+    {
+        return self::query()
+            ->where('provider', $provider)
+            ->where('provider_id', $oauthUser->getId())
+            ->first();
+    }
+
+    public static function createForProvider(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): self
+    {
+        return self::query()
+            ->create([
+                'user_id' => $user->getKey(),
+                'provider' => $provider,
+                'provider_id' => $oauthUser->getId(),
+            ]);
     }
 }
