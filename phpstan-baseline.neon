@@ -2,7 +2,7 @@ parameters:
 	ignoreErrors:
 		-
 			message: "#^Property 'email' does not exist in Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable&Illuminate\\\\Database\\\\Eloquent\\\\Model model\\.$#"
-			count: 1
+			count: 2
 			path: src/FilamentSocialite.php
 
 		-
@@ -16,6 +16,6 @@ parameters:
 			path: src/FilamentSocialitePlugin.php
 
 		-
-			message: "#^Property DutchCodingCompany\\\\FilamentSocialite\\\\FilamentSocialitePlugin\\:\\:\\$userModelClass \\(class\\-string\\<Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable&Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\) does not accept default value of type string\\.$#"
+			message: "#^Property DutchCodingCompany\\\\FilamentSocialite\\\\FilamentSocialitePlugin\\:\\:\\$userModelClass \\(class\\-string\\<Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\>\\) does not accept default value of type string\\.$#"
 			count: 1
 			path: src/FilamentSocialitePlugin.php

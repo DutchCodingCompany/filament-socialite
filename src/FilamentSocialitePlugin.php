@@ -26,7 +26,7 @@ class FilamentSocialitePlugin implements Plugin
     protected array $domainAllowList = [];
 
     /**
-     * @var class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable>
+     * @var class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
     protected string $userModelClass = User::class;
 
@@ -159,7 +159,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @param class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $value
+     * @param class-string<\Illuminate\Contracts\Auth\Authenticatable> $value
      */
     public function setUserModelClass(string $value): static
     {
@@ -173,7 +173,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @return class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable>
+     * @return class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
     public function getUserModelClass(): string
     {

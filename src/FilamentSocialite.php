@@ -77,14 +77,14 @@ class FilamentSocialite
     }
 
     /**
-     * @return class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable>
+     * @return class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
     public function getUserModelClass(): string
     {
         return $this->getPlugin()->getUserModelClass();
     }
 
-    public function getUserModel(): Model & Authenticatable
+    public function getUserModel(): Authenticatable
     {
         return new ($this->getUserModelClass());
     }
@@ -95,13 +95,13 @@ class FilamentSocialite
     public function getUserResolver(): Closure
     {
         return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
-            /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $query */
-            $query = $this->getUserModel()->where(
+            /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $model */
+            $model = $this->getUserModel();
+
+            return $model->where(
                 'email',
                 $oauthUser->getEmail()
-            );
-
-            return $query->first();
+            )->first();
         };
     }
 
