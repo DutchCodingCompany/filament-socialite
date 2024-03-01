@@ -60,6 +60,8 @@ You need to register the plugin in the Filament panel provider (the default file
         ->setRegistrationEnabled(true)
         // (optional) Change the associated model class.
         ->setUserModelClass(\App\Models\User::class)
+        // (optional) Change the associated socialite class (see below).
+        ->setSocialiteUserModelClass(\App\Models\SocialiteUser::class)
 );
 ```
 
@@ -96,9 +98,9 @@ This can be used to setup SSO for internal use.
 );
 ```
 
-### Changing how a (socialite) user is created or retrieved
+### Changing how an Authenticatable user is created or retrieved
 
-In your AppServiceProvider.php, add in the boot method
+In your AppServiceProvider.php, add in the boot method:
 ```php
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite as FilamentSocialiteFacade;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
@@ -109,14 +111,51 @@ FilamentSocialiteFacade::setCreateUserCallback(fn (SocialiteUserContract $oauthU
     'name' => $oauthUser->getName(),
     'email' => $oauthUser->getEmail(),
 ]));
+
+FilamentSocialiteFacade::setUserResolver(fn (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => /* ... */);
 ```
 
-One can set a callback to customize the following actions:
-* Create the filament user: `FilamentSocialite::setCreateUserCallback()`
-* Create the socialite user: `FilamentSocialite::setCreateSocialiteUserCallback()`
-* Resolve the regular user: `FilamentSocialite::setUserResolver()`
+### Change how a Socialite user is created or retrieved
 
-See [FilamentSocialite.php](src/FilamentSocialite.php).
+In your plugin options in your Filament panel, add the following method:
+```php
+// app/Providers/Filament/AdminPanelProvider.php
+->plugins([
+    FilamentSocialitePlugin::make()
+        // ...
+        ->setSocialiteUserModelClass(\App\Models\SocialiteUser::class)
+```
+
+This class should at the minimum implement the [`FilamentSocialiteUser`](/src/Models/Contracts/FilamentSocialiteUser.php) interface, like so:
+
+```php
+namespace App\Models;
+
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+
+class SocialiteUser implements FilamentSocialiteUserContract
+{
+    public function getUser(): Authenticatable
+    {
+        //
+    }
+
+    public static function findForProvider(string $provider, SocialiteUserContract $oauthUser): ?self
+    {
+        //
+    }
+    
+    public static function createForProvider(
+        string $provider,
+        SocialiteUserContract $oauthUser,
+        Authenticatable $user
+    ): self {
+        //
+    }
+}
+```
 
 ### Filament Fortify
 
@@ -157,11 +196,12 @@ You can then add the following snippet in your form:
 
 There are a few events dispatched during the authentication process:
 
-* `Login`: When a user successfully logs in
-* `Registered`: When a user is successfully registered and logged in (when enabled in config)
-* `UserNotAllowed`: When a user tries to login with an email which domain is not on the allowlist
-* `RegistrationNotEnabled`: When a user tries to login with an unknown account and registration is not enabled
-* `InvalidState`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
+* `InvalidState(InvalidStateException $exception)`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
+* `Login(FilamentSocialiteUserContract $socialiteUser)`: When a user successfully logs in
+* `Registered(FilamentSocialiteUserContract $socialiteUser)`: When a user and socialite user is successfully registered and logged in (when enabled in config)
+* `RegistrationNotEnabled(string $provider, SocialiteUserContract $oauthUser)`: When a user tries to login with an unknown account and registration is not enabled
+* `SocialiteUserConnected(FilamentSocialiteUserContract $socialiteUser)`: When a socialite user is created for an existing user
+* `UserNotAllowed(SocialiteUserContract $oauthUser)`: When a user tries to login with an email which domain is not on the allowlist
 
 ## Scopes
 

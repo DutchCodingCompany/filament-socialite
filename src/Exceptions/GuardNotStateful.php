@@ -6,8 +6,8 @@ use LogicException;
 
 class GuardNotStateful extends LogicException
 {
-    public static function make(string $guard): GuardNotStateful
+    public static function make(string $guard): self
     {
-        return new GuardNotStateful('Guard "'.$guard.'" is not stateful.');
+        return new self('Guard "'.$guard.'" is not stateful.');
     }
 }

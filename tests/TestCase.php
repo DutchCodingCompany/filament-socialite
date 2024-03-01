@@ -15,6 +15,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Livewire\LivewireServiceProvider;
@@ -33,7 +34,7 @@ class TestCase extends Orchestra
 
         Factory::guessFactoryNamesUsing(
             fn (
-                string $modelName
+                string $modelName,
             ) => 'DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
 

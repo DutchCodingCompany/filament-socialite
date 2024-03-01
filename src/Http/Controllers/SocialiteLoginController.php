@@ -6,8 +6,8 @@ use DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
-use Illuminate\Database\Eloquent\Model;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -24,13 +24,16 @@ class SocialiteLoginController extends Controller
         //
     }
 
-    public function redirectToProvider(string $provider)
+    public function redirectToProvider(string $provider): RedirectResponse
     {
         if (! $this->socialite->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
-        $redirect = Socialite::driver($provider)
+        /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+        $driver = Socialite::driver($provider);
+
+        $redirect = $driver
             ->with([
                 ...$this->socialite->getOptionalParameters($provider),
                 'state' => $state = PanelFromUrlQuery::encrypt($this->socialite->getPanelId()),
@@ -57,12 +60,9 @@ class SocialiteLoginController extends Controller
         return null;
     }
 
-    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $user): ?SocialiteUser
+    protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser): ?FilamentSocialiteUserContract
     {
-        return SocialiteUser::query()
-            ->where('provider', $provider)
-            ->where('provider_id', $user->getId())
-            ->first();
+        return $this->socialite->getSocialiteUserModel()::findForProvider($provider, $oauthUser);
     }
 
     protected function redirectToLogin(string $message): RedirectResponse
@@ -89,17 +89,13 @@ class SocialiteLoginController extends Controller
             ->__toString();
 
         // See if everything after @ is in the domains array
-        if (in_array($emailDomain, $domains)) {
-            return true;
-        }
-
-        return false;
+        return in_array($emailDomain, $domains);
     }
 
-    protected function loginUser(SocialiteUser $socialiteUser): RedirectResponse
+    protected function loginUser(FilamentSocialiteUserContract $socialiteUser): RedirectResponse
     {
         // Log the user in
-        $this->socialite->getGuard()->login($socialiteUser->user, $this->socialite->getPlugin()->getRememberLogin());
+        $this->socialite->getGuard()->login($socialiteUser->getUser(), $this->socialite->getPlugin()->getRememberLogin());
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
@@ -110,7 +106,7 @@ class SocialiteLoginController extends Controller
         );
     }
 
-    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Model $user): RedirectResponse
+    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
     {
         // Create a socialite user
         $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
