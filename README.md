@@ -159,24 +159,25 @@ class SocialiteUser implements FilamentSocialiteUserContract
 
 ### Multi-tenancy support
 
-When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant). If you want to change this behavior, you can add the `setRedirectTenantCallback` method in the boot method of your `AppServiceProvider.php`:
+When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).
+If you want to change this behavior, you can add the `setRedirectTenantCallback` method in the boot method of your `AppServiceProvider.php`:
 
 ```php
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 
-FilamentSocialite::setRedirectTenantCallback(function (Panel $panel, SocialiteUser $socialiteUser) {
-    // Overwrite tentant redirect logic here.
+FilamentSocialite::setRedirectTenantCallback(function (Panel $panel, FilamentSocialiteUserContract $socialiteUser) {
+    // (default logic below, adjust to your own usecase):
+    $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
+
+    if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {
+        return redirect()->intended($tenantRegistrationUrl);
+    }
+
+    return redirect()->intended(
+        $panel->getUrl($tenant)
+    );
 });
-```
-
-Default logic:
-```php
-$tenant = Filament::getUserDefaultTenant($socialiteUser->user);
-
-return redirect()->intended(
-    $panel->getUrl($tenant)
-);
 ```
 
 ### Filament Fortify
