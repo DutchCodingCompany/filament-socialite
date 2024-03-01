@@ -7,6 +7,7 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use Filament\Support\Concerns\EvaluatesClosures;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
@@ -18,6 +19,8 @@ use Laravel\Socialite\Two\InvalidStateException;
 
 class SocialiteLoginController extends Controller
 {
+    use EvaluatesClosures;
+
     public function __construct(
         protected FilamentSocialite $socialite,
     ) {
@@ -161,15 +164,19 @@ class SocialiteLoginController extends Controller
             return $this->loginUser($socialiteUser);
         }
 
+        // See if a user already exists, but not for this socialite provider
+        $user = app()->call($this->socialite->getUserResolver(), [
+            'provider' => $provider,
+            'oauthUser' => $oauthUser,
+            'socialite' => $this->socialite,
+        ]);
+
         // See if registration is allowed
-        if (! $this->socialite->getPlugin()->getRegistrationEnabled()) {
-            Events\RegistrationNotEnabled::dispatch($provider, $oauthUser);
+        if (! $this->evaluate($this->socialite->getPlugin()->getRegistrationEnabled(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user])) {
+            Events\RegistrationNotEnabled::dispatch($provider, $oauthUser, $user);
 
             return $this->redirectToLogin('filament-socialite::auth.registration-not-enabled');
         }
-
-        // See if a user already exists, but not for this socialite provider
-        $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
         // Handle registration
         return $user

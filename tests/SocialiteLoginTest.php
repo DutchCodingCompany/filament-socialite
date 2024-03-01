@@ -2,12 +2,20 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
+use Closure;
+use DutchCodingCompany\FilamentSocialite\Events\RegistrationNotEnabled;
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Laravel\Socialite\Contracts\Provider;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SocialiteLoginTest extends TestCase
 {
@@ -54,5 +62,61 @@ class SocialiteLoginTest extends TestCase
             'name' => 'test-socialite-user-name',
             'email' => 'test@example.com',
         ]);
+    }
+
+    #[DataProvider('registrationBlockProvider')]
+    public function testRegistrationBlock(bool $createUser, Closure | bool $registrationEnabled): void
+    {
+        Event::fake();
+
+        if ($createUser) {
+            DB::table('users')->insert([
+                'name' => 'test-user',
+                'email' => 'test@example.com',
+            ]);
+        }
+
+        FilamentSocialite::getPlugin()->setRegistrationEnabled($registrationEnabled);
+
+        $this
+            ->getJson("/$this->panelName/oauth/github")
+            ->assertStatus(302);
+
+        Socialite::shouldReceive('driver')
+            ->with('github')
+            ->andReturn(
+                Mockery::mock(Provider::class)
+                    ->shouldReceive('user')
+                    ->andReturn(new TestSocialiteUser())
+                    ->getMock()
+            );
+
+        $state = session()->get('state');
+
+        // Fake oauth response.
+        $this
+            ->getJson("/oauth/callback/github?state=$state")
+            ->assertStatus(302);
+
+        if (! $createUser) {
+            // If there is no user, the event should have been dispatched since the plugin option disabled registration.
+            Event::assertDispatched(RegistrationNotEnabled::class);
+        }
+    }
+
+    /**
+     * @return array<string, array<mixed>>
+     */
+    public static function registrationBlockProvider(): array
+    {
+        $callback = function (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) {
+            return (bool) $user;
+        };
+
+        return [
+            'Authenticatable exists for socialite user' => [true, $callback],
+            'Authenticatable does not exist for socialite user' => [false, $callback],
+            'Registration is always blocked' => [true, false],
+        ];
     }
 }

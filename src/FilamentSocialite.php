@@ -17,18 +17,18 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 class FilamentSocialite
 {
     /**
-     * @var ?\Closure(string, \Laravel\Socialite\Contracts\User, \DutchCodingCompany\FilamentSocialite\FilamentSocialite): ?(\Illuminate\Contracts\Auth\Authenticatable)
+     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable)
      */
     protected ?Closure $userResolver = null;
 
     /**
      * @deprecated This function will be removed in the next major version. Use `setSocialiteUserModelClass()` on the plugin options instead, and implement the `FilamentSocialiteUser` contract on your class.
-     * @var ?\Closure(string, \Laravel\Socialite\Contracts\User, \Illuminate\Contracts\Auth\Authenticatable): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser
+     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \Illuminate\Contracts\Auth\Authenticatable $user): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser
      */
     protected ?Closure $createSocialiteUserCallback = null;
 
     /**
-     * @var ?\Closure(\Laravel\Socialite\Contracts\User, self): \Illuminate\Contracts\Auth\Authenticatable
+     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
      */
     protected ?Closure $createUserCallback = null;
 
@@ -140,7 +140,7 @@ class FilamentSocialite
     }
 
     /**
-     * @param \Closure(\Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable $callback
+     * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable $callback
      */
     public function setCreateUserCallback(Closure $callback = null): static
     {
@@ -175,11 +175,12 @@ class FilamentSocialite
     }
 
     /**
-     * @return \Closure(\Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
+     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
      */
     public function getCreateUserCallback(): Closure
     {
         return $this->createUserCallback ?? function (
+            string $provider,
             SocialiteUserContract $oauthUser,
             FilamentSocialite $socialite,
         ) {
