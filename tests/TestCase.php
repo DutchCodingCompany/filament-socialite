@@ -28,6 +28,16 @@ class TestCase extends Orchestra
 
     protected string $panelName = 'testpanel';
 
+    /**
+     * @var class-string<\Illuminate\Contracts\Auth\Authenticatable>
+     */
+    protected string $userModelClass = TestUser::class;
+
+    /**
+     * @var array{0: ?string, 1?: ?string, 2?: ?string}
+     */
+    protected array $tenantArguments = [null];
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +70,7 @@ class TestCase extends Orchestra
                 ->default()
                 ->id($this->panelName)
                 ->path($this->panelName)
+                ->tenant(...$this->tenantArguments)
                 ->login()
                 ->pages([
                     Dashboard::class,
@@ -79,7 +90,7 @@ class TestCase extends Orchestra
                             ],
                         ])
                         ->setRegistrationEnabled(true)
-                        ->setUserModelClass(TestUser::class),
+                        ->setUserModelClass($this->userModelClass),
                 ]),
         );
     }

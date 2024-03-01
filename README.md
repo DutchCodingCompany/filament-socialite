@@ -164,6 +164,22 @@ class SocialiteUser implements FilamentSocialiteUserContract
 }
 ```
 
+### Change login redirect
+
+When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).
+If you want to change this behavior, you can add the `setLoginRedirectCallback` method in the boot method of your `AppServiceProvider.php`:
+
+```php
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+
+FilamentSocialite::setLoginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
+    return redirect()->intended(
+        route(FilamentSocialite::getPlugin()->getDashboardRouteName())
+    );
+});
+```
+
 ### Filament Fortify
 
 This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.

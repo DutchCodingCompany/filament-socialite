@@ -95,7 +95,7 @@ class SocialiteLoginController extends Controller
         return in_array($emailDomain, $domains);
     }
 
-    protected function loginUser(FilamentSocialiteUserContract $socialiteUser): RedirectResponse
+    protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser): RedirectResponse
     {
         // Log the user in
         $this->socialite->getGuard()->login($socialiteUser->getUser(), $this->socialite->getPlugin()->getRememberLogin());
@@ -103,10 +103,7 @@ class SocialiteLoginController extends Controller
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
 
-        // Redirect as intended
-        return redirect()->intended(
-            route($this->socialite->getPlugin()->getDashboardRouteName())
-        );
+        return app()->call($this->socialite->getLoginRedirectCallback(), ['provider' => $provider, 'socialiteUser' => $socialiteUser]);
     }
 
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
@@ -118,7 +115,7 @@ class SocialiteLoginController extends Controller
         Events\SocialiteUserConnected::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($socialiteUser);
+        return $this->loginUser($provider, $socialiteUser);
     }
 
     protected function registerOauthUser(string $provider, SocialiteUserContract $oauthUser): RedirectResponse
@@ -135,7 +132,7 @@ class SocialiteLoginController extends Controller
         Events\Registered::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($socialiteUser);
+        return $this->loginUser($provider, $socialiteUser);
     }
 
     public function processCallback(string $provider): RedirectResponse
@@ -161,7 +158,7 @@ class SocialiteLoginController extends Controller
         // Try to find a socialite user
         $socialiteUser = $this->retrieveSocialiteUser($provider, $oauthUser);
         if ($socialiteUser) {
-            return $this->loginUser($socialiteUser);
+            return $this->loginUser($provider, $socialiteUser);
         }
 
         // See if a user already exists, but not for this socialite provider
