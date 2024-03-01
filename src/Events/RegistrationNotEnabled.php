@@ -2,6 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Events;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
@@ -19,6 +20,7 @@ class RegistrationNotEnabled
     public function __construct(
         public string $provider,
         public SocialiteUserContract $oauthUser,
+        public ?Authenticatable $user,
     ) {
     }
 }

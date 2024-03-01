@@ -3,6 +3,7 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use App\Models\User;
+use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
@@ -24,7 +25,10 @@ class FilamentSocialitePlugin implements Plugin
 
     protected bool $rememberLogin = false;
 
-    protected bool $registrationEnabled = false;
+    /**
+     * @phpstan-var (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
+     */
+    protected Closure | bool $registrationEnabled = false;
 
     /**
      * @var array<string>
@@ -146,14 +150,21 @@ class FilamentSocialitePlugin implements Plugin
         return $this->rememberLogin;
     }
 
-    public function setRegistrationEnabled(bool $value): static
+    /**
+     * @param (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool $value
+     * @return $this
+     */
+    public function setRegistrationEnabled(Closure | bool $value): static
     {
         $this->registrationEnabled = $value;
 
         return $this;
     }
 
-    public function getRegistrationEnabled(): bool
+    /**
+     * @return (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
+     */
+    public function getRegistrationEnabled(): Closure | bool
     {
         return $this->registrationEnabled;
     }

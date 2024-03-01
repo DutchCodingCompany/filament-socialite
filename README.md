@@ -42,6 +42,10 @@ php artisan vendor:publish --tag="filament-socialite-translations"
 You need to register the plugin in the Filament panel provider (the default filename is `app/Providers/Filament/AdminPanelProvider.php`). The following options are available:
 
 ```php
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+use Illuminate\Contracts\Auth\Authenticatable;
+
+// ...
 ->plugin(
     FilamentSocialitePlugin::make()
         // (required) Add providers corresponding with providers in `config/services.php`. 
@@ -56,8 +60,11 @@ You need to register the plugin in the Filament panel provider (the default file
                 'outlined' => false,
             ],
         ])
-        // (optional) Enable or disable registration from OAuth.
+        // (optional) Enable/disable registration of new (socialite-) users.
         ->setRegistrationEnabled(true)
+        // (optional) Enable/disable registration of new (socialite-) users using a callback.
+        // In this example, a login flow can only continue if there exists a user (Authenticatable) already.
+        ->setRegistrationEnabled(fn (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) => (bool) $user)
         // (optional) Change the associated model class.
         ->setUserModelClass(\App\Models\User::class)
         // (optional) Change the associated socialite class (see below).
