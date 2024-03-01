@@ -8,8 +8,8 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Facades\Filament;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
@@ -32,7 +32,6 @@ class FilamentSocialite
      * @var ?\Closure(\Laravel\Socialite\Contracts\User, self): \Illuminate\Contracts\Auth\Authenticatable
      */
     protected ?Closure $createUserCallback = null;
-
 
     /**
      * @phpstan-var ?\Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
