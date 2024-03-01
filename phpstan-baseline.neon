@@ -6,11 +6,21 @@ parameters:
 			path: src/FilamentSocialitePlugin.php
 
 		-
-			message: "#^Call to an undefined method Laravel\\\\Socialite\\\\Contracts\\\\Provider\\:\\:with\\(\\)\\.$#"
+			message: "#^Property DutchCodingCompany\\\\FilamentSocialite\\\\FilamentSocialitePlugin\\:\\:\\$userModelClass \\(class\\-string\\<Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\>\\) does not accept default value of type string\\.$#"
 			count: 1
-			path: src/Http/Controllers/SocialiteLoginController.php
+			path: src/FilamentSocialitePlugin.php
 
 		-
-			message: "#^Parameter \\#1 \\$user of method Illuminate\\\\Contracts\\\\Auth\\\\StatefulGuard\\:\\:login\\(\\) expects Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable, Illuminate\\\\Database\\\\Eloquent\\\\Model\\|null given\\.$#"
+			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:andReturn\\(\\)\\.$#"
 			count: 1
-			path: src/Http/Controllers/SocialiteLoginController.php
+			path: tests/SocialiteLoginTest.php
+
+		-
+			message: "#^Cannot call method run\\(\\) on Illuminate\\\\Testing\\\\PendingCommand\\|int\\.$#"
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of static method Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:guessFactoryNamesUsing\\(\\) expects callable\\(class\\-string\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\)\\: class\\-string\\<Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory\\>, Closure\\(string\\)\\: non\\-falsy\\-string given\\.$#"
+			count: 1
+			path: tests/TestCase.php

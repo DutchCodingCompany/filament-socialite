@@ -34,12 +34,10 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.8",
+        "larastan/larastan": "^2.9",
         "nunomaduro/collision": "^7.0",
         "nunomaduro/larastan": "^2.0.1",
         "orchestra/testbench": "^8.0",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
         "phpunit/phpunit": "^10.0"
     },
     "suggest": {

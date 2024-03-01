@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \DutchCodingCompany\FilamentSocialite\FilamentSocialite
- * @method static string getUserModelClass()
  */
 class FilamentSocialite extends Facade
 {
