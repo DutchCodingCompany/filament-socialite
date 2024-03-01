@@ -34,7 +34,7 @@ class FilamentSocialite
     protected ?Closure $createUserCallback = null;
 
     /**
-     * @phpstan-var ?\Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
+     * @phpstan-var ?\Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
      */
     protected ?Closure $loginRedirectCallback = null;
 
@@ -215,7 +215,7 @@ class FilamentSocialite
     }
 
     /**
-     * @param \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse $callback
+     * @param \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse $callback
      */
     public function setLoginRedirectCallback(Closure $callback): static
     {
@@ -225,12 +225,12 @@ class FilamentSocialite
     }
 
     /**
-     * @return \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
+     * @return \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
      */
     public function getLoginRedirectCallback(): Closure
     {
-        return $this->loginRedirectCallback ?? function (Panel $panel, FilamentSocialiteUserContract $socialiteUser) {
-            if ($panel->hasTenancy()) {
+        return $this->loginRedirectCallback ?? function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
+            if (($panel = Filament::getCurrentPanel())->hasTenancy()) {
                 $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
 
                 if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {

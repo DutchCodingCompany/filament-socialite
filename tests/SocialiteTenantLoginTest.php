@@ -8,6 +8,7 @@ use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTeam;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTenantUser;
+use Filament\Facades\Filament;
 use Filament\Panel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
@@ -27,10 +28,11 @@ class SocialiteTenantLoginTest extends TestCase
 
     public function testTenantLogin(): void
     {
-        FilamentSocialite::setLoginRedirectCallback(function (Panel $panel, FilamentSocialiteUserContract $socialiteUser) {
+        FilamentSocialite::setLoginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
             assert($socialiteUser instanceof SocialiteUser);
 
-            $this->assertEquals($this->panelName, $panel->getId());
+            $this->assertEquals($this->panelName, Filament::getCurrentPanel()->getId());
+            $this->assertEquals('github', $provider);
             $this->assertEquals('github', $socialiteUser->provider);
             $this->assertEquals('test-socialite-user-id', $socialiteUser->provider_id);
 

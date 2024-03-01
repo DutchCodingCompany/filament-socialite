@@ -7,7 +7,6 @@ use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
-use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
@@ -93,7 +92,7 @@ class SocialiteLoginController extends Controller
         return in_array($emailDomain, $domains);
     }
 
-    protected function loginUser(FilamentSocialiteUserContract $socialiteUser): RedirectResponse
+    protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser): RedirectResponse
     {
         // Log the user in
         $this->socialite->getGuard()->login($socialiteUser->getUser(), $this->socialite->getPlugin()->getRememberLogin());
@@ -101,9 +100,7 @@ class SocialiteLoginController extends Controller
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser);
 
-        $panel = Filament::getCurrentPanel();
-
-        return app()->call($this->socialite->getLoginRedirectCallback(), ['panel' => $panel, 'socialiteUser' => $socialiteUser]);
+        return app()->call($this->socialite->getLoginRedirectCallback(), ['provider' => $provider, 'socialiteUser' => $socialiteUser]);
     }
 
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
@@ -115,7 +112,7 @@ class SocialiteLoginController extends Controller
         Events\SocialiteUserConnected::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($socialiteUser);
+        return $this->loginUser($provider, $socialiteUser);
     }
 
     protected function registerOauthUser(string $provider, SocialiteUserContract $oauthUser): RedirectResponse
@@ -132,7 +129,7 @@ class SocialiteLoginController extends Controller
         Events\Registered::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($socialiteUser);
+        return $this->loginUser($provider, $socialiteUser);
     }
 
     public function processCallback(string $provider): RedirectResponse
@@ -158,7 +155,7 @@ class SocialiteLoginController extends Controller
         // Try to find a socialite user
         $socialiteUser = $this->retrieveSocialiteUser($provider, $oauthUser);
         if ($socialiteUser) {
-            return $this->loginUser($socialiteUser);
+            return $this->loginUser($provider, $socialiteUser);
         }
 
         // See if registration is allowed
