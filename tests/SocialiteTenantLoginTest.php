@@ -21,7 +21,6 @@ class SocialiteTenantLoginTest extends TestCase
 
     protected string $userModelClass = TestTenantUser::class;
 
-
     protected array $tenantArguments = [
         TestTeam::class,
     ];
