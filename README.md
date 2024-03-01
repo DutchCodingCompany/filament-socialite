@@ -166,7 +166,7 @@ If you want to change this behavior, you can add the `setLoginRedirectCallback` 
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 
-FilamentSocialite::setLoginRedirectCallback(function (Panel $panel, FilamentSocialiteUserContract $socialiteUser) {
+FilamentSocialite::setLoginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
     return redirect()->intended(
         route(FilamentSocialite::getPlugin()->getDashboardRouteName())
     );
