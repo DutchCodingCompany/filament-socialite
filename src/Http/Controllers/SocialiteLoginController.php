@@ -103,14 +103,7 @@ class SocialiteLoginController extends Controller
 
         $panel = Filament::getCurrentPanel();
 
-        if ($panel->hasTenancy()) {
-            return app()->call($this->socialite->getRedirectTenantCallback(), ['panel' => $panel, 'socialiteUser' => $socialiteUser]);
-        }
-
-        // Redirect as intended
-        return redirect()->intended(
-            route($this->socialite->getPlugin()->getDashboardRouteName())
-        );
+        return app()->call($this->socialite->getLoginRedirectCallback(), ['panel' => $panel, 'socialiteUser' => $socialiteUser]);
     }
 
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse

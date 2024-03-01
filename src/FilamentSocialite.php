@@ -36,7 +36,7 @@ class FilamentSocialite
     /**
      * @phpstan-var ?\Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
      */
-    protected ?Closure $redirectTenantCallback = null;
+    protected ?Closure $loginRedirectCallback = null;
 
     protected FilamentSocialitePlugin $plugin;
 
@@ -217,9 +217,9 @@ class FilamentSocialite
     /**
      * @param \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse $callback
      */
-    public function setRedirectTenantCallback(Closure $callback): static
+    public function setLoginRedirectCallback(Closure $callback): static
     {
-        $this->redirectTenantCallback = $callback;
+        $this->loginRedirectCallback = $callback;
 
         return $this;
     }
@@ -227,17 +227,23 @@ class FilamentSocialite
     /**
      * @return \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
      */
-    public function getRedirectTenantCallback(): Closure
+    public function getLoginRedirectCallback(): Closure
     {
-        return $this->redirectTenantCallback ?? function (Panel $panel, FilamentSocialiteUserContract $socialiteUser) {
-            $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
+        return $this->loginRedirectCallback ?? function (Panel $panel, FilamentSocialiteUserContract $socialiteUser) {
+            if ($panel->hasTenancy()) {
+                $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
 
-            if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {
-                return redirect()->intended($tenantRegistrationUrl);
+                if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {
+                    return redirect()->intended($tenantRegistrationUrl);
+                }
+
+                return redirect()->intended(
+                    $panel->getUrl($tenant)
+                );
             }
 
             return redirect()->intended(
-                $panel->getUrl($tenant)
+                route($this->getPlugin()->getDashboardRouteName())
             );
         };
     }
