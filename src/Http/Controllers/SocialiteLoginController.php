@@ -165,7 +165,11 @@ class SocialiteLoginController extends Controller
         }
 
         // See if a user already exists, but not for this socialite provider
-        $user = app()->call($this->socialite->getUserResolver(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
+        $user = app()->call($this->socialite->getUserResolver(), [
+            'provider' => $provider,
+            'oauthUser' => $oauthUser,
+            'socialite' => $this->socialite,
+        ]);
 
         // See if registration is allowed
         if (! $this->evaluate($this->socialite->getPlugin()->getRegistrationEnabled(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user])) {

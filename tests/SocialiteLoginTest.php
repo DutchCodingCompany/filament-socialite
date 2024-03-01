@@ -2,10 +2,10 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
+use Closure;
 use DutchCodingCompany\FilamentSocialite\Events\RegistrationNotEnabled;
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
-use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
@@ -64,8 +64,8 @@ class SocialiteLoginTest extends TestCase
         ]);
     }
 
-    #[DataProvider('testProvider')]
-    public function testRegistrationBlock(bool $createUser, \Closure | bool $registrationEnabled): void
+    #[DataProvider('registrationBlockProvider')]
+    public function testRegistrationBlock(bool $createUser, Closure | bool $registrationEnabled): void
     {
         Event::fake();
 
@@ -107,7 +107,7 @@ class SocialiteLoginTest extends TestCase
     /**
      * @return array<string, array<mixed>>
      */
-    public static function testProvider(): array
+    public static function registrationBlockProvider(): array
     {
         $callback = function (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) {
             return (bool) $user;

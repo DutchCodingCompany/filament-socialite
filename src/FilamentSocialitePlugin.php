@@ -26,7 +26,7 @@ class FilamentSocialitePlugin implements Plugin
     protected bool $rememberLogin = false;
 
     /**
-     * @var \Closure(string, \Laravel\Socialite\Contracts\User, ?\Illuminate\Contracts\Auth\Authenticatable): bool|bool
+     * @phpstan-var (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
      */
     protected Closure | bool $registrationEnabled = false;
 
@@ -151,7 +151,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool|bool $value
+     * @param (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool $value
      * @return $this
      */
     public function setRegistrationEnabled(Closure | bool $value): static
@@ -162,7 +162,7 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool|bool
+     * @return (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
      */
     public function getRegistrationEnabled(): Closure | bool
     {
