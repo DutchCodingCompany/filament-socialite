@@ -159,7 +159,7 @@ class SocialiteUser implements FilamentSocialiteUserContract
 
 ### Multi-tenancy support
 
-When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to there [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant). If you want to change this behavior, you can add the `setRedirectTenantCallback` method in the boot method of your `AppServiceProvider.php`:
+When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant). If you want to change this behavior, you can add the `setRedirectTenantCallback` method in the boot method of your `AppServiceProvider.php`:
 
 ```php
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;

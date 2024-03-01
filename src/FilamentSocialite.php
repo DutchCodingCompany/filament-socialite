@@ -34,6 +34,9 @@ class FilamentSocialite
     protected ?Closure $createUserCallback = null;
 
 
+    /**
+     * @phpstan-var ?\Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
+     */
     protected ?Closure $redirectTenantCallback = null;
 
     protected FilamentSocialitePlugin $plugin;
@@ -213,7 +216,7 @@ class FilamentSocialite
     }
 
     /**
-     * @param \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\SocialiteUser): \Illuminate\Http\RedirectResponse $callback
+     * @param \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse $callback
      */
     public function setRedirectTenantCallback(Closure $callback): static
     {
@@ -223,12 +226,12 @@ class FilamentSocialite
     }
 
     /**
-     * @return \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\SocialiteUser): \Illuminate\Http\RedirectResponse
+     * @return \Closure(\Filament\Panel $panel, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
      */
     public function getRedirectTenantCallback(): Closure
     {
-        return $this->redirectTenantCallback ?? function (Panel $panel, SocialiteUser $socialiteUser) {
-            $tenant = Filament::getUserDefaultTenant($socialiteUser->user);
+        return $this->redirectTenantCallback ?? function (Panel $panel, FilamentSocialiteUserContract $socialiteUser) {
+            $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
 
             if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {
                 return redirect()->intended($tenantRegistrationUrl);
