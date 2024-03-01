@@ -26,7 +26,7 @@ class FilamentSocialitePlugin implements Plugin
     protected bool $rememberLogin = false;
 
     /**
-     * @var \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool|bool
+     * @var \Closure(string, \Laravel\Socialite\Contracts\User, ?\Illuminate\Contracts\Auth\Authenticatable): bool|bool
      */
     protected Closure | bool $registrationEnabled = false;
 
