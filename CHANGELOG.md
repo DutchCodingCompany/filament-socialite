@@ -2,6 +2,15 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [1.3.0 - 2024-03-01](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.2.0...1.3.0)
+* Update CHANGELOG.md by @bramr94 in https://github.com/DutchCodingCompany/filament-socialite/pull/70
+* Add socialite test by @bert-w in https://github.com/DutchCodingCompany/filament-socialite/pull/78
+* Improve actions by @bert-w in https://github.com/DutchCodingCompany/filament-socialite/pull/79
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/DutchCodingCompany/filament-socialite/pull/51
+* feature: allow socialite user model customization by @kykurniawan in https://github.com/DutchCodingCompany/filament-socialite/pull/72
+* Add registration enabled callable by @bert-w in https://github.com/DutchCodingCompany/filament-socialite/pull/80
+* Multi-tenancy support by @bramr94 in https://github.com/DutchCodingCompany/filament-socialite/pull/76
+
 ## [1.2.0 - 2024-01-31](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.1.1...1.2.0)
 - Add option to add optional parameters in https://github.com/DutchCodingCompany/filament-socialite/pull/69
 

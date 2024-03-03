@@ -3,6 +3,7 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use DutchCodingCompany\FilamentSocialite\View\Components\Buttons;
+use Filament\Facades\Filament;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
@@ -35,11 +36,14 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
         FilamentView::registerRenderHook(
             'panels::auth.login.form.after',
             static function (): ?string {
-                if (! ($panel = filament()->getCurrentPanel())->hasPlugin('filament-socialite')) {
+                if (! ($panel = Filament::getCurrentPanel())->hasPlugin('filament-socialite')) {
                     return null;
                 }
 
-                return Blade::render('<x-filament-socialite::buttons :show-divider="'.($panel->getPlugin('filament-socialite')->getShowDivider() ? 'true' : 'false').'" />');
+                /** @var \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin */
+                $plugin = $panel->getPlugin('filament-socialite');
+
+                return Blade::render('<x-filament-socialite::buttons :show-divider="'.($plugin->getShowDivider() ? 'true' : 'false').'" />');
             },
         );
     }

@@ -3,13 +3,20 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use App\Models\User;
+use Closure;
+use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 
 class FilamentSocialitePlugin implements Plugin
 {
+    /**
+     * @var array<string, mixed>
+     */
     protected array $providers = [];
 
     protected ?string $loginRouteName = null;
@@ -18,11 +25,25 @@ class FilamentSocialitePlugin implements Plugin
 
     protected bool $rememberLogin = false;
 
-    protected bool $registrationEnabled = false;
+    /**
+     * @phpstan-var (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
+     */
+    protected Closure | bool $registrationEnabled = false;
 
+    /**
+     * @var array<string>
+     */
     protected array $domainAllowList = [];
 
+    /**
+     * @var class-string<\Illuminate\Contracts\Auth\Authenticatable>
+     */
     protected string $userModelClass = User::class;
+
+    /**
+     * @var class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
+     */
+    protected string $socialiteUserModelClass = SocialiteUser::class;
 
     protected ?string $slug = null;
 
@@ -58,6 +79,9 @@ class FilamentSocialitePlugin implements Plugin
         //
     }
 
+    /**
+     * @param array<string, mixed> $providers
+     */
     public function setProviders(array $providers): static
     {
         $this->providers = $providers;
@@ -65,6 +89,9 @@ class FilamentSocialitePlugin implements Plugin
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getProviders(): array
     {
         return $this->providers;
@@ -123,18 +150,28 @@ class FilamentSocialitePlugin implements Plugin
         return $this->rememberLogin;
     }
 
-    public function setRegistrationEnabled(bool $value): static
+    /**
+     * @param (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool $value
+     * @return $this
+     */
+    public function setRegistrationEnabled(Closure | bool $value): static
     {
         $this->registrationEnabled = $value;
 
         return $this;
     }
 
-    public function getRegistrationEnabled(): bool
+    /**
+     * @return (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
+     */
+    public function getRegistrationEnabled(): Closure | bool
     {
         return $this->registrationEnabled;
     }
 
+    /**
+     * @param array<string> $values
+     */
     public function setDomainAllowList(array $values): static
     {
         $this->domainAllowList = $values;
@@ -142,27 +179,56 @@ class FilamentSocialitePlugin implements Plugin
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getDomainAllowList(): array
     {
         return $this->domainAllowList;
     }
 
     /**
-     * @param class-string<Model> $value
+     * @param class-string<\Illuminate\Contracts\Auth\Authenticatable> $value
      */
     public function setUserModelClass(string $value): static
     {
+        if (! is_a($value, Authenticatable::class, true)) {
+            throw new ImplementationException('The user model class must implement the "\Illuminate\Contracts\Auth\Authenticatable" interface.');
+        }
+
         $this->userModelClass = $value;
 
         return $this;
     }
 
     /**
-     * @return class-string<Model>
+     * @return class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
     public function getUserModelClass(): string
     {
         return $this->userModelClass;
+    }
+
+    /**
+     * @param class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser> $value
+     */
+    public function setSocialiteUserModelClass(string $value): static
+    {
+        if (! is_a($value, FilamentSocialiteUserContract::class, true)) {
+            throw new ImplementationException('The socialite user model class must implement the "\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser" interface.');
+        }
+
+        $this->socialiteUserModelClass = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
+     */
+    public function getSocialiteUserModelClass(): string
+    {
+        return $this->socialiteUserModelClass;
     }
 
     public function setShowDivider(bool $divider): static

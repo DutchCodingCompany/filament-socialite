@@ -12,8 +12,8 @@ class InvalidCallbackPayload extends LogicException
         parent::__construct('The panel could not be decrypted from the OAuth callback.', 0, $previous);
     }
 
-    public static function make(): InvalidCallbackPayload
+    public static function make(): self
     {
-        return new InvalidCallbackPayload(...func_get_args());
+        return new self(...func_get_args());
     }
 }

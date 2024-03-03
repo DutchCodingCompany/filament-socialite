@@ -5,8 +5,7 @@ namespace DutchCodingCompany\FilamentSocialite\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \DutchCodingCompany\FilamentSocialite\FilamentSocialite
- * @method static string getUserModelClass()
+ * @mixin \DutchCodingCompany\FilamentSocialite\FilamentSocialite
  */
 class FilamentSocialite extends Facade
 {

@@ -2,7 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Events;
 
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -17,7 +17,7 @@ class Login
      * @return void
      */
     public function __construct(
-        public SocialiteUser $socialiteUser,
+        public FilamentSocialiteUserContract $socialiteUser,
     ) {
     }
 }
