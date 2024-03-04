@@ -114,7 +114,7 @@ use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 // Default
-FilamentSocialiteFacade::setCreateUserCallback(fn (SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
+FilamentSocialiteFacade::setCreateUserCallback(fn (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
     'name' => $oauthUser->getName(),
     'email' => $oauthUser->getEmail(),
 ]));
