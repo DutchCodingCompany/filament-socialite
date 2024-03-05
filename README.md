@@ -164,6 +164,47 @@ class SocialiteUser implements FilamentSocialiteUserContract
 }
 ```
 
+### Multi guard/model/panel implementation
+
+Modify socialite_users table. Update user_id to user morph column
+```
+   {
+        Schema::create('socialite_users', function (Blueprint $table) {
+            $table->id();
+
+            $table->morphs('user');
+            $table->string('provider');
+            $table->string('provider_id');
+
+            $table->timestamps();
+
+        });
+    }
+```
+In your plugin options in your Filament panel, add the following method:
+```php
+// app/Providers/Filament/AdminPanelProvider.php
+->plugins([
+    FilamentSocialitePlugin::make()
+        // ...
+        ->setSocialiteUserModelClass(DutchCodingCompany\FilamentSocialite\Models\MorphableSocialiteUser::class)
+```
+
+Lastly, you'll have to prepare your User model by adding the following interface and trait, which
+will add the necessary methods to your model:
+
+```php
+use DutchCodingCompany\FilamentSocialite\Models\Concerns\MorphableSocialite;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\MorphableSocialite as FilamentSocialiteContract;
+
+// Add the interface:
+class User extends Authenticatable implements FilamentSocialiteContract
+{
+    // Add the trait:
+    use FilamentSocialite;
+}
+```
+
 ### Change login redirect
 
 When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).
