@@ -1,4 +1,4 @@
-<div>
+<div class="flex flex-col gap-y-6">
     @if ($messageBag->isNotEmpty())
         @foreach($messageBag->all() as $value)
             <p class="fi-fo-field-wrp-error-message text-danger-600 dark:text-danger-400">{{ __($value) }}</p>
@@ -23,6 +23,7 @@
                     :icon="$provider['icon'] ?? null"
                     tag="a"
                     :href="route($socialiteRoute, $key)"
+                    :spa-mode="false"
                 >
                     {{ $provider['label'] }}
                 </x-filament::button>
