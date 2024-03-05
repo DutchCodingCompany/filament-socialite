@@ -2,6 +2,10 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [1.3.1 - 2024-03-05](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.3.0...1.3.1)
+* Add $provider as required by the callback by @phh in https://github.com/DutchCodingCompany/filament-socialite/pull/83
+* Never use SPA mode for oauth links + spacing by @bert-w in https://github.com/DutchCodingCompany/filament-socialite/pull/85
+
 ## [1.3.0 - 2024-03-01](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.2.0...1.3.0)
 * Update CHANGELOG.md by @bramr94 in https://github.com/DutchCodingCompany/filament-socialite/pull/70
 * Add socialite test by @bert-w in https://github.com/DutchCodingCompany/filament-socialite/pull/78
