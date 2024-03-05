@@ -9,8 +9,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * Class MorphableSocialite
  *
  * This class is a trait that provides functionality for handling morphable socialite users.
- *
- * @package DutchCodingCompany\FilamentSocialite\Models\Concerns
  */
 trait MorphableSocialite
 {
@@ -20,6 +18,7 @@ trait MorphableSocialite
             $model->socialiteUsers()->delete();
         });
     }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany<\DutchCodingCompany\FilamentSocialite\Models\SocialiteUser>
      */

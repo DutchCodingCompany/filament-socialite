@@ -12,6 +12,7 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 class MorphableSocialiteUser extends Model implements FilamentSocialiteUserContract
 {
     protected $table = 'socialite_users';
+
     protected $fillable = [
         'provider',
         'provider_id',
@@ -40,7 +41,7 @@ class MorphableSocialiteUser extends Model implements FilamentSocialiteUserContr
     public static function createForProvider(
         string $provider,
         SocialiteUserContract $oauthUser,
-        Authenticatable $user
+        Authenticatable $user,
     ): self {
         return $user->socialiteUsers()->updateOrCreate(
             ['provider' => $provider],
