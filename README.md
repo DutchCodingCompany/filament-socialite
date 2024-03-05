@@ -201,7 +201,7 @@ use DutchCodingCompany\FilamentSocialite\Models\Contracts\MorphableSocialite as 
 class User extends Authenticatable implements FilamentSocialiteContract
 {
     // Add the trait:
-    use FilamentSocialite;
+    use MorphableSocialite;
 }
 ```
 
