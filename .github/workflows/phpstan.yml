@@ -15,11 +15,11 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: [8.2, 8.3]
+        php: [8.3, 8.2, 8.1]
         laravel: [10.*, 11.*]
         stability: [prefer-stable]
-        include:
-          - laravel: 10.*
+        exclude:
+          - laravel: 11.*
             php: 8.1
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.os }}
