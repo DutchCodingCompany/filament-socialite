@@ -26,6 +26,11 @@ class TestUser extends Model implements Authenticatable
         return 'test-user-auth-password';
     }
 
+    public function getAuthPasswordName()
+    {
+        return 'test-user-auth-password';
+    }
+
     public function getRememberToken()
     {
         return 'test-user-remember-token';
