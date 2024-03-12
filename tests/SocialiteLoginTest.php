@@ -7,7 +7,6 @@ use DutchCodingCompany\FilamentSocialite\Events\RegistrationNotEnabled;
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -19,8 +18,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class SocialiteLoginTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function testLogin(): void
     {
         $response = $this

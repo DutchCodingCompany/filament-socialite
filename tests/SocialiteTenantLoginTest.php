@@ -9,17 +9,12 @@ use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTeam;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTenantUser;
 use Filament\Facades\Filament;
-use Filament\Panel;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Crypt;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Facades\Socialite;
 use Mockery;
 
 class SocialiteTenantLoginTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected string $userModelClass = TestTenantUser::class;
 
     protected array $tenantArguments = [

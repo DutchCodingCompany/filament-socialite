@@ -11,21 +11,14 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Encryption\Encrypter;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Schema;
 use Laravel\Socialite\SocialiteServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    use LazilyRefreshDatabase;
-    use LazilyRefreshDatabase;
-
     protected string $panelName = 'testpanel';
 
     /**
@@ -97,8 +90,6 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('mysql.driver', ':memory:');
-
         config()->set('app.key', 'base64:'.base64_encode(
             Encrypter::generateKey('AES-256-CBC')
         ));
@@ -108,19 +99,11 @@ class TestCase extends Orchestra
             'client_secret' => 'defgmockeddefg',
             'redirect' => 'http://localhost/oauth/callback/github',
         ]);
-
-        config()->set('database.default', 'testing');
     }
 
     protected function defineDatabaseMigrations()
     {
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__.'/Fixtures');
-
-        $this->artisan('migrate', ['--database' => 'testing'])->run();
-
-        Schema::table('users', static function (Blueprint $table): void {
-            $table->string('password')->nullable()->change();
-        });
     }
 }
