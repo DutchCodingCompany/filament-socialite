@@ -11,32 +11,37 @@ class TestUser extends Model implements Authenticatable
 
     protected $guarded = [];
 
-    public function getAuthIdentifierName()
+    public function getAuthIdentifierName(): string
     {
         return 'test-user-auth-identifier-name';
     }
 
-    public function getAuthIdentifier()
+    public function getAuthIdentifier(): string
     {
         return 'test-user-auth-identifier';
     }
 
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return 'test-user-auth-password';
     }
 
-    public function getRememberToken()
+    public function getAuthPasswordName(): string
+    {
+        return 'test-user-auth-password';
+    }
+
+    public function getRememberToken(): string
     {
         return 'test-user-remember-token';
     }
 
-    public function setRememberToken($value)
+    public function setRememberToken($value): void
     {
         //
     }
 
-    public function getRememberTokenName()
+    public function getRememberTokenName(): string
     {
         return 'test-user-remember-token-name';
     }
