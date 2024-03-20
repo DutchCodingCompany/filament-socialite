@@ -95,13 +95,13 @@ class SocialiteLoginController extends Controller
         return in_array($emailDomain, $domains);
     }
 
-    protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser): RedirectResponse
+    protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser, SocialiteUserContract $oauthUser): RedirectResponse
     {
         // Log the user in
         $this->socialite->getGuard()->login($socialiteUser->getUser(), $this->socialite->getPlugin()->getRememberLogin());
 
         // Dispatch the login event
-        Events\Login::dispatch($socialiteUser);
+        Events\Login::dispatch($socialiteUser, $oauthUser);
 
         return app()->call($this->socialite->getLoginRedirectCallback(), ['provider' => $provider, 'socialiteUser' => $socialiteUser]);
     }
@@ -115,7 +115,7 @@ class SocialiteLoginController extends Controller
         Events\SocialiteUserConnected::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($provider, $socialiteUser);
+        return $this->loginUser($provider, $socialiteUser, $oauthUser);
     }
 
     protected function registerOauthUser(string $provider, SocialiteUserContract $oauthUser): RedirectResponse
@@ -132,7 +132,7 @@ class SocialiteLoginController extends Controller
         Events\Registered::dispatch($socialiteUser);
 
         // Login the user
-        return $this->loginUser($provider, $socialiteUser);
+        return $this->loginUser($provider, $socialiteUser, $oauthUser);
     }
 
     public function processCallback(string $provider): RedirectResponse
@@ -158,7 +158,7 @@ class SocialiteLoginController extends Controller
         // Try to find a socialite user
         $socialiteUser = $this->retrieveSocialiteUser($provider, $oauthUser);
         if ($socialiteUser) {
-            return $this->loginUser($provider, $socialiteUser);
+            return $this->loginUser($provider, $socialiteUser, $oauthUser);
         }
 
         // See if a user already exists, but not for this socialite provider
