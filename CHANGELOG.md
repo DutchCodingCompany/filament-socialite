@@ -2,6 +2,8 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [1.4.1 - 2024-03-20](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.4.0...1.4.1)
+* Provide oauth user to login event by @dcc-bjorn in https://github.com/DutchCodingCompany/filament-socialite/pull/88
 
 ## [1.4.0 - 2024-03-12](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.3.1...1.4.0)
 * Laravel 11 support by @dododedodonl in https://github.com/DutchCodingCompany/filament-socialite/pull/87
