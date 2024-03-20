@@ -2,6 +2,7 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+
 ## [1.4.0 - 2024-03-12](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.3.1...1.4.0)
 * Laravel 11 support by @dododedodonl in https://github.com/DutchCodingCompany/filament-socialite/pull/87
 
