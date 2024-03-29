@@ -122,7 +122,7 @@ class SocialiteLoginController extends Controller
     {
         $socialiteUser = DB::transaction(function () use ($provider, $oauthUser) {
             // Create a user
-            $user = app()->call($this->socialite->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
+            $user = app()->call($this->socialite->getPlugin()->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
             // Create a socialite user
             return app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
@@ -162,7 +162,7 @@ class SocialiteLoginController extends Controller
         }
 
         // See if a user already exists, but not for this socialite provider
-        $user = app()->call($this->socialite->getUserResolver(), [
+        $user = app()->call($this->socialite->getPlugin()->getUserResolver(), [
             'provider' => $provider,
             'oauthUser' => $oauthUser,
             'socialite' => $this->socialite,

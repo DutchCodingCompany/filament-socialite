@@ -105,22 +105,6 @@ class FilamentSocialite
     }
 
     /**
-     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable)
-     */
-    public function getUserResolver(): Closure
-    {
-        return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
-            /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $model */
-            $model = $this->getUserModel();
-
-            return $model->where(
-                'email',
-                $oauthUser->getEmail()
-            )->first();
-        };
-    }
-
-    /**
      * @return class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
     public function getSocialiteUserModelClass(): string
@@ -148,12 +132,12 @@ class FilamentSocialite
     /**
      * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable $callback
      */
-    public function setCreateUserCallback(Closure $callback = null): static
-    {
-        $this->createUserCallback = $callback;
-
-        return $this;
-    }
+//    public function setCreateUserCallback(Closure $callback = null): static
+//    {
+//        $this->createUserCallback = $callback;
+//
+//        return $this;
+//    }
 
     /**
      * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable) $callback
@@ -177,28 +161,6 @@ class FilamentSocialite
             Authenticatable $user,
         ) {
             return $this->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
-        };
-    }
-
-    /**
-     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public function getCreateUserCallback(): Closure
-    {
-        return $this->createUserCallback ?? function (
-            string $provider,
-            SocialiteUserContract $oauthUser,
-            FilamentSocialite $socialite,
-        ) {
-            /**
-             * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $query
-             */
-            $query = $this->getUserModel()->query();
-
-            return $query->create([
-                'name' => $oauthUser->getName(),
-                'email' => $oauthUser->getEmail(),
-            ]);
         };
     }
 

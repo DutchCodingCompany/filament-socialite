@@ -11,6 +11,7 @@ use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class FilamentSocialitePlugin implements Plugin
 {
@@ -44,6 +45,16 @@ class FilamentSocialitePlugin implements Plugin
      * @var class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
     protected string $socialiteUserModelClass = SocialiteUser::class;
+
+    /**
+     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable)
+     */
+    protected ?Closure $userResolver = null;
+
+    /**
+     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
+     */
+    protected ?Closure $createUserCallback = null;
 
     protected ?string $slug = null;
 
@@ -221,6 +232,58 @@ class FilamentSocialitePlugin implements Plugin
         $this->socialiteUserModelClass = $value;
 
         return $this;
+    }
+
+    public function setCreateUserCallback(Closure $callback = null): static
+    {
+        $this->createUserCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
+     */
+    public function getCreateUserCallback(): Closure
+    {
+        return $this->createUserCallback ?? function (
+            string $provider,
+            SocialiteUserContract $oauthUser,
+            FilamentSocialite $socialite,
+        ) {
+            /**
+             * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $query
+             */
+            $query = (new $this->userModelClass())->query();
+
+            return $query->create([
+                'name' => $oauthUser->getName(),
+                'email' => $oauthUser->getEmail(),
+            ]);
+        };
+    }
+
+    public function setUserResolver(Closure $callback = null): static
+    {
+        $this->userResolver = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable)
+     */
+    public function getUserResolver(): Closure
+    {
+        return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+            /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $model */
+            $model = (new $this->userModelClass());
+
+            return $model->where(
+                'email',
+                $oauthUser->getEmail()
+            )->first();
+        };
     }
 
     /**

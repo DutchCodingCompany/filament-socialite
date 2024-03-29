@@ -108,19 +108,23 @@ This can be used to setup SSO for internal use.
 
 ### Changing how an Authenticatable user is created or retrieved
 
-In your AppServiceProvider.php, add in the boot method:
+You can use the `setCreateUserCallback` and `setUserResolver` methods to change how a user is created or retrieved.
+
 ```php
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite as FilamentSocialiteFacade;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
-// Default
-FilamentSocialiteFacade::setCreateUserCallback(fn (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
-    'name' => $oauthUser->getName(),
-    'email' => $oauthUser->getEmail(),
-]));
-
-FilamentSocialiteFacade::setUserResolver(fn (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => /* ... */);
+->plugin(
+    FilamentSocialitePlugin::make()
+        ...
+        ->setCreateUserCallback(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+            // Logic to create a new user.
+        })
+        ->setUserResolver(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+            // Logic to retrieve an existing user.
+        })
+        ...
+);
 ```
 
 ### Change how a Socialite user is created or retrieved
