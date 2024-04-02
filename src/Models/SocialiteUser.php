@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Models;
 
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
