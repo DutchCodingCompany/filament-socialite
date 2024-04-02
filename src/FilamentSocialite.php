@@ -58,44 +58,11 @@ class FilamentSocialite
     }
 
     /**
-     * @return array<string, mixed>
-     */
-    public function getProviderConfig(string $provider): array
-    {
-        if (! $this->isProviderConfigured($provider)) {
-            throw ProviderNotConfigured::make($provider);
-        }
-
-        return $this->config->get('services.'.$provider);
-    }
-
-    /**
-     * @return string|array<string>
-     */
-    public function getProviderScopes(string $provider): string | array
-    {
-        return $this->getProviderConfig($provider)['scopes'] ?? [];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getOptionalParameters(string $provider): array
-    {
-        return $this->getProviderConfig($provider)['with'] ?? [];
-    }
-
-    /**
      * @return class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
     public function getUserModelClass(): string
     {
         return $this->getPlugin()->getUserModelClass();
-    }
-
-    public function getUserModel(): Authenticatable
-    {
-        return new ($this->getUserModelClass());
     }
 
     /**

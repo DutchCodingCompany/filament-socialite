@@ -233,33 +233,39 @@ There are a few events dispatched during the authentication process:
 
 ## Scopes
 
-Scopes should be added in your `config/services.php` config file, for example:
+Scopes can be added to the provider on the panel, for example:
 
 ```php
-'github' => [
-    'client_id' => '...',
-    'client_secret' => '...',
-    'scopes' => [
-        // Add scopes here.
-        'read:user',
-        'public_repo',
-    ],
-]
+FilamentSocialitePlugin::make()
+    ->setProviders([
+        'github' => [
+            'label' => 'Github',
+            'icon' => 'fab-github',
+            'scopes' => [
+                // Add scopes here.
+                'read:user',
+                'public_repo',
+            ],
+        ],
+    ]),
 ```
 
 ## Optional parameters
 
-You can add [optional parameters](https://laravel.com/docs/10.x/socialite#optional-parameters) to the request by adding a `with` key to the provider configuration in the `config/services.php` config file, for example:
+You can add [optional parameters](https://laravel.com/docs/10.x/socialite#optional-parameters) to the request by adding a `with` key to the provider on the panel, for example:
 
 ```php
-'github' => [
-    'client_id' => '...',
-    'client_secret' => '...',
-    'with' => [
-        // Add optional parameters here
-        'hd' => 'example.com',
-    ],
-]
+FilamentSocialitePlugin::make()
+    ->setProviders([
+        'github' => [
+            'label' => 'Github',
+            'icon' => 'fab-github',
+            'with' => [
+                // Add optional parameters here.
+                'hd' => 'example.com',
+            ],
+        ],
+    ]),
 ```
 
 **Note:** you cannot use the `state` parameter, as it is used to determine from which Filament panel the user came from.

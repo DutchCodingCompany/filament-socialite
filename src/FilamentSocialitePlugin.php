@@ -2,11 +2,12 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
-use App\Models\User;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
+use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -292,6 +293,30 @@ class FilamentSocialitePlugin implements Plugin
     public function getSocialiteUserModelClass(): string
     {
         return $this->socialiteUserModelClass;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getOptionalParameters(string $provider): array
+    {
+        if (! FilamentSocialite::isProviderConfigured($provider)) {
+            throw ProviderNotConfigured::make($provider);
+        }
+
+        return $this->providers[$provider]['with'] ?? [];
+    }
+
+    /**
+     * @return string|array<string>
+     */
+    public function getProviderScopes(string $provider): string | array
+    {
+        if (! FilamentSocialite::isProviderConfigured($provider)) {
+            throw ProviderNotConfigured::make($provider);
+        }
+
+        return $this->providers[$provider]['scopes'] ?? [];
     }
 
     public function setShowDivider(bool $divider): static
