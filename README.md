@@ -93,7 +93,7 @@ Or you could opt for customizing the user creation, see below.
 $table->string('password')->nullable();
 ```
 
-### Domain Allowlist
+### Domain Allow list
 
 This package supports the option to limit the users that can login with the OAuth login to users of a certain domain.
 This can be used to setup SSO for internal use.
@@ -173,17 +173,16 @@ class SocialiteUser implements FilamentSocialiteUserContract
 ### Change login redirect
 
 When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).
-If you want to change this behavior, you can add the `setLoginRedirectCallback` method in the boot method of your `AppServiceProvider.php`:
+If you want to change this behavior, you can call the 'loginRedirectCallback' method on the `FilamentSocialitePlugin`.
 
 ```php
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 
-FilamentSocialite::setLoginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
-    return redirect()->intended(
-        route(FilamentSocialite::getPlugin()->getDashboardRouteName())
-    );
-});
+FilamentSocialitePlugin::make()
+    ->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
+        // Change the redirect behaviour here.
+    });
 ```
 
 ### Filament Fortify
