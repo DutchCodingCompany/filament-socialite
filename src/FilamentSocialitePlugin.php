@@ -13,8 +13,8 @@ use Filament\Contracts\Plugin;
 use Filament\Facades\Filament;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Support\Str;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class FilamentSocialitePlugin implements Plugin
