@@ -6,7 +6,7 @@ use App\Models\User;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
@@ -87,15 +87,15 @@ class FilamentSocialitePlugin implements Plugin
     public function register(Panel $panel): void
     {
         if ($this->slug === null) {
-            $this->setSlug(Str::slug($panel->getId()));
+            $this->slug(Str::slug($panel->getId()));
         }
 
         if ($this->loginRouteName === null) {
-            $this->setLoginRouteName("filament.{$panel->getId()}.auth.login");
+            $this->loginRouteName("filament.{$panel->getId()}.auth.login");
         }
 
         if ($this->dashboardRouteName === null) {
-            $this->setDashboardRouteName("filament.{$panel->getId()}.pages.dashboard");
+            $this->dashboardRouteName("filament.{$panel->getId()}.pages.dashboard");
         }
     }
 
@@ -107,7 +107,7 @@ class FilamentSocialitePlugin implements Plugin
     /**
      * @param array<string, mixed> $providers
      */
-    public function setProviders(array $providers): static
+    public function providers(array $providers): static
     {
         $this->providers = $providers;
 
@@ -122,16 +122,16 @@ class FilamentSocialitePlugin implements Plugin
         return $this->providers;
     }
 
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): static
+    public function slug(string $slug): static
     {
         $this->slug = $slug;
 
         return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
     }
 
     public function getRoute(): string
@@ -139,7 +139,7 @@ class FilamentSocialitePlugin implements Plugin
         return "socialite.$this->slug.oauth.redirect";
     }
 
-    public function setLoginRouteName(string $value): static
+    public function loginRouteName(string $value): static
     {
         $this->loginRouteName = $value;
 
@@ -151,7 +151,7 @@ class FilamentSocialitePlugin implements Plugin
         return $this->loginRouteName;
     }
 
-    public function setDashboardRouteName(string $value): static
+    public function dashboardRouteName(string $value): static
     {
         $this->dashboardRouteName = $value;
 
@@ -163,7 +163,7 @@ class FilamentSocialitePlugin implements Plugin
         return $this->dashboardRouteName;
     }
 
-    public function setRememberLogin(bool $value): static
+    public function rememberLogin(bool $value): static
     {
         $this->rememberLogin = $value;
 
@@ -179,7 +179,7 @@ class FilamentSocialitePlugin implements Plugin
      * @param (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool $value
      * @return $this
      */
-    public function setRegistrationEnabled(Closure | bool $value): static
+    public function registrationEnabled(Closure | bool $value): static
     {
         $this->registrationEnabled = $value;
 
@@ -197,7 +197,7 @@ class FilamentSocialitePlugin implements Plugin
     /**
      * @param array<string> $values
      */
-    public function setDomainAllowList(array $values): static
+    public function domainAllowList(array $values): static
     {
         $this->domainAllowList = $values;
 
@@ -216,7 +216,7 @@ class FilamentSocialitePlugin implements Plugin
      * @param class-string<\Illuminate\Contracts\Auth\Authenticatable> $value
      * @throws ImplementationException
      */
-    public function setUserModelClass(string $value): static
+    public function userModelClass(string $value): static
     {
         if (! is_a($value, Authenticatable::class, true)) {
             throw new ImplementationException('The user model class must implement the "\Illuminate\Contracts\Auth\Authenticatable" interface.');
@@ -238,7 +238,7 @@ class FilamentSocialitePlugin implements Plugin
     /**
      * @param class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser> $value
      */
-    public function setSocialiteUserModelClass(string $value): static
+    public function socialiteUserModelClass(string $value): static
     {
         if (! is_a($value, FilamentSocialiteUserContract::class, true)) {
             throw new ImplementationException('The socialite user model class must implement the "\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser" interface.');
@@ -249,7 +249,7 @@ class FilamentSocialitePlugin implements Plugin
         return $this;
     }
 
-    public function setCreateUserCallback(Closure $callback = null): static
+    public function createUserCallback(Closure $callback = null): static
     {
         $this->createUserCallback = $callback;
 
@@ -278,7 +278,7 @@ class FilamentSocialitePlugin implements Plugin
         };
     }
 
-    public function setUserResolver(Closure $callback = null): static
+    public function userResolver(Closure $callback = null): static
     {
         $this->userResolver = $callback;
 
@@ -343,7 +343,7 @@ class FilamentSocialitePlugin implements Plugin
         return $this->providers[$provider]['scopes'] ?? [];
     }
 
-    public function setShowDivider(bool $divider): static
+    public function showDivider(bool $divider): static
     {
         $this->showDivider = $divider;
 
@@ -353,7 +353,7 @@ class FilamentSocialitePlugin implements Plugin
     /**
      * @param \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse $callback
      */
-    public function setLoginRedirectCallback(Closure $callback): static
+    public function loginRedirectCallback(Closure $callback): static
     {
         $this->loginRedirectCallback = $callback;
 

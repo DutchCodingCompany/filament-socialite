@@ -73,7 +73,7 @@ class SocialiteLoginTest extends TestCase
             ]);
         }
 
-        FilamentSocialite::getPlugin()->setRegistrationEnabled($registrationEnabled);
+        FilamentSocialite::getPlugin()->registrationEnabled($registrationEnabled);
 
         $this
             ->getJson("/$this->panelName/oauth/github")

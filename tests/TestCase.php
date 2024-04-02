@@ -70,7 +70,7 @@ class TestCase extends Orchestra
                 ])
                 ->plugins([
                     FilamentSocialitePlugin::make()
-                        ->setProviders([
+                        ->providers([
                             'github' => [
                                 'label' => 'GitHub',
                                 'icon' => 'fab-github',
@@ -82,8 +82,8 @@ class TestCase extends Orchestra
                                 'icon' => 'fab-gitlab',
                             ],
                         ])
-                        ->setRegistrationEnabled(true)
-                        ->setUserModelClass($this->userModelClass),
+                        ->registrationEnabled(true)
+                        ->userModelClass($this->userModelClass),
                 ]),
         );
     }

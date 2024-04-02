@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
-use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Factory;
