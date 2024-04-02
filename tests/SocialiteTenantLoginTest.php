@@ -3,6 +3,7 @@
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
@@ -23,16 +24,17 @@ class SocialiteTenantLoginTest extends TestCase
 
     public function testTenantLogin(): void
     {
-        FilamentSocialite::setLoginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
-            assert($socialiteUser instanceof SocialiteUser);
+        FilamentSocialite::getPlugin()
+            ->setLoginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
+                assert($socialiteUser instanceof SocialiteUser);
 
-            $this->assertEquals($this->panelName, Filament::getCurrentPanel()->getId());
-            $this->assertEquals('github', $provider);
-            $this->assertEquals('github', $socialiteUser->provider);
-            $this->assertEquals('test-socialite-user-id', $socialiteUser->provider_id);
+                $this->assertEquals($this->panelName, Filament::getCurrentPanel()->getId());
+                $this->assertEquals('github', $provider);
+                $this->assertEquals('github', $socialiteUser->provider);
+                $this->assertEquals('test-socialite-user-id', $socialiteUser->provider_id);
 
-            return redirect()->to('/some-tenant-url');
-        });
+                return redirect()->to('/some-tenant-url');
+            });
 
         $response = $this
             ->getJson("/$this->panelName/oauth/github")

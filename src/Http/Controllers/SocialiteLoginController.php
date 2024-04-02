@@ -29,7 +29,7 @@ class SocialiteLoginController extends Controller
 
     public function redirectToProvider(string $provider): RedirectResponse
     {
-        if (! $this->socialite->isProviderConfigured($provider)) {
+        if (! $this->socialite->getPlugin()->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
@@ -65,7 +65,7 @@ class SocialiteLoginController extends Controller
 
     protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser): ?FilamentSocialiteUserContract
     {
-        return $this->socialite->getSocialiteUserModel()::findForProvider($provider, $oauthUser);
+        return $this->socialite->getPlugin()->getSocialiteUserModel()::findForProvider($provider, $oauthUser);
     }
 
     protected function redirectToLogin(string $message): RedirectResponse
@@ -103,13 +103,13 @@ class SocialiteLoginController extends Controller
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser, $oauthUser);
 
-        return app()->call($this->socialite->getLoginRedirectCallback(), ['provider' => $provider, 'socialiteUser' => $socialiteUser]);
+        return app()->call($this->socialite->getPlugin()->getLoginRedirectCallback(), ['provider' => $provider, 'socialiteUser' => $socialiteUser]);
     }
 
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
     {
         // Create a socialite user
-        $socialiteUser = $this->socialite->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
+        $socialiteUser = $this->socialite->getPlugin()->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
 
         // Dispatch the socialite user connected event
         Events\SocialiteUserConnected::dispatch($socialiteUser);
@@ -125,7 +125,7 @@ class SocialiteLoginController extends Controller
             $user = app()->call($this->socialite->getPlugin()->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
             // Create a socialite user
-            return $this->socialite->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
+            return $this->socialite->getPlugin()->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
         });
 
         // Dispatch the registered event
@@ -137,7 +137,7 @@ class SocialiteLoginController extends Controller
 
     public function processCallback(string $provider): RedirectResponse
     {
-        if (! $this->socialite->isProviderConfigured($provider)) {
+        if (! $this->socialite->getPlugin()->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 

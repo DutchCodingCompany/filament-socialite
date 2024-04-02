@@ -4,6 +4,7 @@ namespace DutchCodingCompany\FilamentSocialite\Models;
 
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,7 +31,7 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(FilamentSocialite::getUserModelClass());
+        return $this->belongsTo(Filament::getCurrentPanel()->getPlugin('filament-socialite')->getUserModelClass());
     }
 
     public function getUser(): Authenticatable

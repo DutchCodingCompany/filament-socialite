@@ -2,6 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
+use App\Models\User;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
@@ -9,9 +10,11 @@ use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
+use Filament\Facades\Filament;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Config\Repository;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class FilamentSocialitePlugin implements Plugin
@@ -57,9 +60,19 @@ class FilamentSocialitePlugin implements Plugin
      */
     protected ?Closure $createUserCallback = null;
 
+    /**
+     * @phpstan-var ?\Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
+     */
+    protected ?Closure $loginRedirectCallback = null;
+
     protected ?string $slug = null;
 
     protected bool $showDivider = true;
+
+    public function __construct(protected Repository $config)
+    {
+        //
+    }
 
     public static function make(): static
     {
@@ -201,6 +214,7 @@ class FilamentSocialitePlugin implements Plugin
 
     /**
      * @param class-string<\Illuminate\Contracts\Auth\Authenticatable> $value
+     * @throws ImplementationException
      */
     public function setUserModelClass(string $value): static
     {
@@ -276,7 +290,7 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function getUserResolver(): Closure
     {
-        return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+        return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, $socialite) {
             /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $model */
             $model = (new $this->userModelClass());
 
@@ -295,12 +309,22 @@ class FilamentSocialitePlugin implements Plugin
         return $this->socialiteUserModelClass;
     }
 
+    public function getSocialiteUserModel(): FilamentSocialiteUserContract
+    {
+        return new ($this->getSocialiteUserModelClass());
+    }
+
+    public function isProviderConfigured(string $provider): bool
+    {
+        return $this->config->has('services.'.$provider) && isset($this->providers[$provider]);
+    }
+
     /**
      * @return array<string, mixed>
      */
     public function getOptionalParameters(string $provider): array
     {
-        if (! FilamentSocialite::isProviderConfigured($provider)) {
+        if (! $this->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
@@ -312,7 +336,7 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function getProviderScopes(string $provider): string | array
     {
-        if (! FilamentSocialite::isProviderConfigured($provider)) {
+        if (! $this->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
@@ -324,6 +348,40 @@ class FilamentSocialitePlugin implements Plugin
         $this->showDivider = $divider;
 
         return $this;
+    }
+
+    /**
+     * @param \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse $callback
+     */
+    public function setLoginRedirectCallback(Closure $callback): static
+    {
+        $this->loginRedirectCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
+     */
+    public function getLoginRedirectCallback(): Closure
+    {
+        return $this->loginRedirectCallback ?? function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
+            if (($panel = Filament::getCurrentPanel())->hasTenancy()) {
+                $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
+
+                if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {
+                    return redirect()->intended($tenantRegistrationUrl);
+                }
+
+                return redirect()->intended(
+                    $panel->getUrl($tenant)
+                );
+            }
+
+            return redirect()->intended(
+                route($this->getDashboardRouteName())
+            );
+        };
     }
 
     public function getShowDivider(): bool
