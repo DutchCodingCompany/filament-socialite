@@ -50,7 +50,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 ->plugin(
     FilamentSocialitePlugin::make()
         // (required) Add providers corresponding with providers in `config/services.php`. 
-        ->setProviders([
+        ->providers([
             'github' => [
                 'label' => 'GitHub',
                 // Custom icon requires an additional package, see below.
@@ -62,14 +62,14 @@ use Illuminate\Contracts\Auth\Authenticatable;
             ],
         ])
         // (optional) Enable/disable registration of new (socialite-) users.
-        ->setRegistrationEnabled(true)
+        ->registrationEnabled(true)
         // (optional) Enable/disable registration of new (socialite-) users using a callback.
         // In this example, a login flow can only continue if there exists a user (Authenticatable) already.
-        ->setRegistrationEnabled(fn (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) => (bool) $user)
+        ->registrationEnabled(fn (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) => (bool) $user)
         // (optional) Change the associated model class.
-        ->setUserModelClass(\App\Models\User::class)
+        ->userModelClass(\App\Models\User::class)
         // (optional) Change the associated socialite class (see below).
-        ->setSocialiteUserModelClass(\App\Models\SocialiteUser::class)
+        ->socialiteUserModelClass(\App\Models\SocialiteUser::class)
 );
 ```
 
@@ -101,14 +101,14 @@ This can be used to setup SSO for internal use.
 ```php
 ->plugin(
     FilamentSocialitePlugin::make()
-        ->setRegistrationEnabled(true)
-        ->setDomainAllowList(['localhost'])
+        ->registrationEnabled(true)
+        ->domainAllowList(['localhost'])
 );
 ```
 
 ### Changing how an Authenticatable user is created or retrieved
 
-You can use the `setCreateUserCallback` and `setUserResolver` methods to change how a user is created or retrieved.
+You can use the `createUserCallback` and `userResolver` methods to change how a user is created or retrieved.
 
 ```php
 use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
@@ -117,10 +117,10 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 ->plugin(
     FilamentSocialitePlugin::make()
         ...
-        ->setCreateUserCallback(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+        ->createUserCallback(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
             // Logic to create a new user.
         })
-        ->setUserResolver(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+        ->userResolver(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
             // Logic to retrieve an existing user.
         })
         ...
@@ -130,12 +130,13 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 ### Change how a Socialite user is created or retrieved
 
 In your plugin options in your Filament panel, add the following method:
+
 ```php
 // app/Providers/Filament/AdminPanelProvider.php
 ->plugins([
     FilamentSocialitePlugin::make()
         // ...
-        ->setSocialiteUserModelClass(\App\Models\SocialiteUser::class)
+        ->socialiteUserModelClass(\App\Models\SocialiteUser::class)
 ```
 
 This class should at the minimum implement the [`FilamentSocialiteUser`](/src/Models/Contracts/FilamentSocialiteUser.php) interface, like so:
@@ -237,7 +238,7 @@ Scopes can be added to the provider on the panel, for example:
 
 ```php
 FilamentSocialitePlugin::make()
-    ->setProviders([
+    ->providers([
         'github' => [
             'label' => 'Github',
             'icon' => 'fab-github',
@@ -256,7 +257,7 @@ You can add [optional parameters](https://laravel.com/docs/10.x/socialite#option
 
 ```php
 FilamentSocialitePlugin::make()
-    ->setProviders([
+    ->providers([
         'github' => [
             'label' => 'Github',
             'icon' => 'fab-github',
