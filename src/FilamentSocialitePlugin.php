@@ -6,7 +6,6 @@ use App\Models\User;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
-use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use Filament\Contracts\Plugin;
@@ -19,14 +18,13 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class FilamentSocialitePlugin implements Plugin
 {
+    use Traits\Callbacks;
+    use Traits\Routes;
+
     /**
      * @var array<string, mixed>
      */
     protected array $providers = [];
-
-    protected ?string $loginRouteName = null;
-
-    protected ?string $dashboardRouteName = null;
 
     protected bool $rememberLogin = false;
 
@@ -49,21 +47,6 @@ class FilamentSocialitePlugin implements Plugin
      * @var class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
     protected string $socialiteUserModelClass = SocialiteUser::class;
-
-    /**
-     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable)
-     */
-    protected ?Closure $userResolver = null;
-
-    /**
-     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
-     */
-    protected ?Closure $createUserCallback = null;
-
-    /**
-     * @phpstan-var ?\Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
-     */
-    protected ?Closure $loginRedirectCallback = null;
 
     protected ?string $slug = null;
 
@@ -132,35 +115,6 @@ class FilamentSocialitePlugin implements Plugin
     public function getSlug(): string
     {
         return $this->slug;
-    }
-
-    public function getRoute(): string
-    {
-        return "socialite.$this->slug.oauth.redirect";
-    }
-
-    public function loginRouteName(string $value): static
-    {
-        $this->loginRouteName = $value;
-
-        return $this;
-    }
-
-    public function getLoginRouteName(): string
-    {
-        return $this->loginRouteName;
-    }
-
-    public function dashboardRouteName(string $value): static
-    {
-        $this->dashboardRouteName = $value;
-
-        return $this;
-    }
-
-    public function getDashboardRouteName(): string
-    {
-        return $this->dashboardRouteName;
     }
 
     public function rememberLogin(bool $value): static
@@ -249,58 +203,6 @@ class FilamentSocialitePlugin implements Plugin
         return $this;
     }
 
-    public function createUserCallback(Closure $callback = null): static
-    {
-        $this->createUserCallback = $callback;
-
-        return $this;
-    }
-
-    /**
-     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
-     */
-    public function getCreateUserCallback(): Closure
-    {
-        return $this->createUserCallback ?? function (
-            string $provider,
-            SocialiteUserContract $oauthUser,
-            FilamentSocialite $socialite,
-        ) {
-            /**
-             * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $query
-             */
-            $query = (new $this->userModelClass())->query();
-
-            return $query->create([
-                'name' => $oauthUser->getName(),
-                'email' => $oauthUser->getEmail(),
-            ]);
-        };
-    }
-
-    public function userResolver(Closure $callback = null): static
-    {
-        $this->userResolver = $callback;
-
-        return $this;
-    }
-
-    /**
-     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable)
-     */
-    public function getUserResolver(): Closure
-    {
-        return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, $socialite) {
-            /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $model */
-            $model = (new $this->userModelClass());
-
-            return $model->where(
-                'email',
-                $oauthUser->getEmail()
-            )->first();
-        };
-    }
-
     /**
      * @return class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
      */
@@ -348,40 +250,6 @@ class FilamentSocialitePlugin implements Plugin
         $this->showDivider = $divider;
 
         return $this;
-    }
-
-    /**
-     * @param \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse $callback
-     */
-    public function loginRedirectCallback(Closure $callback): static
-    {
-        $this->loginRedirectCallback = $callback;
-
-        return $this;
-    }
-
-    /**
-     * @return \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser): \Illuminate\Http\RedirectResponse
-     */
-    public function getLoginRedirectCallback(): Closure
-    {
-        return $this->loginRedirectCallback ?? function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
-            if (($panel = Filament::getCurrentPanel())->hasTenancy()) {
-                $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
-
-                if (is_null($tenant) && $tenantRegistrationUrl = $panel->getTenantRegistrationUrl()) {
-                    return redirect()->intended($tenantRegistrationUrl);
-                }
-
-                return redirect()->intended(
-                    $panel->getUrl($tenant)
-                );
-            }
-
-            return redirect()->intended(
-                route($this->getDashboardRouteName())
-            );
-        };
     }
 
     public function getShowDivider(): bool
