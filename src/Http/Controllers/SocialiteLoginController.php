@@ -109,7 +109,7 @@ class SocialiteLoginController extends Controller
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
     {
         // Create a socialite user
-        $socialiteUser = app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
+        $socialiteUser = $this->socialite->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
 
         // Dispatch the socialite user connected event
         Events\SocialiteUserConnected::dispatch($socialiteUser);
@@ -125,7 +125,7 @@ class SocialiteLoginController extends Controller
             $user = app()->call($this->socialite->getPlugin()->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'socialite' => $this->socialite]);
 
             // Create a socialite user
-            return app()->call($this->socialite->getCreateSocialiteUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user, 'socialite' => $this->socialite]);
+            return $this->socialite->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
         });
 
         // Dispatch the registered event

@@ -23,12 +23,6 @@ class FilamentSocialite
     protected ?Closure $userResolver = null;
 
     /**
-     * @deprecated This function will be removed in the next major version. Use `setSocialiteUserModelClass()` on the plugin options instead, and implement the `FilamentSocialiteUser` contract on your class.
-     * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \Illuminate\Contracts\Auth\Authenticatable $user): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser
-     */
-    protected ?Closure $createSocialiteUserCallback = null;
-
-    /**
      * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
      */
     protected ?Closure $createUserCallback = null;
@@ -115,53 +109,6 @@ class FilamentSocialite
     public function getSocialiteUserModel(): FilamentSocialiteUserContract
     {
         return new ($this->getSocialiteUserModelClass());
-    }
-
-    /**
-     * @deprecated This function will be removed in the next major version. Use `setSocialiteUserModelClass()` on the plugin options instead, and implement the `FilamentSocialiteUser` contract on your class.
-     * @param ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \Illuminate\Contracts\Auth\Authenticatable $user): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $callback
-     * @return $this
-     */
-    public function setCreateSocialiteUserCallback(Closure $callback = null): static
-    {
-        $this->createSocialiteUserCallback = $callback;
-
-        return $this;
-    }
-
-    /**
-     * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable $callback
-     */
-//    public function setCreateUserCallback(Closure $callback = null): static
-//    {
-//        $this->createUserCallback = $callback;
-//
-//        return $this;
-//    }
-
-    /**
-     * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialite $socialite): ?(\Illuminate\Contracts\Auth\Authenticatable) $callback
-     */
-    public function setUserResolver(Closure $callback = null): static
-    {
-        $this->userResolver = $callback;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated This function will be removed in the next major version. Use `setSocialiteUserModelClass()` on the plugin options instead, and implement the `FilamentSocialiteUser` contract on your class.
-     * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \Illuminate\Contracts\Auth\Authenticatable $user): \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser
-     */
-    public function getCreateSocialiteUserCallback(): Closure
-    {
-        return $this->createSocialiteUserCallback ?? function (
-            string $provider,
-            SocialiteUserContract $oauthUser,
-            Authenticatable $user,
-        ) {
-            return $this->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
-        };
     }
 
     public function getGuard(): StatefulGuard
