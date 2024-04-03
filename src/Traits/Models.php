@@ -2,6 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Traits;
 
+use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;

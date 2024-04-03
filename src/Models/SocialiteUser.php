@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 
 /**
  * @property int $user_id
@@ -30,7 +31,7 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(Filament::getCurrentPanel()->getPlugin('filament-socialite')->getUserModelClass());
+        return $this->belongsTo(FilamentSocialite::getPlugin()->getUserModelClass());
     }
 
     public function getUser(): Authenticatable

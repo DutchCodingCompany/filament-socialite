@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
-use App\Models\User;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use Filament\Contracts\Plugin;
