@@ -2,6 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Models;
 
+use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Facades\Filament;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -9,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 
 /**
  * @property int $user_id
