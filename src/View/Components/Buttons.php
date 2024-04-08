@@ -2,14 +2,14 @@
 
 namespace DutchCodingCompany\FilamentSocialite\View\Components;
 
-use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use Illuminate\Support\MessageBag;
 use Illuminate\View\Component;
 
 class Buttons extends Component
 {
     public function __construct(
-        protected FilamentSocialite $socialite,
+        protected FilamentSocialitePlugin $plugin,
         public bool $showDivider = true,
     ) {
         //
@@ -27,8 +27,8 @@ class Buttons extends Component
         }
 
         return view('filament-socialite::components.buttons', [
-            'providers' => $this->socialite->getPlugin()->getProviders(),
-            'socialiteRoute' => $this->socialite->getPlugin()->getRoute(),
+            'providers' => $this->plugin->getProviders(),
+            'socialiteRoute' => $this->plugin->getRoute(),
             'messageBag' => $messageBag,
         ]);
     }

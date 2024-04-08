@@ -22,6 +22,8 @@ trait Routes
 
     public function getLoginRouteName(): string
     {
+        assert(is_string($this->loginRouteName));
+
         return $this->loginRouteName;
     }
 
@@ -34,6 +36,8 @@ trait Routes
 
     public function getDashboardRouteName(): string
     {
+        assert(is_string($this->dashboardRouteName));
+
         return $this->dashboardRouteName;
     }
 }

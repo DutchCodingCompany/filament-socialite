@@ -3,9 +3,14 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use Closure;
+use DutchCodingCompany\FilamentSocialite\Exceptions\GuardNotStateful;
+use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use Filament\Contracts\Plugin;
+use Filament\Facades\Filament;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\Factory;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Str;
 
@@ -36,14 +41,20 @@ class FilamentSocialitePlugin implements Plugin
 
     protected bool $showDivider = true;
 
-    public function __construct(protected Repository $config)
-    {
+    public function __construct(
+        protected Repository $config,
+        protected Factory $auth,
+    ) {
         //
     }
 
     public static function make(): static
     {
-        return app(static::class);
+        $instance = app(static::class);
+
+        app()->singleton(static::class, fn () => $instance);
+
+        return $instance;
     }
 
     public function getId(): string
@@ -98,6 +109,8 @@ class FilamentSocialitePlugin implements Plugin
 
     public function getSlug(): string
     {
+        assert(is_string($this->slug));
+
         return $this->slug;
     }
 
@@ -189,5 +202,23 @@ class FilamentSocialitePlugin implements Plugin
     public function getShowDivider(): bool
     {
         return $this->showDivider;
+    }
+
+    public function getPanel(): Panel
+    {
+        return Filament::getCurrentPanel() ?? throw new ImplementationException('No panel is currently set.');
+    }
+
+    public function getGuard(): StatefulGuard
+    {
+        $guard = $this->auth->guard(
+            $guardName = $this->getPanel()->getAuthGuard()
+        );
+
+        if ($guard instanceof StatefulGuard) {
+            return $guard;
+        }
+
+        throw GuardNotStateful::make($guardName);
     }
 }

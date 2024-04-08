@@ -12,6 +12,7 @@ use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTenantUser;
 use Filament\Facades\Filament;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Facades\Socialite;
+use LogicException;
 use Mockery;
 
 class SocialiteTenantLoginTest extends TestCase
@@ -24,17 +25,16 @@ class SocialiteTenantLoginTest extends TestCase
 
     public function testTenantLogin(): void
     {
-        FilamentSocialite::getPlugin()
-            ->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
-                assert($socialiteUser instanceof SocialiteUser);
+        app(FilamentSocialitePlugin::class)->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
+            assert($socialiteUser instanceof SocialiteUser);
 
-                $this->assertEquals($this->panelName, Filament::getCurrentPanel()->getId());
-                $this->assertEquals('github', $provider);
-                $this->assertEquals('github', $socialiteUser->provider);
-                $this->assertEquals('test-socialite-user-id', $socialiteUser->provider_id);
+            $this->assertEquals($this->panelName, $plugin->getPanel()->getId());
+            $this->assertEquals('github', $provider);
+            $this->assertEquals('github', $socialiteUser->provider);
+            $this->assertEquals('test-socialite-user-id', $socialiteUser->provider_id);
 
-                return redirect()->to('/some-tenant-url');
-            });
+            return redirect()->to('/some-tenant-url');
+        });
 
         $response = $this
             ->getJson("/$this->panelName/oauth/github")
@@ -56,7 +56,7 @@ class SocialiteTenantLoginTest extends TestCase
             ->getJson("/oauth/callback/github?state=$state")
             ->assertStatus(302);
 
-        $this->assertStringContainsString('/some-tenant-url', $response->headers->get('Location'));
+        $this->assertStringContainsString('/some-tenant-url', $response->headers->get('Location') ?? throw new LogicException('Location header not set.'));
 
         $this->assertDatabaseHas('socialite_users', [
             'provider' => 'github',

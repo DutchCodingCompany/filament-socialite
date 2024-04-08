@@ -4,6 +4,8 @@ namespace DutchCodingCompany\FilamentSocialite\Tests;
 
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialiteServiceProvider;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestUser;
 use Filament\Facades\Filament;
 use Filament\FilamentServiceProvider;
@@ -41,7 +43,7 @@ class TestCase extends Orchestra
             ) => 'DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
 
-        $this->app->make(Kernel::class)->pushMiddleware(StartSession::class);
+        $this->app?->make(Kernel::class)->pushMiddleware(StartSession::class);
     }
 
     protected function getPackageProviders($app)

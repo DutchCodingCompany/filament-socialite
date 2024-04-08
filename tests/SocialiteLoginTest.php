@@ -5,6 +5,9 @@ namespace DutchCodingCompany\FilamentSocialite\Tests;
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Events\RegistrationNotEnabled;
 use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Crypt;
@@ -13,6 +16,7 @@ use Illuminate\Support\Facades\Event;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
+use LogicException;
 use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -26,7 +30,7 @@ class SocialiteLoginTest extends TestCase
 
         $state = session()->get('state');
 
-        $location = $response->headers->get('location');
+        $location = $response->headers->get('location') ?? throw new LogicException('Location header not set.');
 
         parse_str($location, $urlQuery);
 
@@ -73,7 +77,7 @@ class SocialiteLoginTest extends TestCase
             ]);
         }
 
-        FilamentSocialite::getPlugin()->registrationEnabled($registrationEnabled);
+        app(FilamentSocialitePlugin::class)->registrationEnabled($registrationEnabled);
 
         $this
             ->getJson("/$this->panelName/oauth/github")
