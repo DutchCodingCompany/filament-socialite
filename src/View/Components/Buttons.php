@@ -8,11 +8,12 @@ use Illuminate\View\Component;
 
 class Buttons extends Component
 {
+    protected FilamentSocialitePlugin $plugin;
+
     public function __construct(
-        protected FilamentSocialitePlugin $plugin,
         public bool $showDivider = true,
     ) {
-        //
+        $this->plugin = FilamentSocialitePlugin::current();
     }
 
     /**

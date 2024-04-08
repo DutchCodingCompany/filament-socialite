@@ -84,7 +84,7 @@ class TestCase extends Orchestra
                                 'icon' => 'fab-gitlab',
                             ],
                         ])
-                        ->registrationEnabled(true)
+                        ->registration(true)
                         ->userModelClass($this->userModelClass),
                 ]),
         );

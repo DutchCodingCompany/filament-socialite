@@ -22,16 +22,11 @@ class SocialiteLoginController extends Controller
 {
     use EvaluatesClosures;
 
-    protected FilamentSocialitePlugin $plugin;
-
-    public function __construct()
-    {
-        $this->plugin = FilamentSocialitePlugin::current();
-    }
+    private ?FilamentSocialitePlugin $plugin = null;
 
     public function redirectToProvider(string $provider): RedirectResponse
     {
-        if (! $this->plugin->isProviderConfigured($provider)) {
+        if (! $this->plugin()->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
@@ -40,10 +35,10 @@ class SocialiteLoginController extends Controller
 
         $redirect = $driver
             ->with([
-                ...$this->plugin->getOptionalParameters($provider),
-                'state' => $state = PanelFromUrlQuery::encrypt($this->plugin->getPanel()->getId()),
+                ...$this->plugin()->getOptionalParameters($provider),
+                'state' => $state = PanelFromUrlQuery::encrypt($this->plugin()->getPanel()->getId()),
             ])
-            ->scopes($this->plugin->getProviderScopes($provider))
+            ->scopes($this->plugin()->getProviderScopes($provider))
             ->redirect();
 
         // Set state value to be equal to the encrypted panel id. This value is used to
@@ -67,7 +62,7 @@ class SocialiteLoginController extends Controller
 
     protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser): ?FilamentSocialiteUserContract
     {
-        return $this->plugin->getSocialiteUserModel()::findForProvider($provider, $oauthUser);
+        return $this->plugin()->getSocialiteUserModel()::findForProvider($provider, $oauthUser);
     }
 
     protected function redirectToLogin(string $message): RedirectResponse
@@ -75,12 +70,12 @@ class SocialiteLoginController extends Controller
         // Add error message to the session, this way we can show an error message on the form.
         session()->flash('filament-socialite-login-error', __($message));
 
-        return redirect()->route($this->plugin->getLoginRouteName());
+        return redirect()->route($this->plugin()->getLoginRouteName());
     }
 
     protected function isUserAllowed(SocialiteUserContract $user): bool
     {
-        $domains = $this->plugin->getDomainAllowList();
+        $domains = $this->plugin()->getDomainAllowList();
 
         // When no domains are specified, all users are allowed
         if (count($domains) < 1) {
@@ -100,18 +95,18 @@ class SocialiteLoginController extends Controller
     protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser, SocialiteUserContract $oauthUser): RedirectResponse
     {
         // Log the user in
-        $this->plugin->getGuard()->login($socialiteUser->getUser(), $this->plugin->getRememberLogin());
+        $this->plugin()->getGuard()->login($socialiteUser->getUser(), $this->plugin()->getRememberLogin());
 
         // Dispatch the login event
         Events\Login::dispatch($socialiteUser, $oauthUser);
 
-        return app()->call($this->plugin->getLoginRedirectCallback(), ['provider' => $provider, 'socialiteUser' => $socialiteUser, 'plugin' => $this->plugin]);
+        return app()->call($this->plugin()->getRedirectAfterLoginUsing(), ['provider' => $provider, 'socialiteUser' => $socialiteUser, 'plugin' => $this->plugin]);
     }
 
     protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
     {
         // Create a socialite user
-        $socialiteUser = $this->plugin->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
+        $socialiteUser = $this->plugin()->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
 
         // Dispatch the socialite user connected event
         Events\SocialiteUserConnected::dispatch($socialiteUser);
@@ -124,10 +119,10 @@ class SocialiteLoginController extends Controller
     {
         $socialiteUser = DB::transaction(function () use ($provider, $oauthUser) {
             // Create a user
-            $user = app()->call($this->plugin->getCreateUserCallback(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'plugin' => $this->plugin]);
+            $user = app()->call($this->plugin()->getCreateUserUsing(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'plugin' => $this->plugin]);
 
             // Create a socialite user
-            return $this->plugin->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
+            return $this->plugin()->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
         });
 
         // Dispatch the registered event
@@ -139,7 +134,7 @@ class SocialiteLoginController extends Controller
 
     public function processCallback(string $provider): RedirectResponse
     {
-        if (! $this->plugin->isProviderConfigured($provider)) {
+        if (! $this->plugin()->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
         }
 
@@ -164,14 +159,14 @@ class SocialiteLoginController extends Controller
         }
 
         // See if a user already exists, but not for this socialite provider
-        $user = app()->call($this->plugin->getUserResolver(), [
+        $user = app()->call($this->plugin()->getResolveUserUsing(), [
             'provider' => $provider,
             'oauthUser' => $oauthUser,
             'plugin' => $this->plugin,
         ]);
 
         // See if registration is allowed
-        if (! $this->evaluate($this->plugin->getRegistrationEnabled(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user])) {
+        if (! $this->evaluate($this->plugin()->getRegistration(), ['provider' => $provider, 'oauthUser' => $oauthUser, 'user' => $user])) {
             Events\RegistrationNotEnabled::dispatch($provider, $oauthUser, $user);
 
             return $this->redirectToLogin('filament-socialite::auth.registration-not-enabled');
@@ -181,5 +176,10 @@ class SocialiteLoginController extends Controller
         return $user
             ? $this->registerSocialiteUser($provider, $oauthUser, $user)
             : $this->registerOauthUser($provider, $oauthUser);
+    }
+
+    private function plugin(): FilamentSocialitePlugin
+    {
+        return $this->plugin ?? $this->plugin = FilamentSocialitePlugin::current();
     }
 }

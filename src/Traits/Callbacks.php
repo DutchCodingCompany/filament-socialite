@@ -13,24 +13,24 @@ trait Callbacks
     /**
      * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, self $socialite): \Illuminate\Contracts\Auth\Authenticatable
      */
-    protected ?Closure $createUserCallback = null;
+    protected ?Closure $createUserUsing = null;
 
     /**
      * @phpstan-var ?\Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Http\RedirectResponse
      */
-    protected ?Closure $loginRedirectCallback = null;
+    protected ?Closure $redirectAfterLoginUsing = null;
 
     /**
      * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): ?(\Illuminate\Contracts\Auth\Authenticatable)
      */
-    protected ?Closure $userResolver = null;
+    protected ?Closure $resolveUserUsing = null;
 
     /**
      * @param ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Contracts\Auth\Authenticatable $callback
      */
-    public function createUserCallback(Closure $callback = null): static
+    public function createUserUsing(Closure $callback = null): static
     {
-        $this->createUserCallback = $callback;
+        $this->createUserUsing = $callback;
 
         return $this;
     }
@@ -38,9 +38,9 @@ trait Callbacks
     /**
      * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Contracts\Auth\Authenticatable
      */
-    public function getCreateUserCallback(): Closure
+    public function getCreateUserUsing(): Closure
     {
-        return $this->createUserCallback ?? function (
+        return $this->createUserUsing ?? function (
             string $provider,
             SocialiteUserContract $oauthUser,
             FilamentSocialitePlugin $plugin,
@@ -60,9 +60,9 @@ trait Callbacks
     /**
      * @param \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Http\RedirectResponse $callback
      */
-    public function loginRedirectCallback(Closure $callback): static
+    public function redirectAfterLoginUsing(Closure $callback): static
     {
-        $this->loginRedirectCallback = $callback;
+        $this->redirectAfterLoginUsing = $callback;
 
         return $this;
     }
@@ -70,10 +70,9 @@ trait Callbacks
     /**
      * @return \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Http\RedirectResponse
      */
-    // @TODO redirectAfterLoginUsing
-    public function getLoginRedirectCallback(): Closure
+    public function getRedirectAfterLoginUsing(): Closure
     {
-        return $this->loginRedirectCallback ?? function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
+        return $this->redirectAfterLoginUsing ?? function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
             if (($panel = $this->getPanel())->hasTenancy()) {
                 $tenant = Filament::getUserDefaultTenant($socialiteUser->getUser());
 
@@ -95,9 +94,9 @@ trait Callbacks
     /**
      * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): ?(\Illuminate\Contracts\Auth\Authenticatable) $callback
      */
-    public function userResolver(Closure $callback = null): static
+    public function resolveUserUsing(Closure $callback = null): static
     {
-        $this->userResolver = $callback;
+        $this->resolveUserUsing = $callback;
 
         return $this;
     }
@@ -105,9 +104,9 @@ trait Callbacks
     /**
      * @return \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): ?(\Illuminate\Contracts\Auth\Authenticatable)
      */
-    public function getUserResolver(): Closure
+    public function getResolveUserUsing(): Closure
     {
-        return $this->userResolver ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
+        return $this->resolveUserUsing ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
             /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $model */
             $model = (new $this->userModelClass());
 

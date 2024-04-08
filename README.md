@@ -43,6 +43,7 @@ php artisan vendor:publish --tag="filament-socialite-translations"
 You need to register the plugin in the Filament panel provider (the default filename is `app/Providers/Filament/AdminPanelProvider.php`). The following options are available:
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -62,10 +63,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
             ],
         ])
         // (optional) Enable/disable registration of new (socialite-) users.
-        ->registrationEnabled(true)
+        ->registration(true)
         // (optional) Enable/disable registration of new (socialite-) users using a callback.
         // In this example, a login flow can only continue if there exists a user (Authenticatable) already.
-        ->registrationEnabled(fn (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) => (bool) $user)
+        ->registration(fn (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) => (bool) $user)
         // (optional) Change the associated model class.
         ->userModelClass(\App\Models\User::class)
         // (optional) Change the associated socialite class (see below).
@@ -102,14 +103,14 @@ This can be used to setup SSO for internal use.
 ->plugin(
     FilamentSocialitePlugin::make()
         // ...
-        ->registrationEnabled(true)
+        ->registration(true)
         ->domainAllowList(['localhost'])
 );
 ```
 
 ### Changing how an Authenticatable user is created or retrieved
 
-You can use the `createUserCallback` and `userResolver` methods to change how a user is created or retrieved.
+You can use the `createUserUsing` and `resolveUserUsing` methods to change how a user is created or retrieved.
 
 ```php
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
@@ -118,10 +119,10 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 ->plugin(
     FilamentSocialitePlugin::make()
         // ...
-        ->createUserCallback(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
+        ->createUserUsing(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
             // Logic to create a new user.
         })
-        ->userResolver(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
+        ->resolveUserUsing(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
             // Logic to retrieve an existing user.
         })
         ...
@@ -174,7 +175,7 @@ class SocialiteUser implements FilamentSocialiteUserContract
 ### Change login redirect
 
 When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).
-If you want to change this behavior, you can call the 'loginRedirectCallback' method on the `FilamentSocialitePlugin`.
+If you want to change this behavior, you can call the 'redirectAfterLoginUsing' method on the `FilamentSocialitePlugin`.
 
 ```php
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
@@ -182,7 +183,7 @@ use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser 
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 
 FilamentSocialitePlugin::make()
-    ->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
+    ->redirectAfterLoginUsing(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
         // Change the redirect behaviour here.
     });
 ```

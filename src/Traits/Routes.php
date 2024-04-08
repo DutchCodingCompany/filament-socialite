@@ -10,7 +10,7 @@ trait Routes
 
     public function getRoute(): string
     {
-        return "socialite.$this->slug.oauth.redirect";
+        return "socialite.{$this->getSlug()}.oauth.redirect";
     }
 
     public function loginRouteName(string $value): static

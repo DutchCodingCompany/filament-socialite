@@ -2,14 +2,12 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTeam;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTenantUser;
-use Filament\Facades\Filament;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Facades\Socialite;
 use LogicException;
@@ -25,7 +23,7 @@ class SocialiteTenantLoginTest extends TestCase
 
     public function testTenantLogin(): void
     {
-        FilamentSocialitePlugin::current()->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
+        FilamentSocialitePlugin::current()->redirectAfterLoginUsing(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
             assert($socialiteUser instanceof SocialiteUser);
 
             $this->assertEquals($this->panelName, $plugin->getPanel()->getId());

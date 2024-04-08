@@ -35,7 +35,7 @@ class FilamentSocialitePlugin implements Plugin
     /**
      * @phpstan-var (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
      */
-    protected Closure | bool $registrationEnabled = false;
+    protected Closure | bool $registration = false;
 
     protected ?string $slug = null;
 
@@ -57,10 +57,14 @@ class FilamentSocialitePlugin implements Plugin
 
     public static function current(): static
     {
-        /** @var ?static $plugin */
-        $plugin = Filament::getCurrentPanel()?->getPlugin('filament-socialite');
+        if (Filament::getCurrentPanel()?->hasPlugin('filament-socialite')) {
+            /** @var static $plugin */
+            $plugin = Filament::getCurrentPanel()->getPlugin('filament-socialite');
 
-        return $plugin ?? throw new ImplementationException('FilamentSocialitePlugin not found.');
+            return $plugin;
+        }
+
+        throw new ImplementationException('No current panel found with filament-socialite plugin.');
     }
 
     public function getId(): string
@@ -124,9 +128,9 @@ class FilamentSocialitePlugin implements Plugin
      * @param (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool $value
      * @return $this
      */
-    public function registrationEnabled(Closure | bool $value): static
+    public function registration(Closure | bool $value = true): static
     {
-        $this->registrationEnabled = $value;
+        $this->registration = $value;
 
         return $this;
     }
@@ -134,9 +138,9 @@ class FilamentSocialitePlugin implements Plugin
     /**
      * @return (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
      */
-    public function getRegistrationEnabled(): Closure | bool
+    public function getRegistration(): Closure | bool
     {
-        return $this->registrationEnabled;
+        return $this->registration;
     }
 
     /**

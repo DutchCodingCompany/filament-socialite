@@ -4,10 +4,7 @@ namespace DutchCodingCompany\FilamentSocialite\Tests;
 
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Events\RegistrationNotEnabled;
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
-use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
-use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Crypt;
@@ -77,7 +74,7 @@ class SocialiteLoginTest extends TestCase
             ]);
         }
 
-        FilamentSocialitePlugin::current()->registrationEnabled($registrationEnabled);
+        FilamentSocialitePlugin::current()->registration($registrationEnabled);
 
         $this
             ->getJson("/$this->panelName/oauth/github")
