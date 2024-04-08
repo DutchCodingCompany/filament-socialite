@@ -178,8 +178,8 @@ class SocialiteLoginController extends Controller
             : $this->registerOauthUser($provider, $oauthUser);
     }
 
-    private function plugin(): FilamentSocialitePlugin
+    protected function plugin(): FilamentSocialitePlugin
     {
-        return $this->plugin ?? $this->plugin = FilamentSocialitePlugin::current();
+        return $this->plugin ??= FilamentSocialitePlugin::current();
     }
 }
