@@ -39,6 +39,8 @@ class FilamentSocialitePlugin implements Plugin
 
     protected ?string $slug = null;
 
+    protected ?string $panelId = null;
+
     protected bool $showDivider = true;
 
     public function __construct(
@@ -50,11 +52,15 @@ class FilamentSocialitePlugin implements Plugin
 
     public static function make(): static
     {
-        $instance = app(static::class);
+        return app(static::class);
+    }
 
-        app()->singleton(static::class, fn () => $instance);
+    public static function current(): static
+    {
+        /** @var ?static $plugin */
+        $plugin = Filament::getCurrentPanel()?->getPlugin('filament-socialite');
 
-        return $instance;
+        return $plugin ?? throw new ImplementationException('FilamentSocialitePlugin not found.');
     }
 
     public function getId(): string
@@ -64,17 +70,7 @@ class FilamentSocialitePlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        if ($this->slug === null) {
-            $this->slug(Str::slug($panel->getId()));
-        }
-
-        if ($this->loginRouteName === null) {
-            $this->loginRouteName("filament.{$panel->getId()}.auth.login");
-        }
-
-        if ($this->dashboardRouteName === null) {
-            $this->dashboardRouteName("filament.{$panel->getId()}.pages.dashboard");
-        }
+        $this->panelId = $panel->getId();
     }
 
     public function boot(Panel $panel): void
@@ -100,7 +96,7 @@ class FilamentSocialitePlugin implements Plugin
         return $this->providers;
     }
 
-    public function slug(string $slug): static
+    public function slug(?string $slug): static
     {
         $this->slug = $slug;
 
@@ -109,9 +105,7 @@ class FilamentSocialitePlugin implements Plugin
 
     public function getSlug(): string
     {
-        assert(is_string($this->slug));
-
-        return $this->slug;
+        return $this->slug ?? Str::slug($this->getPanelId());
     }
 
     public function rememberLogin(bool $value): static
@@ -206,7 +200,12 @@ class FilamentSocialitePlugin implements Plugin
 
     public function getPanel(): Panel
     {
-        return Filament::getCurrentPanel() ?? throw new ImplementationException('No panel is currently set.');
+        return Filament::getPanel($this->getPanelId());
+    }
+
+    public function getPanelId(): string
+    {
+        return $this->panelId ?? throw new ImplementationException('Panel ID not set.');
     }
 
     public function getGuard(): StatefulGuard

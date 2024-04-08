@@ -5,7 +5,6 @@ namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 use DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
-use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
@@ -23,10 +22,11 @@ class SocialiteLoginController extends Controller
 {
     use EvaluatesClosures;
 
-    public function __construct(
-        protected FilamentSocialitePlugin $plugin,
-    ) {
-        //
+    protected FilamentSocialitePlugin $plugin;
+
+    public function __construct()
+    {
+        $this->plugin = FilamentSocialitePlugin::current();
     }
 
     public function redirectToProvider(string $provider): RedirectResponse

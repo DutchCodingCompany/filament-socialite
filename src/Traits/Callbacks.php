@@ -3,7 +3,6 @@
 namespace DutchCodingCompany\FilamentSocialite\Traits;
 
 use Closure;
-use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Facades\Filament;
@@ -71,6 +70,7 @@ trait Callbacks
     /**
      * @return \Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Http\RedirectResponse
      */
+    // @TODO redirectAfterLoginUsing
     public function getLoginRedirectCallback(): Closure
     {
         return $this->loginRedirectCallback ?? function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
@@ -87,7 +87,7 @@ trait Callbacks
             }
 
             return redirect()->intended(
-                route($this->getDashboardRouteName())
+                $this->getPanel()->getUrl()
             );
         };
     }

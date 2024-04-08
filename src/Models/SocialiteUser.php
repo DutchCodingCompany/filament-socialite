@@ -30,7 +30,7 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(app(FilamentSocialitePlugin::class)->getUserModelClass());
+        return $this->belongsTo(FilamentSocialitePlugin::current()->getUserModelClass());
     }
 
     public function getUser(): Authenticatable

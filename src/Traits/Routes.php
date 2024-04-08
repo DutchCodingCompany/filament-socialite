@@ -22,9 +22,7 @@ trait Routes
 
     public function getLoginRouteName(): string
     {
-        assert(is_string($this->loginRouteName));
-
-        return $this->loginRouteName;
+        return $this->loginRouteName ?? "filament.{$this->getPanelId()}.auth.login";
     }
 
     public function dashboardRouteName(string $value): static
@@ -36,8 +34,6 @@ trait Routes
 
     public function getDashboardRouteName(): string
     {
-        assert(is_string($this->dashboardRouteName));
-
-        return $this->dashboardRouteName;
+        return $this->dashboardRouteName ?? "filament.{$this->getPanelId()}.pages.dashboard";
     }
 }

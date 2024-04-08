@@ -25,7 +25,7 @@ class SocialiteTenantLoginTest extends TestCase
 
     public function testTenantLogin(): void
     {
-        app(FilamentSocialitePlugin::class)->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
+        FilamentSocialitePlugin::current()->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
             assert($socialiteUser instanceof SocialiteUser);
 
             $this->assertEquals($this->panelName, $plugin->getPanel()->getId());

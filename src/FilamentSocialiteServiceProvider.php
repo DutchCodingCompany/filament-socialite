@@ -39,9 +39,7 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
             static function (): ?string {
                 $panel = Filament::getCurrentPanel();
 
-                assert($panel instanceof Panel);
-
-                if (! $panel->hasPlugin('filament-socialite')) {
+                if (! $panel?->hasPlugin('filament-socialite')) {
                     return null;
                 }
 

@@ -77,7 +77,7 @@ See [Socialite Providers](https://socialiteproviders.com/) for additional Social
 
 ### Icons
 
-You can specify a Blade Icon. You can add Font Awesome brand
+You can specify a custom icon for each of your login providers. You can add Font Awesome brand
 icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome) by running:
 ```
 composer require owenvoke/blade-fontawesome
@@ -101,6 +101,7 @@ This can be used to setup SSO for internal use.
 ```php
 ->plugin(
     FilamentSocialitePlugin::make()
+        // ...
         ->registrationEnabled(true)
         ->domainAllowList(['localhost'])
 );
@@ -111,16 +112,16 @@ This can be used to setup SSO for internal use.
 You can use the `createUserCallback` and `userResolver` methods to change how a user is created or retrieved.
 
 ```php
-use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 ->plugin(
     FilamentSocialitePlugin::make()
-        ...
-        ->createUserCallback(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+        // ...
+        ->createUserCallback(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
             // Logic to create a new user.
         })
-        ->userResolver(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) {
+        ->userResolver(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
             // Logic to retrieve an existing user.
         })
         ...
@@ -176,11 +177,12 @@ When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tena
 If you want to change this behavior, you can call the 'loginRedirectCallback' method on the `FilamentSocialitePlugin`.
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 
 FilamentSocialitePlugin::make()
-    ->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
+    ->loginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
         // Change the redirect behaviour here.
     });
 ```
