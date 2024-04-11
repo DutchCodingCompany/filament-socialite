@@ -5,25 +5,25 @@ For version 2 we refactored most of the plugin to be more consistent with the Fi
 
 ### Method names
 
-Every method name has been changed to be more consisten with the Filament naming conventions. The following changes have been made:
+Every method name has been changed to be more consistent with the Filament naming conventions. The following changes have been made:
 
-- `setProviders` -> `providers`
-- `setSlug` -> `slug`
-- `setLoginRouteName` -> `loginRouteName`
-- `setDashboardRouteName` -> `dashboardRouteName`
-- `setRememberLogin` -> `rememberLogin`
-- `setRegistrationEnabled` -> `registration`
-- `getRegistrationEnabled` -> `getRegistration`
-- `setDomainAllowList` -> `domainAllowList`
-- `setSocialiteUserModelClass` -> `socialiteUserModelClass
-- `setUserModelClass` -> `userModelClass`
-- `setShowDivider` -> `showDivider`
+- `setProviders()` -> `providers()` 
+- `setSlug()` -> `slug()` 
+- `setLoginRouteName()` -> `loginRouteName()` 
+- `setDashboardRouteName()` -> `dashboardRouteName()` 
+- `setRememberLogin()` -> `rememberLogin()` 
+- `setRegistrationEnabled()` -> `registration()` 
+- `getRegistrationEnabled()` -> `getRegistration()` 
+- `setDomainAllowList()` -> `domainAllowList()` 
+- `setSocialiteUserModelClass()` -> `socialiteUserModelClass()`
+- `setUserModelClass()` -> `userModelClass()` 
+- `setShowDivider()` -> `showDivider()` 
 
-### Callbacks
+#### Callbacks
 
 **setCreateUserCallback**
 
-The `setCreateUserCallback` has been renamed to `createUserUsing`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
+The `setCreateUserCallback()` has been renamed to `createUserUsing()`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
 
 ```php
 FilamentSocialitePlugin::make()
@@ -35,7 +35,7 @@ FilamentSocialitePlugin::make()
 
 **setUserResolver**
 
-The `setUserResolver` has been renamed to `resolveUserUsing`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
+The `setUserResolver()` has been renamed to `resolveUserUsing()`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
 
 ```php
 FilamentSocialitePlugin::make()
@@ -47,7 +47,7 @@ FilamentSocialitePlugin::make()
 
 **setLoginRedirectCallback**
 
-The `setLoginRedirectCallback` has been renamed to `redirectAfterLoginUsing`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
+The `setLoginRedirectCallback()` has been renamed to `redirectAfterLoginUsing()`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
 
 ```php
 FilamentSocialitePlugin::make()
@@ -79,7 +79,7 @@ FilamentSocialitePlugin::make()
 
 **Scopes**
 
-Scopes where first configured in the `services.php` file, but now they should be configured in the `providers` method.
+Scopes where first configured in the `services.php` file, but now they should also be configured in the `providers` method.
 
 ```php
 FilamentSocialitePlugin::make()
