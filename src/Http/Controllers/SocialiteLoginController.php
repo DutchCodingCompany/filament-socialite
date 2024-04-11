@@ -35,10 +35,10 @@ class SocialiteLoginController extends Controller
 
         $redirect = $driver
             ->with([
-                ...$this->plugin()->getOptionalParameters($provider),
+                ...$this->plugin()->getProvider($provider)->getWith(),
                 'state' => $state = PanelFromUrlQuery::encrypt($this->plugin()->getPanel()->getId()),
             ])
-            ->scopes($this->plugin()->getProviderScopes($provider))
+            ->scopes($this->plugin()->getProvider($provider)->getScopes())
             ->redirect();
 
         // Set state value to be equal to the encrypted panel id. This value is used to

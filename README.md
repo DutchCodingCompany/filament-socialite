@@ -44,6 +44,8 @@ You need to register the plugin in the Filament panel provider (the default file
 
 ```php
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+use Filament\Support\Colors;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -52,6 +54,15 @@ use Illuminate\Contracts\Auth\Authenticatable;
     FilamentSocialitePlugin::make()
         // (required) Add providers corresponding with providers in `config/services.php`. 
         ->providers([
+            // (advisable) Use object syntax:
+            Provider::make('gitlab')
+                ->label('GitLab')
+                ->icon('fab-gitlab')
+                ->color(Color::hex('#2f2a6b'))
+                ->outlined(false)
+                ->scopes(['...'])
+                ->with(['...']),
+            // (legacy) Use array syntax:
             'github' => [
                 'label' => 'GitHub',
                 // Custom icon requires an additional package, see below.

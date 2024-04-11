@@ -12,6 +12,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class FilamentSocialitePlugin implements Plugin
@@ -21,7 +22,7 @@ class FilamentSocialitePlugin implements Plugin
     use Traits\Models;
 
     /**
-     * @var array<string, mixed>
+     * @var array<string, \DutchCodingCompany\FilamentSocialite\Provider>
      */
     protected array $providers = [];
 
@@ -87,17 +88,31 @@ class FilamentSocialitePlugin implements Plugin
      */
     public function providers(array $providers): static
     {
-        $this->providers = $providers;
+        $this->providers = Arr::mapWithKeys(
+            $providers,
+            static fn (Provider | array $value, string $key) => is_array($value)
+                ? [$key => Provider::make($key)->fill($value)]
+                : [$value->getName() => $value],
+        );
 
         return $this;
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<string, \DutchCodingCompany\FilamentSocialite\Provider>
      */
     public function getProviders(): array
     {
         return $this->providers;
+    }
+
+    public function getProvider(string $provider): Provider
+    {
+        if (! $this->isProviderConfigured($provider)) {
+            throw ProviderNotConfigured::make($provider);
+        }
+
+        return $this->providers[$provider];
     }
 
     public function slug(?string $slug): static
@@ -164,30 +179,6 @@ class FilamentSocialitePlugin implements Plugin
     public function isProviderConfigured(string $provider): bool
     {
         return $this->config->has('services.'.$provider) && isset($this->providers[$provider]);
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getOptionalParameters(string $provider): array
-    {
-        if (! $this->isProviderConfigured($provider)) {
-            throw ProviderNotConfigured::make($provider);
-        }
-
-        return $this->providers[$provider]['with'] ?? [];
-    }
-
-    /**
-     * @return string|array<string>
-     */
-    public function getProviderScopes(string $provider): string | array
-    {
-        if (! $this->isProviderConfigured($provider)) {
-            throw ProviderNotConfigured::make($provider);
-        }
-
-        return $this->providers[$provider]['scopes'] ?? [];
     }
 
     public function showDivider(bool $divider): static

@@ -26,7 +26,7 @@ vendor/bin/upgrade-v2
 ```
 #### Callbacks
 
-**setCreateUserCallback**
+**setCreateUserCallback()**
 
 The `setCreateUserCallback()` has been renamed to `createUserUsing()`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
 
@@ -38,7 +38,7 @@ FilamentSocialitePlugin::make()
     })
 ```
 
-**setUserResolver**
+**setUserResolver()**
 
 The `setUserResolver()` has been renamed to `resolveUserUsing()`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
 
@@ -50,7 +50,7 @@ FilamentSocialitePlugin::make()
     })
 ```
 
-**setLoginRedirectCallback**
+**setLoginRedirectCallback()**
 
 The `setLoginRedirectCallback()` has been renamed to `redirectAfterLoginUsing()`. This function was first registered in the `boot` method of your `AppServiceProvider.php`, but now it should be called on the plugin.
 
@@ -61,6 +61,19 @@ FilamentSocialitePlugin::make()
         // Change the redirect behaviour here.
     })
 ```
+
+#### Removals
+**getOptionalParameters()**
+
+This function was used internally only inside the `SocialiteLoginController`. If you haven't extended this controller, you can ignore this change.
+
+Provider details can now be retrieved using `$plugin->getProvider($provider)->getWith()`.
+
+**getProviderScopes()**
+
+This function was used internally only inside the `SocialiteLoginController`. If you haven't extended this controller, you can ignore this change.
+
+Provider details can now be retrieved using `$plugin->getProvider($provider)->getScopes()`.
 
 ### Configuration
 
