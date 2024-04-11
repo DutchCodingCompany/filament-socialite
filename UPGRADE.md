@@ -19,6 +19,11 @@ Every method name has been changed to be more consistent with the Filament namin
 - `setUserModelClass()` -> `userModelClass()` 
 - `setShowDivider()` -> `showDivider()` 
 
+**Note:** We've included a simple rector script which automatically updates the method names. It checks all panel providers in the `app\Provider\Filament` directory. You can run the script by executing the following command:
+
+```bash
+vendor/bin/upgrade-v2
+```
 #### Callbacks
 
 **setCreateUserCallback**

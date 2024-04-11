@@ -3,6 +3,4 @@
 
 namespace Composer;
 
-exec("vendor/bin/rector process --config vendor/dutchcodingcompany/filament-socialite/rector.php --clear-cache", $output);
-
-var_dump($output);
+exec("vendor/bin/rector process --config vendor/dutchcodingcompany/filament-socialite/rector.php --clear-cache");
