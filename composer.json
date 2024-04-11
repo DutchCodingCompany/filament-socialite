@@ -37,7 +37,8 @@
         "larastan/larastan": "^2.9",
         "nunomaduro/collision": "^7.0|^8.1",
         "orchestra/testbench": "^8.0|^9.0",
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "rector/rector": "^0.19.8"
     },
     "suggest": {
         "owenvoke/blade-fontawesome": "^2.0"
@@ -46,13 +47,17 @@
         "psr-4": {
             "DutchCodingCompany\\FilamentSocialite\\": "src",
             "DutchCodingCompany\\FilamentSocialite\\Tests\\": "tests",
-            "DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\": "database/factories"
+            "DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\": "database/factories",
+            "Utils\\Rector\\": "utils/rector/src"
         }
     },
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/phpunit"
     },
+    "bin": [
+        "bin/upgrade-v2"
+    ],
     "config": {
         "sort-packages": true,
         "allow-plugins": {
