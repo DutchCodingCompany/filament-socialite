@@ -84,15 +84,14 @@ class FilamentSocialitePlugin implements Plugin
     }
 
     /**
-     * @param array<string, mixed> $providers
+     * @param array<array-key, \DutchCodingCompany\FilamentSocialite\Provider> $providers
      */
     public function providers(array $providers): static
     {
+        // Assign providers as key-value pairs with the provider name as the key.
         $this->providers = Arr::mapWithKeys(
             $providers,
-            static fn (Provider | array $value, string $key) => is_array($value)
-                ? [$key => Provider::make($key)->fill($value)]
-                : [$value->getName() => $value],
+            static fn (Provider $value) => [$value->getName() => $value],
         );
 
         return $this;

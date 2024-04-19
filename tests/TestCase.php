@@ -6,6 +6,7 @@ use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialiteServiceProvider;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use DutchCodingCompany\FilamentSocialite\Provider;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestUser;
 use Filament\Facades\Filament;
 use Filament\FilamentServiceProvider;
@@ -73,16 +74,18 @@ class TestCase extends Orchestra
                 ->plugins([
                     FilamentSocialitePlugin::make()
                         ->providers([
-                            'github' => [
-                                'label' => 'GitHub',
-                                'icon' => 'fab-github',
-                                'color' => 'danger',
-                                'outlined' => false,
-                            ],
-                            'gitlab' => [
-                                'label' => 'GitLab',
-                                'icon' => 'fab-gitlab',
-                            ],
+                            Provider::make('github')
+                                ->label('GitHub')
+                                ->icon('fab-github')
+                                ->color( 'danger')
+                                ->outlined(false),
+                            Provider::make('gitlab')
+                                ->label('GitLab')
+                                ->icon('fab-gitlab')
+                                ->color( 'danger')
+                                ->outlined()
+                                ->scopes([])
+                                ->with([]),
                         ])
                         ->registration(true)
                         ->userModelClass($this->userModelClass),

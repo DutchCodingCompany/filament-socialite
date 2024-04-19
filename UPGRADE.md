@@ -77,40 +77,44 @@ Provider details can now be retrieved using `$plugin->getProvider($provider)->ge
 
 ### Configuration
 
-**Optional parameters**
+**Providers**
 
-These where first configured in the `services.php` file, but now they should be configured in the `providers` method.
+Previously, providers were configured by passing a plain array. In the new setup, they should be created using the `Provider` class. The key should be passed as part of the `make()` function.
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+
 FilamentSocialitePlugin::make()
     ->providers([
-        'github' => [
-            'label' => 'Github',
-            'icon' => 'fab-github',
-            'with' => [
-                // Add optional parameters here.
-                'hd' => 'example.com',
-            ],
-        ],
+        Provider::make('gitlab')
+            ->label('GitLab')
+            ->icon('fab-gitlab')
+            ->color(Color::hex('#2f2a6b')),
     ]),
 ```
 
-**Scopes**
+**Scopes and Optional parameters**
 
-Scopes where first configured in the `services.php` file, but now they should also be configured in the `providers` method.
+Scopes and additional parameters for Socialite providers were previously configured in the `services.php` file, but have now been moved to the `->providers()` method on the Filament plugin.
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+
 FilamentSocialitePlugin::make()
     ->providers([
-        'github' => [
-            'label' => 'Github',
-            'icon' => 'fab-github',
-            'scopes' => [
+        Provider::make('gitlab')
+            // ...
+            ->scopes([
                 // Add scopes here.
                 'read:user',
                 'public_repo',
-            ],
-        ],
+            ]),
+            ->with([
+                // Add optional parameters here.
+                 'hd' => 'example.com',
+            ]),
     ]),
 ```
 

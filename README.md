@@ -54,7 +54,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
     FilamentSocialitePlugin::make()
         // (required) Add providers corresponding with providers in `config/services.php`. 
         ->providers([
-            // (advisable) Use object syntax:
+            // Create a provider 'gitlab' corresponding to the Socialite driver with the same name.
             Provider::make('gitlab')
                 ->label('GitLab')
                 ->icon('fab-gitlab')
@@ -62,16 +62,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
                 ->outlined(false)
                 ->scopes(['...'])
                 ->with(['...']),
-            // (legacy) Use array syntax:
-            'github' => [
-                'label' => 'GitHub',
-                // Custom icon requires an additional package, see below.
-                'icon' => 'fab-github',
-                // (optional) Button color override, default: 'gray'.
-                'color' => 'primary',
-                // (optional) Button style override, default: true (outlined).
-                'outlined' => false,
-            ],
         ])
         // (optional) Enable/disable registration of new (socialite-) users.
         ->registration(true)
@@ -250,17 +240,19 @@ There are a few events dispatched during the authentication process:
 Scopes can be added to the provider on the panel, for example:
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+
 FilamentSocialitePlugin::make()
     ->providers([
-        'github' => [
-            'label' => 'Github',
-            'icon' => 'fab-github',
-            'scopes' => [
+        Provider::make('github')
+            ->label('Github')
+            ->icon('fab-github')
+            ->scopes([
                 // Add scopes here.
                 'read:user',
                 'public_repo',
-            ],
-        ],
+            ]),
     ]),
 ```
 
@@ -269,16 +261,19 @@ FilamentSocialitePlugin::make()
 You can add [optional parameters](https://laravel.com/docs/10.x/socialite#optional-parameters) to the request by adding a `with` key to the provider on the panel, for example:
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+
 FilamentSocialitePlugin::make()
     ->providers([
-        'github' => [
-            'label' => 'Github',
-            'icon' => 'fab-github',
-            'with' => [
+        Provider::make('github')
+            ->label('Github')
+            ->icon('fab-github')
+            ->with([
+                // Add scopes here.
                 // Add optional parameters here.
                 'hd' => 'example.com',
-            ],
-        ],
+            ]),
     ]),
 ```
 
