@@ -77,12 +77,12 @@ class TestCase extends Orchestra
                             Provider::make('github')
                                 ->label('GitHub')
                                 ->icon('fab-github')
-                                ->color( 'danger')
+                                ->color('danger')
                                 ->outlined(false),
                             Provider::make('gitlab')
                                 ->label('GitLab')
                                 ->icon('fab-gitlab')
-                                ->color( 'danger')
+                                ->color('danger')
                                 ->outlined()
                                 ->scopes([])
                                 ->with([]),
