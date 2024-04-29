@@ -18,7 +18,7 @@ foreach (Filament::getPanels() as $panel) {
     foreach ((empty($domains) ? [null] : $domains) as $domain) {
         Route::domain($domain)
             ->middleware($panel->getMiddleware())
-            ->name("socialite.$slug.")
+            ->name("socialite.$slug.".((filled($domain) && (count($domains) > 1)) ? "{$domain}." : ''))
             ->group(function () use ($slug) {
                 Route::get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider'])
                     ->name('oauth.redirect');
