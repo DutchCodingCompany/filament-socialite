@@ -16,12 +16,12 @@ foreach (Filament::getPanels() as $panel) {
     $domains = $panel->getDomains();
 
     foreach ((empty($domains) ? [null] : $domains) as $domain) {
+        $redirectRoute = "socialite.{$panel->generateRouteName('oauth.redirect')}";
+
         Route::domain($domain)
             ->middleware($panel->getMiddleware())
-            ->group(function () use ($panel, $slug) {
-                Route::get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider'])
-                    ->name("socialite.{$panel->generateRouteName('oauth.redirect')}");
-            });
+            ->name($redirectRoute)
+            ->get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider']);
     }
 }
 
