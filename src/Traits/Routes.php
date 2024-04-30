@@ -10,7 +10,7 @@ trait Routes
 
     public function getRoute(): string
     {
-        return "socialite.{$this->getSlug()}.oauth.redirect";
+        return "socialite.{$this->getPanel()->generateRouteName('oauth.redirect')}";
     }
 
     public function loginRouteName(string $value): static
@@ -22,7 +22,7 @@ trait Routes
 
     public function getLoginRouteName(): string
     {
-        return $this->loginRouteName ?? "filament.{$this->getPanelId()}.auth.login";
+        return $this->loginRouteName ?? $this->getPanel()->generateRouteName('auth.login');
     }
 
     public function dashboardRouteName(string $value): static
@@ -34,6 +34,6 @@ trait Routes
 
     public function getDashboardRouteName(): string
     {
-        return $this->dashboardRouteName ?? "filament.{$this->getPanelId()}.pages.dashboard";
+        return $this->dashboardRouteName ?? $this->getPanel()->generateRouteName('pages.dashboard');
     }
 }
