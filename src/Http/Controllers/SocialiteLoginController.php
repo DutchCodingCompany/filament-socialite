@@ -55,7 +55,7 @@ class SocialiteLoginController extends Controller
     protected function retrieveOauthUser(string $provider): ?SocialiteUserContract
     {
         try {
-            return Socialite::driver($provider)->user();
+            return $provider === "apple" ? Socialite::driver($provider)->stateless()->user() : Socialite::driver($provider)->user();
         } catch (InvalidStateException $e) {
             Events\InvalidState::dispatch($e);
         }
