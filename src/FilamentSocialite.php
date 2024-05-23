@@ -84,6 +84,15 @@ class FilamentSocialite
     }
 
     /**
+     * @return bool
+     */
+    public function getProviderStateless(string $provider): bool
+    {
+        return $this->getProviderConfig($provider)['stateless'] ?? false;
+    }
+
+
+    /**
      * @return array<string, mixed>
      */
     public function getOptionalParameters(string $provider): array
