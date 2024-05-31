@@ -56,8 +56,10 @@ class SocialiteLoginController extends Controller
     {
         $stateless = $this->socialite->getProviderStateless($provider);
         try {
-            $user = $stateless ? Socialite::driver($provider)->stateless()->user() : Socialite::driver($provider)->user();
-            return $user;
+            /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+            $driver = Socialite::driver($provider);
+
+            return $stateless ? $driver->stateless()->user() : $driver->user();
         } catch (InvalidStateException $e) {
             Events\InvalidState::dispatch($e);
         }
