@@ -55,7 +55,7 @@ class SocialiteLoginController extends Controller
 
         try {
             /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
-            $driver = Socialite::driver($provider)->user();
+            $driver = Socialite::driver($provider);
 
             return $stateless
                 ? $driver->stateless()->user()
