@@ -25,7 +25,7 @@ foreach (Filament::getPanels() as $panel) {
     }
 }
 
-Route::get("/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
+Route::match(['get', 'post'], "/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
     ->middleware([
         PanelFromUrlQuery::class,
         ...config('filament-socialite.middleware'),

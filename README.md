@@ -60,6 +60,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
                 ->icon('fab-gitlab')
                 ->color(Color::hex('#2f2a6b'))
                 ->outlined(false)
+                ->stateless()
                 ->scopes(['...'])
                 ->with(['...']),
         ])

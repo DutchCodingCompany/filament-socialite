@@ -34,6 +34,8 @@ class Provider
      */
     protected Closure | array $with = [];
 
+    protected bool $stateless = false;
+
     public function __construct(string $name)
     {
         $this->name($name);
@@ -156,5 +158,17 @@ class Provider
     public function getWith(): array
     {
         return $this->evaluate($this->with, ['provider' => $this]);
+    }
+
+    public function stateless(bool $stateless = true): static
+    {
+        $this->stateless = $stateless;
+
+        return $this;
+    }
+
+    public function getStateless(): bool
+    {
+        return $this->stateless;
     }
 }

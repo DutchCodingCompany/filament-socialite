@@ -28,11 +28,11 @@ class PanelFromUrlQuery
     public static function decrypt(Request $request): string
     {
         try {
-            if (! is_string($request->query('state'))) {
+            if (! is_string($request->get('state'))) {
                 throw new DecryptException('State is not a string.');
             }
 
-            return Crypt::decrypt($request->query('state'));
+            return Crypt::decrypt($request->get('state'));
         } catch (DecryptException $e) {
             throw InvalidCallbackPayload::make($e);
         }
