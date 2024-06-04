@@ -83,6 +83,11 @@ class FilamentSocialite
         return $this->getProviderConfig($provider)['scopes'] ?? [];
     }
 
+    public function getProviderStateless(string $provider): bool
+    {
+        return $this->getProviderConfig($provider)['stateless'] ?? false;
+    }
+
     /**
      * @return array<string, mixed>
      */
