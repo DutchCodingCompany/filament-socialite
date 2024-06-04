@@ -14,11 +14,12 @@ Add OAuth2 login through Laravel Socialite to Filament. OAuth1 (eg. Twitter) is 
 
 ## Installation
 
-| Filament version                                                                                                                                              | Package version |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode)) | ^1.3.1          |
-| 3.x                                                                                                                                                           | 1.x.x           |
-| 2.x                                                                                                                                                           | 0.x.x           |
+| Filament version                                                                                                                                               | Package version | Readme                                                                               |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|--------------------------------------------------------------------------------------|
+| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | 2.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/main/README.md) |
+| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | ^1.3.1          |                                                                                      |
+| 3.x                                                                                                                                                            | 1.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/1.x/README.md)  |
+| 2.x                                                                                                                                                            | 0.x.x           |                                                                                      |
 
 Install the package via composer:
 
@@ -60,7 +61,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
                 ->icon('fab-gitlab')
                 ->color(Color::hex('#2f2a6b'))
                 ->outlined(false)
-                ->stateless()
+                ->stateless(false)
                 ->scopes(['...'])
                 ->with(['...']),
         ])

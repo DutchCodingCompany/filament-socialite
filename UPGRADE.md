@@ -1,5 +1,5 @@
 # Upgrade Guide
-## `1.x.x` to `2.x.x`
+## `1.x.x` to `2.x.x` (Filament v3.x)
 
 For version 2 we refactored most of the plugin to be more consistent with the Filament naming conventions. We've also moved some of the callbacks to the plugin, so they are configurable per panel.
 
@@ -63,6 +63,7 @@ FilamentSocialitePlugin::make()
 ```
 
 #### Removals
+
 **getOptionalParameters()**
 
 This function was used internally only inside the `SocialiteLoginController`. If you haven't extended this controller, you can ignore this change.
