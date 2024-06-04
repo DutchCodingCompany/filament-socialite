@@ -2,6 +2,10 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [2.0.0 - 2024-06-04](https://github.com/DutchCodingCompany/filament-socialite/compare/1.5.0...2.0.0)
+* **Please check the revised [README.md](https://github.com/DutchCodingCompany/filament-socialite/blob/main/README.md) and [UPGRADE.md](https://github.com/DutchCodingCompany/filament-socialite/blob/main/UPGRADE.md)! Many functions have been renamed.**
+* Refactor package for better consistency with Filament code standards https://github.com/DutchCodingCompany/filament-socialite/pull/90
+
 ## [1.5.0 - 2024-06-04](https://github.com/DutchCodingCompany/filament-socialite/compare/1.4.1...1.5.0)
 
 * Bump dependabot/fetch-metadata from 1.6.0 to 2.0.0 by @dependabot in https://github.com/DutchCodingCompany/filament-socialite/pull/89
