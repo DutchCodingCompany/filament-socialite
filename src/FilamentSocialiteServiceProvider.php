@@ -2,8 +2,10 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
+use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\View\Components\Buttons;
 use Filament\Facades\Filament;
+use Filament\Panel;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
@@ -24,8 +26,7 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(FilamentSocialite::class);
-        $this->app->alias(FilamentSocialite::class, 'filament-socialite');
+        //
     }
 
     public function packageBooted(): void
@@ -36,7 +37,9 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
         FilamentView::registerRenderHook(
             'panels::auth.login.form.after',
             static function (): ?string {
-                if (! ($panel = Filament::getCurrentPanel())->hasPlugin('filament-socialite')) {
+                $panel = Filament::getCurrentPanel();
+
+                if (! $panel?->hasPlugin('filament-socialite')) {
                     return null;
                 }
 

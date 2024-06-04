@@ -4,6 +4,9 @@ namespace DutchCodingCompany\FilamentSocialite\Tests;
 
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialiteServiceProvider;
+use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
+use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
+use DutchCodingCompany\FilamentSocialite\Provider;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestUser;
 use Filament\Facades\Filament;
 use Filament\FilamentServiceProvider;
@@ -41,7 +44,7 @@ class TestCase extends Orchestra
             ) => 'DutchCodingCompany\\FilamentSocialite\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
 
-        $this->app->make(Kernel::class)->pushMiddleware(StartSession::class);
+        $this->app?->make(Kernel::class)->pushMiddleware(StartSession::class);
     }
 
     protected function getPackageProviders($app)
@@ -70,20 +73,22 @@ class TestCase extends Orchestra
                 ])
                 ->plugins([
                     FilamentSocialitePlugin::make()
-                        ->setProviders([
-                            'github' => [
-                                'label' => 'GitHub',
-                                'icon' => 'fab-github',
-                                'color' => 'danger',
-                                'outlined' => false,
-                            ],
-                            'gitlab' => [
-                                'label' => 'GitLab',
-                                'icon' => 'fab-gitlab',
-                            ],
+                        ->providers([
+                            Provider::make('github')
+                                ->label('GitHub')
+                                ->icon('fab-github')
+                                ->color('danger')
+                                ->outlined(false),
+                            Provider::make('gitlab')
+                                ->label('GitLab')
+                                ->icon('fab-gitlab')
+                                ->color('danger')
+                                ->outlined()
+                                ->scopes([])
+                                ->with([]),
                         ])
-                        ->setRegistrationEnabled(true)
-                        ->setUserModelClass($this->userModelClass),
+                        ->registration(true)
+                        ->userModelClass($this->userModelClass),
                 ]),
         );
     }

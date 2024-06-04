@@ -16,17 +16,16 @@ foreach (Filament::getPanels() as $panel) {
     $domains = $panel->getDomains();
 
     foreach ((empty($domains) ? [null] : $domains) as $domain) {
+        $redirectRoute = "socialite.{$panel->generateRouteName('oauth.redirect')}";
+
         Route::domain($domain)
             ->middleware($panel->getMiddleware())
-            ->name("socialite.$slug.")
-            ->group(function () use ($slug) {
-                Route::get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider'])
-                    ->name('oauth.redirect');
-            });
+            ->name($redirectRoute)
+            ->get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider']);
     }
 }
 
-Route::match(['get', 'post'], '/oauth/callback/{provider}', [SocialiteLoginController::class, 'processCallback'])
+Route::match(['get', 'post'], "/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
     ->middleware([
         PanelFromUrlQuery::class,
         ...config('filament-socialite.middleware'),

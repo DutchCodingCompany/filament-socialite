@@ -14,11 +14,12 @@ Add OAuth2 login through Laravel Socialite to Filament. OAuth1 (eg. Twitter) is 
 
 ## Installation
 
-| Filament version                                                                                                                                              | Package version |
-|---------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode)) | ^1.3.1          |
-| 3.x                                                                                                                                                           | 1.x.x           |
-| 2.x                                                                                                                                                           | 0.x.x           |
+| Filament version                                                                                                                                               | Package version | Readme                                                                               |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|--------------------------------------------------------------------------------------|
+| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | 2.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/main/README.md) |
+| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | ^1.3.1          |                                                                                      |
+| 3.x                                                                                                                                                            | 1.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/1.x/README.md)  |
+| 2.x                                                                                                                                                            | 0.x.x           |                                                                                      |
 
 Install the package via composer:
 
@@ -43,6 +44,9 @@ php artisan vendor:publish --tag="filament-socialite-translations"
 You need to register the plugin in the Filament panel provider (the default filename is `app/Providers/Filament/AdminPanelProvider.php`). The following options are available:
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+use Filament\Support\Colors;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 
@@ -50,26 +54,26 @@ use Illuminate\Contracts\Auth\Authenticatable;
 ->plugin(
     FilamentSocialitePlugin::make()
         // (required) Add providers corresponding with providers in `config/services.php`. 
-        ->setProviders([
-            'github' => [
-                'label' => 'GitHub',
-                // Custom icon requires an additional package, see below.
-                'icon' => 'fab-github',
-                // (optional) Button color override, default: 'gray'.
-                'color' => 'primary',
-                // (optional) Button style override, default: true (outlined).
-                'outlined' => false,
-            ],
+        ->providers([
+            // Create a provider 'gitlab' corresponding to the Socialite driver with the same name.
+            Provider::make('gitlab')
+                ->label('GitLab')
+                ->icon('fab-gitlab')
+                ->color(Color::hex('#2f2a6b'))
+                ->outlined(false)
+                ->stateless(false)
+                ->scopes(['...'])
+                ->with(['...']),
         ])
         // (optional) Enable/disable registration of new (socialite-) users.
-        ->setRegistrationEnabled(true)
+        ->registration(true)
         // (optional) Enable/disable registration of new (socialite-) users using a callback.
         // In this example, a login flow can only continue if there exists a user (Authenticatable) already.
-        ->setRegistrationEnabled(fn (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) => (bool) $user)
+        ->registration(fn (string $provider, SocialiteUserContract $oauthUser, ?Authenticatable $user) => (bool) $user)
         // (optional) Change the associated model class.
-        ->setUserModelClass(\App\Models\User::class)
+        ->userModelClass(\App\Models\User::class)
         // (optional) Change the associated socialite class (see below).
-        ->setSocialiteUserModelClass(\App\Models\SocialiteUser::class)
+        ->socialiteUserModelClass(\App\Models\SocialiteUser::class)
 );
 ```
 
@@ -77,7 +81,7 @@ See [Socialite Providers](https://socialiteproviders.com/) for additional Social
 
 ### Icons
 
-You can specify a Blade Icon. You can add Font Awesome brand
+You can specify a custom icon for each of your login providers. You can add Font Awesome brand
 icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome) by running:
 ```
 composer require owenvoke/blade-fontawesome
@@ -93,7 +97,7 @@ Or you could opt for customizing the user creation, see below.
 $table->string('password')->nullable();
 ```
 
-### Domain Allowlist
+### Domain Allow list
 
 This package supports the option to limit the users that can login with the OAuth login to users of a certain domain.
 This can be used to setup SSO for internal use.
@@ -101,37 +105,43 @@ This can be used to setup SSO for internal use.
 ```php
 ->plugin(
     FilamentSocialitePlugin::make()
-        ->setRegistrationEnabled(true)
-        ->setDomainAllowList(['localhost'])
+        // ...
+        ->registration(true)
+        ->domainAllowList(['localhost'])
 );
 ```
 
 ### Changing how an Authenticatable user is created or retrieved
 
-In your AppServiceProvider.php, add in the boot method:
+You can use the `createUserUsing` and `resolveUserUsing` methods to change how a user is created or retrieved.
+
 ```php
-use DutchCodingCompany\FilamentSocialite\Facades\FilamentSocialite as FilamentSocialiteFacade;
-use DutchCodingCompany\FilamentSocialite\FilamentSocialite;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
-// Default
-FilamentSocialiteFacade::setCreateUserCallback(fn (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => $socialite->getUserModelClass()::create([
-    'name' => $oauthUser->getName(),
-    'email' => $oauthUser->getEmail(),
-]));
-
-FilamentSocialiteFacade::setUserResolver(fn (string $provider, SocialiteUserContract $oauthUser, FilamentSocialite $socialite) => /* ... */);
+->plugin(
+    FilamentSocialitePlugin::make()
+        // ...
+        ->createUserUsing(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
+            // Logic to create a new user.
+        })
+        ->resolveUserUsing(function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
+            // Logic to retrieve an existing user.
+        })
+        ...
+);
 ```
 
 ### Change how a Socialite user is created or retrieved
 
 In your plugin options in your Filament panel, add the following method:
+
 ```php
 // app/Providers/Filament/AdminPanelProvider.php
 ->plugins([
     FilamentSocialitePlugin::make()
         // ...
-        ->setSocialiteUserModelClass(\App\Models\SocialiteUser::class)
+        ->socialiteUserModelClass(\App\Models\SocialiteUser::class)
 ```
 
 This class should at the minimum implement the [`FilamentSocialiteUser`](/src/Models/Contracts/FilamentSocialiteUser.php) interface, like so:
@@ -168,17 +178,17 @@ class SocialiteUser implements FilamentSocialiteUserContract
 ### Change login redirect
 
 When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).
-If you want to change this behavior, you can add the `setLoginRedirectCallback` method in the boot method of your `AppServiceProvider.php`:
+If you want to change this behavior, you can call the 'redirectAfterLoginUsing' method on the `FilamentSocialitePlugin`.
 
 ```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
 
-FilamentSocialite::setLoginRedirectCallback(function (string $provider, FilamentSocialiteUserContract $socialiteUser) {
-    return redirect()->intended(
-        route(FilamentSocialite::getPlugin()->getDashboardRouteName())
-    );
-});
+FilamentSocialitePlugin::make()
+    ->redirectAfterLoginUsing(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
+        // Change the redirect behaviour here.
+    });
 ```
 
 ### Filament Fortify
@@ -229,33 +239,44 @@ There are a few events dispatched during the authentication process:
 
 ## Scopes
 
-Scopes should be added in your `config/services.php` config file, for example:
+Scopes can be added to the provider on the panel, for example:
 
 ```php
-'github' => [
-    'client_id' => '...',
-    'client_secret' => '...',
-    'scopes' => [
-        // Add scopes here.
-        'read:user',
-        'public_repo',
-    ],
-]
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+
+FilamentSocialitePlugin::make()
+    ->providers([
+        Provider::make('github')
+            ->label('Github')
+            ->icon('fab-github')
+            ->scopes([
+                // Add scopes here.
+                'read:user',
+                'public_repo',
+            ]),
+    ]),
 ```
 
 ## Optional parameters
 
-You can add [optional parameters](https://laravel.com/docs/10.x/socialite#optional-parameters) to the request by adding a `with` key to the provider configuration in the `config/services.php` config file, for example:
+You can add [optional parameters](https://laravel.com/docs/10.x/socialite#optional-parameters) to the request by adding a `with` key to the provider on the panel, for example:
 
 ```php
-'github' => [
-    'client_id' => '...',
-    'client_secret' => '...',
-    'with' => [
-        // Add optional parameters here
-        'hd' => 'example.com',
-    ],
-]
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+
+FilamentSocialitePlugin::make()
+    ->providers([
+        Provider::make('github')
+            ->label('Github')
+            ->icon('fab-github')
+            ->with([
+                // Add scopes here.
+                // Add optional parameters here.
+                'hd' => 'example.com',
+            ]),
+    ]),
 ```
 
 ## Stateless Authentication
