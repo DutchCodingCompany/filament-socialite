@@ -2,6 +2,12 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [1.5.0 - 2024-06-04](https://github.com/DutchCodingCompany/filament-socialite/compare/1.4.1...1.5.0)
+
+* Bump dependabot/fetch-metadata from 1.6.0 to 2.0.0 by @dependabot in https://github.com/DutchCodingCompany/filament-socialite/pull/89
+* Bump dependabot/fetch-metadata from 2.0.0 to 2.1.0 by @dependabot in https://github.com/DutchCodingCompany/filament-socialite/pull/91
+* Compatible with Stateless Authentication by @LittleHans8 in https://github.com/DutchCodingCompany/filament-socialite/pull/96
+
 ## [1.4.1 - 2024-03-20](https://github.com/DutchCodingCompany/filament-socialite/compare/v1.4.0...1.4.1)
 * Provide oauth user to login event by @dcc-bjorn in https://github.com/DutchCodingCompany/filament-socialite/pull/88
 
