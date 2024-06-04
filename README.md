@@ -279,6 +279,17 @@ FilamentSocialitePlugin::make()
     ]),
 ```
 
+## Stateless Authentication
+You can add `stateless` parameters to the provider configuration in the config/services.php config file, for example:
+
+```php
+'apple' => [
+    'client_id' => '...',
+    'client_secret' => '...',
+    'stateless'=>true,
+]
+```
+
 **Note:** you cannot use the `state` parameter, as it is used to determine from which Filament panel the user came from.
 
 ## Changelog
