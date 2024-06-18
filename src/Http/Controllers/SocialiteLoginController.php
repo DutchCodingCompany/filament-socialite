@@ -164,8 +164,7 @@ class SocialiteLoginController extends Controller
             return $this->redirectToLogin('filament-socialite::auth.user-not-allowed');
         }
 
-        $authorized = $this->authorizeUser($oauthUser);
-        if (! $authorized) {
+        if (! $this->authorizeUser($oauthUser)) {
             Events\UserNotAllowed::dispatch($oauthUser);
 
             return $this->redirectToLogin('filament-socialite::auth.user-not-authorized');
