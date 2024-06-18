@@ -99,6 +99,11 @@ class SocialiteLoginController extends Controller
         return in_array($emailDomain, $domains);
     }
 
+    protected function authorizeUser(SocialiteUserContract $user): bool
+    {
+        return app()->call($this->plugin()->getAuthorizeUserUsing(), ['oauthUser' => $user]);
+    }
+
     protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser, SocialiteUserContract $oauthUser): RedirectResponse
     {
         // Log the user in
@@ -157,6 +162,13 @@ class SocialiteLoginController extends Controller
             Events\UserNotAllowed::dispatch($oauthUser);
 
             return $this->redirectToLogin('filament-socialite::auth.user-not-allowed');
+        }
+
+        $authorized = $this->authorizeUser($oauthUser);
+        if (! $authorized) {
+            Events\UserNotAllowed::dispatch($oauthUser);
+
+            return $this->redirectToLogin('filament-socialite::auth.user-not-authorized');
         }
 
         // Try to find a socialite user

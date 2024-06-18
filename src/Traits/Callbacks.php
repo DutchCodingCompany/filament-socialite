@@ -26,6 +26,11 @@ trait Callbacks
     protected ?Closure $resolveUserUsing = null;
 
     /**
+     * @phpstan-var ?\Closure(\Laravel\Socialite\Contracts\User $oauthUser): bool
+     */
+    protected ?Closure $authorizeUserUsing = null;
+
+    /**
      * @param ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Contracts\Auth\Authenticatable $callback
      */
     public function createUserUsing(Closure $callback = null): static
@@ -114,6 +119,24 @@ trait Callbacks
                 'email',
                 $oauthUser->getEmail()
             )->first();
-        };
+            };
+    }
+
+    /**
+     * @param \Closure(\Laravel\Socialite\Contracts\User $oauthUser): bool $callback
+     */
+    public function authorizeUserUsing(Closure $callback = null): static
+    {
+        $this->authorizeUserUsing = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure(\Laravel\Socialite\Contracts\User $oauthUser): bool $callback
+     */
+    public function getAuthorizeUserUsing(): Closure
+    {
+        return $this->authorizeUserUsing ?? fn() => true;
     }
 }
