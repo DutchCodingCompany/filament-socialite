@@ -119,7 +119,7 @@ trait Callbacks
                 'email',
                 $oauthUser->getEmail()
             )->first();
-            };
+        };
     }
 
     /**
