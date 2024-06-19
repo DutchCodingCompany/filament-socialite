@@ -88,7 +88,8 @@ class TestCase extends Orchestra
                                 ->with([]),
                         ])
                         ->registration(true)
-                        ->userModelClass($this->userModelClass),
+                        ->userModelClass($this->userModelClass)
+                        ->domainAllowList(['example.com']),
                 ]),
         );
     }

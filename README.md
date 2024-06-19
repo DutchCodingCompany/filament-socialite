@@ -175,6 +175,25 @@ class SocialiteUser implements FilamentSocialiteUserContract
 }
 ```
 
+### Check if the user is authorized to use the application
+
+You can use the `authorizeUserUsing` method to check if the user is authorized to use the application. **Note:** by [default](/src/Traits/Callbacks.php#L145) this method check if the user's email domain is in the domain allow list.
+
+```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
+
+->plugin(
+    FilamentSocialitePlugin::make()
+        // ...
+        ->authorizeUserUsing(function (FilamentSocialitePlugin $plugin, SocialiteUserContract $oauthUser) {
+            // Logic to authorize the user.
+            return static::checkDomainAllowList($plugin, $oauthUser);
+        })
+        // ...
+);
+```
+
 ### Change login redirect
 
 When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).

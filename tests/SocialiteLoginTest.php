@@ -4,6 +4,7 @@ namespace DutchCodingCompany\FilamentSocialite\Tests;
 
 use Closure;
 use DutchCodingCompany\FilamentSocialite\Events\RegistrationNotEnabled;
+use DutchCodingCompany\FilamentSocialite\Events\UserNotAllowed;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -19,8 +20,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class SocialiteLoginTest extends TestCase
 {
-    public function testLogin(): void
+    #[DataProvider('loginDataProvider')]
+    public function testLogin(string $email, bool $dispatchesUserNotAllowedEvent): void
     {
+        Event::fake();
+
         $response = $this
             ->getJson("/$this->panelName/oauth/github")
             ->assertStatus(302);
@@ -37,12 +41,15 @@ class SocialiteLoginTest extends TestCase
         // Assert decrypting of the state gives the correct panel name.
         $this->assertEquals($this->panelName, Crypt::decrypt($state));
 
+        $user = new TestSocialiteUser();
+        $user->email = $email;
+
         Socialite::shouldReceive('driver')
             ->with('github')
             ->andReturn(
                 Mockery::mock(Provider::class)
                     ->shouldReceive('user')
-                    ->andReturn(new TestSocialiteUser())
+                    ->andReturn($user)
                     ->getMock()
             );
 
@@ -51,15 +58,19 @@ class SocialiteLoginTest extends TestCase
             ->getJson("/oauth/callback/github?state=$state")
             ->assertStatus(302);
 
-        $this->assertDatabaseHas('socialite_users', [
-            'provider' => 'github',
-            'provider_id' => 'test-socialite-user-id',
-        ]);
+        if ($dispatchesUserNotAllowedEvent) {
+            Event::assertDispatched(UserNotAllowed::class);
+        } else {
+            $this->assertDatabaseHas('socialite_users', [
+                'provider' => 'github',
+                'provider_id' => 'test-socialite-user-id',
+            ]);
 
-        $this->assertDatabaseHas('users', [
-            'name' => 'test-socialite-user-name',
-            'email' => 'test@example.com',
-        ]);
+            $this->assertDatabaseHas('users', [
+                'name' => 'test-socialite-user-name',
+                'email' => 'test@example.com',
+            ]);
+        }
     }
 
     #[DataProvider('registrationBlockProvider')]
@@ -100,6 +111,23 @@ class SocialiteLoginTest extends TestCase
             // If there is no user, the event should have been dispatched since the plugin option disabled registration.
             Event::assertDispatched(RegistrationNotEnabled::class);
         }
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: bool}>
+     */
+    public static function loginDataProvider(): array
+    {
+        return [
+            'Email with domain in domain allow list is allowed to login' => [
+                'test@example.com',
+                false,
+            ],
+            'Email with domain not in domain allow list is not allowed to login' => [
+                'test@example1.com',
+                true,
+            ],
+        ];
     }
 
     /**
