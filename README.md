@@ -188,7 +188,7 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
         // ...
         ->authorizeUserUsing(function (FilamentSocialitePlugin $plugin, SocialiteUserContract $oauthUser) {
             // Logic to authorize the user.
-            return static::checkDomainAllowList($plugin, $oauthUser);
+            return FilamentSocialitePlugin::checkDomainAllowList($plugin, $oauthUser);
         })
         // ...
 );
