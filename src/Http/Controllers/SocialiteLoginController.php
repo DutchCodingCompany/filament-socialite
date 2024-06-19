@@ -3,7 +3,6 @@
 namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 
 use DutchCodingCompany\FilamentSocialite\Events;
-use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
@@ -13,7 +12,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;

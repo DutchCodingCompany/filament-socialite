@@ -3,17 +3,19 @@
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
 use DutchCodingCompany\FilamentSocialite\Events\UserNotAllowed;
-use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Event;
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
-use DutchCodingCompany\FilamentSocialite\Provider;
+use DutchCodingCompany\FilamentSocialite\Provider as PluginProvider;
+use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use Filament\Facades\Filament;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
-use Mockery;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Event;
+use Laravel\Socialite\Contracts\Provider;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
+use LogicException;
+use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class SocialiteLoginAuthorizationTest extends TestCase
@@ -33,12 +35,12 @@ class SocialiteLoginAuthorizationTest extends TestCase
                 ->plugins([
                     FilamentSocialitePlugin::make()
                         ->providers([
-                            Provider::make('github')
+                            PluginProvider::make('github')
                                 ->label('GitHub')
                                 ->icon('fab-github')
                                 ->color('danger')
                                 ->outlined(false),
-                            Provider::make('gitlab')
+                            PluginProvider::make('gitlab')
                                 ->label('GitLab')
                                 ->icon('fab-gitlab')
                                 ->color('danger')
@@ -50,7 +52,7 @@ class SocialiteLoginAuthorizationTest extends TestCase
                         ->userModelClass($this->userModelClass)
                         ->authorizeUserUsing(function (FilamentSocialitePlugin $plugin, SocialiteUserContract $oauthUser) {
                             return $oauthUser->getEmail() === 'test@example.com';
-                        })
+                        }),
                 ]),
         );
     }
@@ -82,14 +84,15 @@ class SocialiteLoginAuthorizationTest extends TestCase
         Socialite::shouldReceive('driver')
             ->with('github')
             ->andReturn(
-                Mockery::mock(\Laravel\Socialite\Contracts\Provider::class)
+                Mockery::mock(Provider::class)
                     ->shouldReceive('user')
                     ->andReturn($user)
                     ->getMock()
             );
 
         // Fake oauth response.
-        $this->getJson("/oauth/callback/github?state=$state")
+        $response = $this
+            ->getJson("/oauth/callback/github?state=$state")
             ->assertStatus(302);
 
         $dispatchesUserNotAllowedEvent
