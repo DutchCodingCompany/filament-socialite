@@ -78,7 +78,7 @@ class SocialiteLoginTest extends TestCase
 
             $this->assertDatabaseHas('users', [
                 'name' => 'test-socialite-user-name',
-                'email' => 'test@example.com',
+                'email' => $user->email,
             ]);
         }
     }
