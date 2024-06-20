@@ -60,6 +60,16 @@ class SocialiteLoginTest extends TestCase
 
         if ($dispatchesUserNotAllowedEvent) {
             Event::assertDispatched(UserNotAllowed::class);
+
+            $this->assertDatabaseMissing('socialite_users', [
+                'provider' => 'github',
+                'provider_id' => 'test-socialite-user-id',
+            ]);
+
+            $this->assertDatabaseMissing('users', [
+                'name' => 'test-socialite-user-name',
+                'email' => $user->email,
+            ]);
         } else {
             $this->assertDatabaseHas('socialite_users', [
                 'provider' => 'github',
