@@ -2,7 +2,7 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
-## [2.2.0 - 2024-06-21](https://github.com/DutchCodingCompany/filament-socialite/compare/2.0.0...2.1.0)
+## [2.1.0 - 2024-06-21](https://github.com/DutchCodingCompany/filament-socialite/compare/2.0.0...2.1.0)
 
 * Add Authorization Callback by @petecoop in https://github.com/DutchCodingCompany/filament-socialite/pull/100
 
