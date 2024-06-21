@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
+use Symfony\Component\HttpFoundation\Response;
 
 class SocialiteLoginController extends Controller
 {
@@ -22,7 +23,7 @@ class SocialiteLoginController extends Controller
 
     private ?FilamentSocialitePlugin $plugin = null;
 
-    public function redirectToProvider(string $provider): RedirectResponse
+    public function redirectToProvider(string $provider): mixed
     {
         if (! $this->plugin()->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
@@ -31,7 +32,7 @@ class SocialiteLoginController extends Controller
         /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
         $driver = Socialite::driver($provider);
 
-        $redirect = $driver
+        $response = $driver
             ->with([
                 ...$this->plugin()->getProvider($provider)->getWith(),
                 'state' => $state = PanelFromUrlQuery::encrypt($this->plugin()->getPanel()->getId()),
@@ -44,7 +45,7 @@ class SocialiteLoginController extends Controller
         // and it still prevents CSRF as it is non-guessable value.
         session()->put('state', $state);
 
-        return $redirect;
+        return $response;
     }
 
     protected function retrieveOauthUser(string $provider): ?SocialiteUserContract
@@ -83,7 +84,7 @@ class SocialiteLoginController extends Controller
         return app()->call($this->plugin()->getAuthorizeUserUsing(), ['plugin' => $this->plugin(), 'oauthUser' => $oauthUser]);
     }
 
-    protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser, SocialiteUserContract $oauthUser): RedirectResponse
+    protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser, SocialiteUserContract $oauthUser): Response
     {
         // Log the user in
         $this->plugin()->getGuard()->login($socialiteUser->getUser(), $this->plugin()->getRememberLogin());
@@ -94,7 +95,7 @@ class SocialiteLoginController extends Controller
         return app()->call($this->plugin()->getRedirectAfterLoginUsing(), ['provider' => $provider, 'socialiteUser' => $socialiteUser, 'plugin' => $this->plugin]);
     }
 
-    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): RedirectResponse
+    protected function registerSocialiteUser(string $provider, SocialiteUserContract $oauthUser, Authenticatable $user): Response
     {
         // Create a socialite user
         $socialiteUser = $this->plugin()->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
@@ -106,7 +107,7 @@ class SocialiteLoginController extends Controller
         return $this->loginUser($provider, $socialiteUser, $oauthUser);
     }
 
-    protected function registerOauthUser(string $provider, SocialiteUserContract $oauthUser): RedirectResponse
+    protected function registerOauthUser(string $provider, SocialiteUserContract $oauthUser): Response
     {
         $socialiteUser = DB::transaction(function () use ($provider, $oauthUser) {
             // Create a user
@@ -123,7 +124,7 @@ class SocialiteLoginController extends Controller
         return $this->loginUser($provider, $socialiteUser, $oauthUser);
     }
 
-    public function processCallback(string $provider): RedirectResponse
+    public function processCallback(string $provider): Response
     {
         if (! $this->plugin()->isProviderConfigured($provider)) {
             throw ProviderNotConfigured::make($provider);
