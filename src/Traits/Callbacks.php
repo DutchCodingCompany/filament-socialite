@@ -18,7 +18,7 @@ trait Callbacks
     protected ?Closure $createUserUsing = null;
 
     /**
-     * @phpstan-var ?\Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Http\RedirectResponse
+     * @phpstan-var ?\Closure(string $provider, \DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser $socialiteUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): Symfony\Component\HttpFoundation\RedirectResponse
      */
     protected ?Closure $redirectAfterLoginUsing = null;
 
