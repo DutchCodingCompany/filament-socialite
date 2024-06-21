@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'login-via' => 'Or log in via',
 
     'login-failed' => 'Login failed, please try again.',

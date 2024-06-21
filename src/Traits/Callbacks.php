@@ -3,9 +3,11 @@
 namespace DutchCodingCompany\FilamentSocialite\Traits;
 
 use Closure;
+use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Facades\Filament;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 trait Callbacks
@@ -24,6 +26,11 @@ trait Callbacks
      * @phpstan-var ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): ?(\Illuminate\Contracts\Auth\Authenticatable)
      */
     protected ?Closure $resolveUserUsing = null;
+
+    /**
+     * @phpstan-var ?\Closure(\DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin, \Laravel\Socialite\Contracts\User $oauthUser): bool
+     */
+    protected ?Closure $authorizeUserUsing = null;
 
     /**
      * @param ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Contracts\Auth\Authenticatable $callback
@@ -115,5 +122,42 @@ trait Callbacks
                 $oauthUser->getEmail()
             )->first();
         };
+    }
+
+    /**
+     * @param \Closure(\DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin, \Laravel\Socialite\Contracts\User $oauthUser): bool $callback
+     */
+    public function authorizeUserUsing(Closure $callback = null): static
+    {
+        $this->authorizeUserUsing = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return \Closure(\DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin, \Laravel\Socialite\Contracts\User $oauthUser): bool
+     */
+    public function getAuthorizeUserUsing(): Closure
+    {
+        return $this->authorizeUserUsing ?? static::checkDomainAllowList(...);
+    }
+
+    public static function checkDomainAllowList(FilamentSocialitePlugin $plugin, SocialiteUserContract $oauthUser): bool
+    {
+        $domains = $plugin->getDomainAllowList();
+
+        // When no domains are specified, all users are allowed
+        if (count($domains) < 1) {
+            return true;
+        }
+
+        // Get the domain of the email for the specified user
+        $emailDomain = Str::of($oauthUser->getEmail() ?? throw new ImplementationException('User email is required.'))
+            ->afterLast('@')
+            ->lower()
+            ->__toString();
+
+        // See if everything after @ is in the domains array
+        return in_array($emailDomain, $domains);
     }
 }

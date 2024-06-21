@@ -3,7 +3,6 @@
 namespace DutchCodingCompany\FilamentSocialite\Http\Controllers;
 
 use DutchCodingCompany\FilamentSocialite\Events;
-use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ProviderNotConfigured;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
@@ -13,7 +12,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -80,23 +78,9 @@ class SocialiteLoginController extends Controller
         return redirect()->route($this->plugin()->getLoginRouteName());
     }
 
-    protected function isUserAllowed(SocialiteUserContract $user): bool
+    protected function authorizeUser(SocialiteUserContract $oauthUser): bool
     {
-        $domains = $this->plugin()->getDomainAllowList();
-
-        // When no domains are specified, all users are allowed
-        if (count($domains) < 1) {
-            return true;
-        }
-
-        // Get the domain of the email for the specified user
-        $emailDomain = Str::of($user->getEmail() ?? throw new ImplementationException('User email is required.'))
-            ->afterLast('@')
-            ->lower()
-            ->__toString();
-
-        // See if everything after @ is in the domains array
-        return in_array($emailDomain, $domains);
+        return app()->call($this->plugin()->getAuthorizeUserUsing(), ['plugin' => $this->plugin(), 'oauthUser' => $oauthUser]);
     }
 
     protected function loginUser(string $provider, FilamentSocialiteUserContract $socialiteUser, SocialiteUserContract $oauthUser): RedirectResponse
@@ -152,8 +136,8 @@ class SocialiteLoginController extends Controller
             return $this->redirectToLogin('filament-socialite::auth.login-failed');
         }
 
-        // Verify if user is allowed
-        if (! $this->isUserAllowed($oauthUser)) {
+        // Verify if the user is authorized.
+        if (! $this->authorizeUser($oauthUser)) {
             Events\UserNotAllowed::dispatch($oauthUser);
 
             return $this->redirectToLogin('filament-socialite::auth.user-not-allowed');
