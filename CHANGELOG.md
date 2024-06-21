@@ -2,6 +2,14 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [2.1.1 - 2024-06-21](https://github.com/DutchCodingCompany/filament-socialite/compare/2.1.0...2.1.1)
+
+## What's Changed
+* Improve Socialite driver typings + callable typings by @juliangums in https://github.com/DutchCodingCompany/filament-socialite/pull/103
+
+## New Contributors
+* @juliangums made their first contribution in https://github.com/DutchCodingCompany/filament-socialite/pull/103
+
 ## [2.1.0 - 2024-06-21](https://github.com/DutchCodingCompany/filament-socialite/compare/2.0.0...2.1.0)
 
 * Add Authorization Callback by @petecoop in https://github.com/DutchCodingCompany/filament-socialite/pull/100
