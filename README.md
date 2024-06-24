@@ -65,6 +65,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
                 ->scopes(['...'])
                 ->with(['...']),
         ])
+        // (optional) Override the panel slug to be used in the oauth routes. Defaults to the panel ID.
+        ->slug('admin')
         // (optional) Enable/disable registration of new (socialite-) users.
         ->registration(true)
         // (optional) Enable/disable registration of new (socialite-) users using a callback.
@@ -77,13 +79,21 @@ use Illuminate\Contracts\Auth\Authenticatable;
 );
 ```
 
+This package automatically adds 2 routes per panel to make the OAuth flow possible. When setting up your external OAuth 
+configuration, use the following redirect URL (in this case for the `'admin'` panel with the `'github'` provider):
+```
+https://example.com/admin/oauth/callback/github
+```
+
+If in doubt, run `php artisan route:list` to see which routes are available to you.
+
 See [Socialite Providers](https://socialiteproviders.com/) for additional Socialite providers.
 
 ### Icons
 
 You can specify a custom icon for each of your login providers. You can add Font Awesome brand
 icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome) by running:
-```
+```bash
 composer require owenvoke/blade-fontawesome
 ```
 

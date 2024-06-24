@@ -16,15 +16,24 @@ foreach (Filament::getPanels() as $panel) {
     $domains = $panel->getDomains();
 
     foreach ((empty($domains) ? [null] : $domains) as $domain) {
-        $redirectRoute = "socialite.{$panel->generateRouteName('oauth.redirect')}";
-
         Route::domain($domain)
             ->middleware($panel->getMiddleware())
-            ->name($redirectRoute)
+            ->name("socialite.{$panel->generateRouteName('oauth.redirect')}")
             ->get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider']);
+
+        Route::domain($domain)
+            ->match(['get', 'post'], "$slug/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
+            ->middleware([
+                ...$panel->getMiddleware(),
+                ...config('filament-socialite.middleware'),
+            ])
+            ->name("socialite.{$panel->generateRouteName('oauth.callback')}");
     }
 }
 
+/**
+ * @deprecated This route is deprecated and will be removed in a future release. Use the "$slug/oauth/callback/{provider}" route instead.
+ */
 Route::match(['get', 'post'], "/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
     ->middleware([
         PanelFromUrlQuery::class,
