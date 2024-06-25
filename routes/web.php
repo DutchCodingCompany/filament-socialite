@@ -16,6 +16,8 @@ foreach (Filament::getPanels() as $panel) {
     $domains = $panel->getDomains();
 
     foreach ((empty($domains) ? [null] : $domains) as $domain) {
+        Filament::currentDomain($domain);
+
         Route::domain($domain)
             ->middleware($panel->getMiddleware())
             ->name("socialite.{$panel->generateRouteName('oauth.redirect')}")
@@ -28,6 +30,8 @@ foreach (Filament::getPanels() as $panel) {
                 ...config('filament-socialite.middleware'),
             ])
             ->name("socialite.{$panel->generateRouteName('oauth.callback')}");
+
+        Filament::currentDomain(null);
     }
 }
 
