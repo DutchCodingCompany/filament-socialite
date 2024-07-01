@@ -17,18 +17,8 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:andReturn\\(\\)\\.$#"
-			count: 1
-			path: tests/SocialiteLoginAuthorizationTest.php
-
-		-
-			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:andReturn\\(\\)\\.$#"
-			count: 2
-			path: tests/SocialiteLoginTest.php
-
-		-
-			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:andReturn\\(\\)\\.$#"
-			count: 1
-			path: tests/SocialiteTenantLoginTest.php
+			count: 3
+			path: tests/TestCase.php
 
 		-
 			message: "#^Parameter \\#1 \\$callback of static method Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\:\\:guessFactoryNamesUsing\\(\\) expects callable\\(class\\-string\\<Illuminate\\\\Database\\\\Eloquent\\\\Model\\>\\)\\: class\\-string\\<Illuminate\\\\Database\\\\Eloquent\\\\Factories\\\\Factory\\>, Closure\\(string\\)\\: non\\-falsy\\-string given\\.$#"

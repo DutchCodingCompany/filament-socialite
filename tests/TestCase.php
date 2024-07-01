@@ -15,15 +15,17 @@ use Filament\Panel;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Encryption\Encrypter;
+use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\SocialiteServiceProvider;
+use Laravel\Socialite\Two\AbstractProvider;
 use Livewire\LivewireServiceProvider;
+use Mockery\LegacyMockInterface;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    protected string $panelName = 'testpanel';
-
     /**
      * @var class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
@@ -64,8 +66,8 @@ class TestCase extends Orchestra
         Filament::registerPanel(
             fn (): Panel => Panel::make()
                 ->default()
-                ->id($this->panelName)
-                ->path($this->panelName)
+                ->id($this::getPanelName())
+                ->path($this::getPanelName())
                 ->tenant(...$this->tenantArguments)
                 ->login()
                 ->pages([
@@ -111,5 +113,28 @@ class TestCase extends Orchestra
     {
         $this->loadLaravelMigrations();
         $this->loadMigrationsFrom(__DIR__.'/Fixtures');
+    }
+
+    protected static function getPanelName(): string
+    {
+        return 'testpanel';
+    }
+
+    protected static function makeOAuthProviderMock(
+        Request $request,
+        SocialiteUserContract $user,
+    ): LegacyMockInterface {
+        $mock = \Mockery::mock(
+            AbstractProvider::class,
+            [$request, 'test-client-id', 'test-client-secret', 'test-redirect-url']
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $mock->shouldReceive('getAccessTokenResponse')->andReturn([]);
+        $mock->shouldReceive('getUserByToken')->andReturn([]);
+        $mock->shouldReceive('userInstance')->andReturn($user);
+
+        return $mock;
     }
 }

@@ -26,7 +26,7 @@ class SocialiteTenantLoginTest extends TestCase
         FilamentSocialitePlugin::current()->redirectAfterLoginUsing(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
             assert($socialiteUser instanceof SocialiteUser);
 
-            $this->assertEquals($this->panelName, $plugin->getPanel()->getId());
+            $this->assertEquals($this::getPanelName(), $plugin->getPanel()->getId());
             $this->assertEquals('github', $provider);
             $this->assertEquals('github', $socialiteUser->provider);
             $this->assertEquals('test-socialite-user-id', $socialiteUser->provider_id);
@@ -35,19 +35,17 @@ class SocialiteTenantLoginTest extends TestCase
         });
 
         $response = $this
-            ->getJson("/$this->panelName/oauth/github")
+            ->getJson("/{$this::getPanelName()}/oauth/github")
             ->assertStatus(302);
 
         $state = session()->get('state');
 
         Socialite::shouldReceive('driver')
             ->with('github')
-            ->andReturn(
-                Mockery::mock(Provider::class)
-                    ->shouldReceive('user')
-                    ->andReturn(new TestSocialiteUser())
-                    ->getMock()
-            );
+            ->andReturn(static::makeOAuthProviderMock(
+                request()->merge(['state' => $state]),
+                new TestSocialiteUser()
+            ));
 
         // Fake oauth response.
         $response = $this
