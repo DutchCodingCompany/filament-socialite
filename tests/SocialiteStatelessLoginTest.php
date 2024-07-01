@@ -112,14 +112,14 @@ class SocialiteStatelessLoginTest extends TestCase
     public static function statelessLoginDataProvider(): array
     {
         return [
-            'Stateless login fails when incorrect state (panelized callback route)' => [
+            'Stateless login succeeds (panelized callback route)' => [
                 'test@example.com',
                 // Use the new callback route that already contains the panel in the url.
                 'socialite.filament.'.static::getPanelName().'.oauth.callback',
                 null,
                 InvalidState::class,
             ],
-            'Stateless login fails when incorrect state (general callback route)' => [
+            'Stateless login succeeds with mocked state (general callback route)' => [
                 'test@example.com',
                 // Use the old callback route that determines the panel based on the state parameter.
                 'oauth.callback',
