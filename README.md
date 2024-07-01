@@ -79,10 +79,20 @@ use Illuminate\Contracts\Auth\Authenticatable;
 );
 ```
 
-This package automatically adds 2 routes per panel to make the OAuth flow possible. When setting up your external OAuth 
-configuration, use the following redirect URL (in this case for the `'admin'` panel with the `'github'` provider):
+This package automatically adds 2 routes per panel to make the OAuth flow possible: a redirector and a callback. When
+setting up your **external OAuth app configuration**, enter the following callback URL (in this case for the Filament
+panel with ID `admin` and the `github` provider):
 ```
 https://example.com/admin/oauth/callback/github
+```
+
+A multi-panel callback route is available as well that does not contain the panel ID in the url. Instead, it determines
+the panel ID from an encrypted `state` input (`...?state=abcd1234`). This allows you to create a single OAuth
+application for multiple Filament panels that use the same callback URL. Note that this only works for _stateful_ OAuth
+apps:
+
+```
+https://example.com/oauth/callback/github
 ```
 
 If in doubt, run `php artisan route:list` to see which routes are available to you.
