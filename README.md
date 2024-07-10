@@ -97,6 +97,21 @@ https://example.com/oauth/callback/github
 
 If in doubt, run `php artisan route:list` to see which routes are available to you.
 
+### CSRF protection
+_(Laravel 11.x users can ignore this section)_
+
+If your third-party provider calls the OAuth callback using a `POST` request, you need to add the callback route to the
+exception list in your `VerifyCsrfToken` middleware. This can be done by adding the url to the `$except` array:
+
+```php
+protected $except = [
+    '*/oauth/callback/*',
+    'oauth/callback/*',
+];
+````
+
+For Laravel 11.x users, this exception is automatically added by our service provider.
+
 See [Socialite Providers](https://socialiteproviders.com/) for additional Socialite providers.
 
 ### Icons
