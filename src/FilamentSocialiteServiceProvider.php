@@ -50,6 +50,7 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
         );
 
         if (version_compare(app()->version(), '11.0', '>=')) {
+            // @phpstan-ignore-next-line
             VerifyCsrfToken::except([
                 '*/oauth/callback/*',
                 'oauth/callback/*',
