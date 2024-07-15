@@ -36,7 +36,8 @@ foreach (Filament::getPanels() as $panel) {
 }
 
 /**
- * @deprecated This route is deprecated and will be removed in a future release. Use the "$slug/oauth/callback/{provider}" route instead.
+ * @note This route can only distinguish between Filament panels using the `state` input. If you have a stateless OAuth
+ * implementation, use the "$slug/oauth/callback/{provider}" route instead which has the panel in the URL itself.
  */
 Route::match(['get', 'post'], "/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
     ->middleware([
