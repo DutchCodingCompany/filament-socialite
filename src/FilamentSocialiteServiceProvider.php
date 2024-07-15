@@ -2,11 +2,10 @@
 
 namespace DutchCodingCompany\FilamentSocialite;
 
-use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\View\Components\Buttons;
 use Filament\Facades\Filament;
-use Filament\Panel;
 use Filament\Support\Facades\FilamentView;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Blade;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -49,5 +48,15 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
                 return Blade::render('<x-filament-socialite::buttons :show-divider="'.($plugin->getShowDivider() ? 'true' : 'false').'" />');
             },
         );
+
+        if (
+            version_compare(app()->version(), '11.0', '>=')
+            && method_exists(VerifyCsrfToken::class, 'except')
+        ) {
+            VerifyCsrfToken::except([
+                '*/oauth/callback/*',
+                'oauth/callback/*',
+            ]);
+        }
     }
 }

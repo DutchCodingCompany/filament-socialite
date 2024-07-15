@@ -9,6 +9,11 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
+/**
+ * @note This callback uses the `state` input to determine the correct panel ID. A simpler
+ * implementation is to use the "$slug/oauth/callback/{provider}" route instead, which
+ * contains the panel ID in the url itself.
+ */
 class PanelFromUrlQuery
 {
     public function handle(Request $request, Closure $next): mixed

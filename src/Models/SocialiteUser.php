@@ -5,7 +5,6 @@ namespace DutchCodingCompany\FilamentSocialite\Models;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
@@ -17,8 +16,6 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
  */
 class SocialiteUser extends Model implements FilamentSocialiteUserContract
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'provider',
@@ -26,11 +23,14 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable, self>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\Illuminate\Database\Eloquent\Model, $this>
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(FilamentSocialitePlugin::current()->getUserModelClass());
+        /** @var class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> */
+        $user = FilamentSocialitePlugin::current()->getUserModelClass();
+
+        return $this->belongsTo($user);
     }
 
     public function getUser(): Authenticatable

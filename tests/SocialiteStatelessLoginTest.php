@@ -2,23 +2,21 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
-use DutchCodingCompany\FilamentSocialite\Events\UserNotAllowed;
+use Closure;
+use DutchCodingCompany\FilamentSocialite\Events\InvalidState;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
-use DutchCodingCompany\FilamentSocialite\Provider as PluginProvider;
+use DutchCodingCompany\FilamentSocialite\Provider;
 use DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestSocialiteUser;
 use Filament\Facades\Filament;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
-use Laravel\Socialite\Contracts\Provider;
-use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Laravel\Socialite\Facades\Socialite;
 use LogicException;
-use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class SocialiteLoginAuthorizationTest extends TestCase
+class SocialiteStatelessLoginTest extends TestCase
 {
     protected function registerTestPanel(): void
     {
@@ -35,12 +33,13 @@ class SocialiteLoginAuthorizationTest extends TestCase
                 ->plugins([
                     FilamentSocialitePlugin::make()
                         ->providers([
-                            PluginProvider::make('github')
+                            Provider::make('github')
                                 ->label('GitHub')
                                 ->icon('fab-github')
                                 ->color('danger')
-                                ->outlined(false),
-                            PluginProvider::make('gitlab')
+                                ->outlined(false)
+                                ->stateless(),
+                            Provider::make('gitlab')
                                 ->label('GitLab')
                                 ->icon('fab-gitlab')
                                 ->color('danger')
@@ -50,16 +49,17 @@ class SocialiteLoginAuthorizationTest extends TestCase
                         ])
                         ->registration(true)
                         ->userModelClass($this->userModelClass)
-                        ->authorizeUserUsing(function (FilamentSocialitePlugin $plugin, SocialiteUserContract $oauthUser) {
-                            return $oauthUser->getEmail() === 'test@example.com';
-                        }),
+                        ->domainAllowList(['example.com']),
                 ]),
         );
     }
 
-    #[DataProvider('loginDataProvider')]
-    public function testAuthorizationLogin(string $email, bool $dispatchesUserNotAllowedEvent): void
-    {
+    #[DataProvider('statelessLoginDataProvider')]
+    public function testStatelessLogin(
+        string $email,
+        string $callbackRoute,
+        ?string $overrideState = null,
+    ): void {
         Event::fake();
 
         $response = $this
@@ -84,33 +84,47 @@ class SocialiteLoginAuthorizationTest extends TestCase
         Socialite::shouldReceive('driver')
             ->with('github')
             ->andReturn(static::makeOAuthProviderMock(
-                request()->merge(['state' => $state]),
+                request()->merge(['state' => $overrideState ?? $state]),
                 $user
             ));
 
         // Fake oauth response.
         $response = $this
-            ->getJson(route("socialite.filament.{$this::getPanelName()}.oauth.callback", ['provider' => 'github', 'state' => $state]))
+            ->getJson(route($callbackRoute, ['provider' => 'github', 'state' => $state]))
             ->assertStatus(302);
 
-        $dispatchesUserNotAllowedEvent
-            ? Event::assertDispatched(UserNotAllowed::class)
-            : Event::assertNotDispatched(UserNotAllowed::class);
+        Event::assertNotDispatched(InvalidState::class);
+
+        $this->assertDatabaseHas('socialite_users', [
+            'provider' => 'github',
+            'provider_id' => 'test-socialite-user-id',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'test-socialite-user-name',
+            'email' => $user->email,
+        ]);
     }
 
     /**
-     * @return array<string, array{0: string, 1: bool}>
+     * @return array<string, array{0: string, 1: string, 2: ?string, 3: ?string}>
      */
-    public static function loginDataProvider(): array
+    public static function statelessLoginDataProvider(): array
     {
         return [
-            'User is authorized to use the application so UserNotAllowedEvent should not be dispatched' => [
+            'Stateless login succeeds (panelized callback route)' => [
                 'test@example.com',
-                false,
+                // Use the new callback route that already contains the panel in the url.
+                'socialite.filament.'.static::getPanelName().'.oauth.callback',
+                null,
+                InvalidState::class,
             ],
-            'User is not authorized to use the application so UserNotAllowedEvent should be dispatched' => [
-                'test@example1.com',
-                true,
+            'Stateless login succeeds with mocked state (general callback route)' => [
+                'test@example.com',
+                // Use the old callback route that determines the panel based on the state parameter.
+                'oauth.callback',
+                'invalid-mocked-state',
+                InvalidState::class,
             ],
         ];
     }

@@ -16,15 +16,29 @@ foreach (Filament::getPanels() as $panel) {
     $domains = $panel->getDomains();
 
     foreach ((empty($domains) ? [null] : $domains) as $domain) {
-        $redirectRoute = "socialite.{$panel->generateRouteName('oauth.redirect')}";
+        Filament::currentDomain($domain);
 
         Route::domain($domain)
             ->middleware($panel->getMiddleware())
-            ->name($redirectRoute)
+            ->name("socialite.{$panel->generateRouteName('oauth.redirect')}")
             ->get("/$slug/oauth/{provider}", [SocialiteLoginController::class, 'redirectToProvider']);
+
+        Route::domain($domain)
+            ->match(['get', 'post'], "$slug/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
+            ->middleware([
+                ...$panel->getMiddleware(),
+                ...config('filament-socialite.middleware'),
+            ])
+            ->name("socialite.{$panel->generateRouteName('oauth.callback')}");
+
+        Filament::currentDomain(null);
     }
 }
 
+/**
+ * @note This route can only distinguish between Filament panels using the `state` input. If you have a stateless OAuth
+ * implementation, use the "$slug/oauth/callback/{provider}" route instead which has the panel in the URL itself.
+ */
 Route::match(['get', 'post'], "/oauth/callback/{provider}", [SocialiteLoginController::class, 'processCallback'])
     ->middleware([
         PanelFromUrlQuery::class,

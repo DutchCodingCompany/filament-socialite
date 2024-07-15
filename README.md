@@ -65,6 +65,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
                 ->scopes(['...'])
                 ->with(['...']),
         ])
+        // (optional) Override the panel slug to be used in the oauth routes. Defaults to the panel ID.
+        ->slug('admin')
         // (optional) Enable/disable registration of new (socialite-) users.
         ->registration(true)
         // (optional) Enable/disable registration of new (socialite-) users using a callback.
@@ -77,13 +79,46 @@ use Illuminate\Contracts\Auth\Authenticatable;
 );
 ```
 
+This package automatically adds 2 routes per panel to make the OAuth flow possible: a redirector and a callback. When
+setting up your **external OAuth app configuration**, enter the following callback URL (in this case for the Filament
+panel with ID `admin` and the `github` provider):
+```
+https://example.com/admin/oauth/callback/github
+```
+
+A multi-panel callback route is available as well that does not contain the panel ID in the url. Instead, it determines
+the panel ID from an encrypted `state` input (`...?state=abcd1234`). This allows you to create a single OAuth
+application for multiple Filament panels that use the same callback URL. Note that this only works for _stateful_ OAuth
+apps:
+
+```
+https://example.com/oauth/callback/github
+```
+
+If in doubt, run `php artisan route:list` to see which routes are available to you.
+
+### CSRF protection
+_(Laravel 11.x users can ignore this section)_
+
+If your third-party provider calls the OAuth callback using a `POST` request, you need to add the callback route to the
+exception list in your `VerifyCsrfToken` middleware. This can be done by adding the url to the `$except` array:
+
+```php
+protected $except = [
+    '*/oauth/callback/*',
+    'oauth/callback/*',
+];
+````
+
+For Laravel 11.x users, this exception is automatically added by our service provider.
+
 See [Socialite Providers](https://socialiteproviders.com/) for additional Socialite providers.
 
 ### Icons
 
 You can specify a custom icon for each of your login providers. You can add Font Awesome brand
 icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome) by running:
-```
+```bash
 composer require owenvoke/blade-fontawesome
 ```
 
