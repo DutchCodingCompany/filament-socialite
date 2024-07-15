@@ -11,9 +11,9 @@ use Illuminate\Contracts\Auth\Authenticatable;
 trait Models
 {
     /**
-     * @var class-string<\Illuminate\Contracts\Auth\Authenticatable>
+     * @var ?class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable>
      */
-    protected string $userModelClass = User::class;
+    protected ?string $userModelClass = null;
 
     /**
      * @var class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
@@ -21,7 +21,7 @@ trait Models
     protected string $socialiteUserModelClass = SocialiteUser::class;
 
     /**
-     * @param class-string<\Illuminate\Contracts\Auth\Authenticatable> $value
+     * @param class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $value
      * @throws ImplementationException
      */
     public function userModelClass(string $value): static
@@ -36,11 +36,14 @@ trait Models
     }
 
     /**
-     * @return class-string<\Illuminate\Contracts\Auth\Authenticatable>
+     * @return class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable>
      */
     public function getUserModelClass(): string
     {
-        return $this->userModelClass;
+        /** @var class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> */
+        $user = User::class;
+
+        return $this->userModelClass ?? $user;
     }
 
     /**

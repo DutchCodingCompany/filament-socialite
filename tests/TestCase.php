@@ -27,7 +27,7 @@ use Orchestra\Testbench\TestCase as Orchestra;
 class TestCase extends Orchestra
 {
     /**
-     * @var class-string<\Illuminate\Contracts\Auth\Authenticatable>
+     * @var class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable>
      */
     protected string $userModelClass = TestUser::class;
 
