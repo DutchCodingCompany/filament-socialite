@@ -13,7 +13,6 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
  * @property int $user_id
  * @property string $provider
  * @property int $provider_id
- * @property \Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable $user
  */
 class SocialiteUser extends Model implements FilamentSocialiteUserContract
 {
@@ -28,7 +27,10 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(FilamentSocialitePlugin::current()->getUserModelClass());
+        /** @var class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> */
+        $user = FilamentSocialitePlugin::current()->getUserModelClass();
+
+        return $this->belongsTo($user);
     }
 
     public function getUser(): Authenticatable
