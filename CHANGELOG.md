@@ -2,6 +2,12 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [2.2.0 - 2024-07-15](https://github.com/DutchCodingCompany/filament-socialite/compare/2.1.1...2.2.0)
+
+## What's Changed
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/DutchCodingCompany/filament-socialite/pull/106
+* Add new callback route for stateless OAuth flows by @bert-w in https://github.com/DutchCodingCompany/filament-socialite/pull/105
+
 ## [2.1.1 - 2024-06-21](https://github.com/DutchCodingCompany/filament-socialite/compare/2.1.0...2.1.1)
 
 ## What's Changed
