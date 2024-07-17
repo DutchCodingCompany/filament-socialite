@@ -6,6 +6,11 @@ parameters:
 			path: src/FilamentSocialitePlugin.php
 
 		-
+			message: "#^Property DutchCodingCompany\\\\FilamentSocialite\\\\FilamentSocialitePlugin\\:\\:\\$userModelClass \\(class\\-string\\<Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\>\\) does not accept default value of type string\\.$#"
+			count: 1
+			path: src/FilamentSocialitePlugin.php
+
+		-
 			message: "#^Parameter \\#1 \\$value of method DutchCodingCompany\\\\FilamentSocialite\\\\Http\\\\Controllers\\\\SocialiteLoginController\\:\\:evaluate\\(\\) expects bool\\|\\(callable\\(\\)\\: bool\\), bool\\|\\(Closure\\(string, Laravel\\\\Socialite\\\\Contracts\\\\User, Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null\\)\\: bool\\) given\\.$#"
 			count: 1
 			path: src/Http/Controllers/SocialiteLoginController.php
