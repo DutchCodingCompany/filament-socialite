@@ -2,6 +2,11 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [2.2.1 - 2024-07-16](https://github.com/DutchCodingCompany/filament-socialite/compare/2.2.0...2.2.1)
+
+## What's Changed
+* Revert model property changes by @bert-w in https://github.com/DutchCodingCompany/filament-socialite/pull/110
+
 ## [2.2.0 - 2024-07-15](https://github.com/DutchCodingCompany/filament-socialite/compare/2.1.1...2.2.0)
 
 ## What's Changed
