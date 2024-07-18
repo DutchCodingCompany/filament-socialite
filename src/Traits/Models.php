@@ -13,7 +13,7 @@ trait Models
     /**
      * @var ?class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
-    protected ?string $userModelClass = null;
+    protected ?string $userModelClass = 'App\\Models\\User';
 
     /**
      * @var class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
