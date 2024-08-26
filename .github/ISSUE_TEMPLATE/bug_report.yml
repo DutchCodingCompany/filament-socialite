@@ -13,8 +13,16 @@ body:
     id: plugin-version
     attributes:
       label: Plugin Version
-      description: Please provide the installed plugin
+      description: Please provide the version of filament socialite installed in your project.
       placeholder: v2.0.0
+    validations:
+      required: true
+  - type: input
+    id: filament-version
+    attributes:
+      label: Filament Version
+      description: Please provide the full filament version of your project.
+      placeholder: v3.0.0
     validations:
       required: true
   - type: input
@@ -57,7 +65,7 @@ body:
     id: steps
     attributes:
       label: Steps to reproduce
-      description: Which steps do we need to take to reproduce the problem? Any code examples need to be **as short as possible**, remove any code that is unrelated to the bug.  **This issue will be automatically closed and not reviewed if detailed replication steps are missing.**
+      description: Which steps do we need to take to reproduce the problem? Any code examples need to be **as short as possible**, remove any code that is unrelated to the bug.
     validations:
       required: true
   - type: textarea
