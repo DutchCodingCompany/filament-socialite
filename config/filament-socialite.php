@@ -18,4 +18,6 @@ return [
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
     ],
+
+    'show_'
 ];
