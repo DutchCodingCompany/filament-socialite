@@ -18,4 +18,6 @@ return [
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
     ],
+
+    'user_id_column' => 'user_id',
 ];

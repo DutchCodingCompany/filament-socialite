@@ -14,12 +14,12 @@ Add OAuth2 login through Laravel Socialite to Filament. OAuth1 (eg. Twitter) is 
 
 ## Installation
 
-| Filament version                                                                                                                                               | Package version | Readme                                                                               |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|--------------------------------------------------------------------------------------|
-| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | 2.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/main/README.md) |
-| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | ^1.3.1          |                                                                                      |
-| 3.x                                                                                                                                                            | 1.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/1.x/README.md)  |
-| 2.x                                                                                                                                                            | 0.x.x           |                                                                                      |
+| Filament version                                                                                                                                              | Package version | Readme                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------ |
+| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode)) | 2.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/main/README.md) |
+| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode)) | ^1.3.1          |                                                                                      |
+| 3.x                                                                                                                                                           | 1.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/1.x/README.md)  |
+| 2.x                                                                                                                                                           | 0.x.x           |                                                                                      |
 
 Install the package via composer:
 
@@ -35,6 +35,7 @@ php artisan migrate
 ```
 
 Other configuration files include:
+
 ```bash
 php artisan vendor:publish --tag="filament-socialite-config"
 php artisan vendor:publish --tag="filament-socialite-views"
@@ -53,7 +54,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 // ...
 ->plugin(
     FilamentSocialitePlugin::make()
-        // (required) Add providers corresponding with providers in `config/services.php`. 
+        // (required) Add providers corresponding with providers in `config/services.php`.
         ->providers([
             // Create a provider 'gitlab' corresponding to the Socialite driver with the same name.
             Provider::make('gitlab')
@@ -82,6 +83,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 This package automatically adds 2 routes per panel to make the OAuth flow possible: a redirector and a callback. When
 setting up your **external OAuth app configuration**, enter the following callback URL (in this case for the Filament
 panel with ID `admin` and the `github` provider):
+
 ```
 https://example.com/admin/oauth/callback/github
 ```
@@ -98,6 +100,7 @@ https://example.com/oauth/callback/github
 If in doubt, run `php artisan route:list` to see which routes are available to you.
 
 ### CSRF protection
+
 _(Laravel 11.x users can ignore this section)_
 
 If your third-party provider calls the OAuth callback using a `POST` request, you need to add the callback route to the
@@ -108,7 +111,7 @@ protected $except = [
     '*/oauth/callback/*',
     'oauth/callback/*',
 ];
-````
+```
 
 For Laravel 11.x users, this exception is automatically added by our service provider.
 
@@ -118,6 +121,7 @@ See [Socialite Providers](https://socialiteproviders.com/) for additional Social
 
 You can specify a custom icon for each of your login providers. You can add Font Awesome brand
 icons made available through [Blade Font Awesome](https://github.com/owenvoke/blade-fontawesome) by running:
+
 ```bash
 composer require owenvoke/blade-fontawesome
 ```
@@ -199,7 +203,7 @@ class SocialiteUser implements FilamentSocialiteUserContract
     {
         //
     }
-    
+
     public static function createForProvider(
         string $provider,
         SocialiteUserContract $oauthUser,
@@ -254,13 +258,26 @@ This component can also be added while using the [Fortify plugin](https://filame
 public function boot()
 {
     //...
-    
+
     Filament::registerRenderHook(
         'filament-fortify.login.end',
         fn (): string => Blade::render('<x-filament-socialite::buttons />'),
     );
 }
 ```
+
+### Custom user ids
+
+If you want to use a custom user id, you can change the `user_id_column` in the `config/filament-socialite.php` file. For example when you use a UUID or ULID as user id.
+
+```php
+
+return [
+    'user_id_column' => 'uuid',
+];
+```
+
+> **Note:** If you change the `user_id_column` you need to make sure that the `user_id` in the `socialite_users` table is also a UUID or ULID.
 
 ### Filament Breezy
 
@@ -284,12 +301,12 @@ You can then add the following snippet in your form:
 
 There are a few events dispatched during the authentication process:
 
-* `InvalidState(InvalidStateException $exception)`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
-* `Login(FilamentSocialiteUserContract $socialiteUser)`: When a user successfully logs in
-* `Registered(FilamentSocialiteUserContract $socialiteUser)`: When a user and socialite user is successfully registered and logged in (when enabled in config)
-* `RegistrationNotEnabled(string $provider, SocialiteUserContract $oauthUser)`: When a user tries to login with an unknown account and registration is not enabled
-* `SocialiteUserConnected(FilamentSocialiteUserContract $socialiteUser)`: When a socialite user is created for an existing user
-* `UserNotAllowed(SocialiteUserContract $oauthUser)`: When a user tries to login with an email which domain is not on the allowlist
+-   `InvalidState(InvalidStateException $exception)`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
+-   `Login(FilamentSocialiteUserContract $socialiteUser)`: When a user successfully logs in
+-   `Registered(FilamentSocialiteUserContract $socialiteUser)`: When a user and socialite user is successfully registered and logged in (when enabled in config)
+-   `RegistrationNotEnabled(string $provider, SocialiteUserContract $oauthUser)`: When a user tries to login with an unknown account and registration is not enabled
+-   `SocialiteUserConnected(FilamentSocialiteUserContract $socialiteUser)`: When a socialite user is created for an existing user
+-   `UserNotAllowed(SocialiteUserContract $oauthUser)`: When a user tries to login with an email which domain is not on the allowlist
 
 ## Scopes
 
@@ -334,6 +351,7 @@ FilamentSocialitePlugin::make()
 ```
 
 ## Stateless Authentication
+
 You can add `stateless` parameters to the provider configuration in the config/services.php config file, for example:
 
 ```php
@@ -359,7 +377,8 @@ Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTI
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
-- [All Contributors](../../contributors)
+
+-   [All Contributors](../../contributors)
 
 ## License
 

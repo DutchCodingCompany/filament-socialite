@@ -16,11 +16,7 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
  */
 class SocialiteUser extends Model implements FilamentSocialiteUserContract
 {
-    protected $fillable = [
-        'user_id',
-        'provider',
-        'provider_id',
-    ];
+    protected $guarded = [];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\Illuminate\Database\Eloquent\Model, $this>
@@ -52,7 +48,7 @@ class SocialiteUser extends Model implements FilamentSocialiteUserContract
     {
         return self::query()
             ->create([
-                'user_id' => $user->getKey(),
+                config('filament-socialite.user_id_column') => $user->getKey(),
                 'provider' => $provider,
                 'provider_id' => $oauthUser->getId(),
             ]);
