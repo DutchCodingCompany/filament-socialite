@@ -332,6 +332,20 @@ FilamentSocialitePlugin::make()
             ]),
     ]),
 ```
+## Visibility
+
+You can set the visibility of a provider, if it is not visible, buttons will not be rendered. All functionality will still be enabled.
+
+```php
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use DutchCodingCompany\FilamentSocialite\Provider;
+
+FilamentSocialitePlugin::make()
+    ->providers([
+        Provider::make('github')
+            ->visible(fn () => true),
+    ]),
+```
 
 ## Stateless Authentication
 You can add `stateless` parameters to the provider configuration in the config/services.php config file, for example:
