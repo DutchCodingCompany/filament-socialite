@@ -16,6 +16,11 @@ parameters:
 			path: src/Http/Controllers/SocialiteLoginController.php
 
 		-
+			message: "#^Generic type Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTeam, static\\(DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTenantUser\\)\\> in PHPDoc tag @return specifies 2 template types, but class Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany supports only 1\\: TRelatedModel$#"
+			count: 1
+			path: tests/Fixtures/TestTenantUser.php
+
+		-
 			message: "#^Method DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTenantUser\\:\\:teams\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTeam, static\\(DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTenantUser\\)\\> but returns Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTeam\\>\\.$#"
 			count: 1
 			path: tests/Fixtures/TestTenantUser.php
