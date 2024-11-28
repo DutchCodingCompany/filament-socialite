@@ -8,8 +8,6 @@ on:
       - 'phpstan.neon.dist'
       - 'phpstan.laravel-10.neon.dist'
   pull_request:
-    branches:
-      - '**'
 
 jobs:
   phpstan:
