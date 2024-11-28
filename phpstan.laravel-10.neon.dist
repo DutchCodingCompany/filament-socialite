@@ -1,0 +1,12 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+    - ./phpstan-baseline.laravel-10.neon
+
+parameters:
+    level: 8
+
+    paths:
+        - config
+        - database
+        - src
+        - tests
