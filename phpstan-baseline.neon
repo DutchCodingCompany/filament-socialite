@@ -16,6 +16,11 @@ parameters:
 			path: src/Http/Controllers/SocialiteLoginController.php
 
 		-
+			message: "#^Method DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTenantUser\\:\\:teams\\(\\) should return Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTeam, static\\(DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTenantUser\\)\\> but returns Illuminate\\\\Database\\\\Eloquent\\\\Relations\\\\BelongsToMany\\<DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTeam, \\$this\\(DutchCodingCompany\\\\FilamentSocialite\\\\Tests\\\\Fixtures\\\\TestTenantUser\\)\\>\\.$#"
+			count: 1
+			path: tests/Fixtures/TestTenantUser.php
+
+		-
 			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:andReturn\\(\\)\\.$#"
 			count: 3
 			path: tests/TestCase.php
