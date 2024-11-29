@@ -2,6 +2,12 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [2.3.0 - 2024-11-29](https://github.com/DutchCodingCompany/filament-socialite/compare/2.2.1...2.3.0)
+
+## What's Changed
+* Add option to hide providers by @dododedodonl in https://github.com/DutchCodingCompany/filament-socialite/pull/122
+* Add support for php 8.4
+
 ## [2.2.1 - 2024-07-17](https://github.com/DutchCodingCompany/filament-socialite/compare/2.2.0...2.2.1)
 
 ## What's Changed
