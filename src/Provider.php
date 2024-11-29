@@ -3,6 +3,7 @@
 namespace DutchCodingCompany\FilamentSocialite;
 
 use Closure;
+use DutchCodingCompany\FilamentSocialite\Traits\CanBeHidden;
 use Filament\Support\Colors\Color;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Illuminate\Support\Str;
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
 class Provider
 {
     use EvaluatesClosures;
+    use CanBeHidden;
 
     protected string $name;
 

@@ -5,7 +5,7 @@
         @endforeach
     @endif
 
-    @if (count($providers))
+    @if (count($visibleProviders))
         @if($showDivider)
             <div class="relative flex items-center justify-center text-center">
                 <div class="absolute border-t border-gray-200 w-full h-px"></div>
@@ -15,8 +15,8 @@
             </div>
         @endif
 
-        <div class="grid @if(count($providers) > 1) grid-cols-2 @endif gap-4">
-            @foreach($providers as $key => $provider)
+        <div class="grid @if(count($visibleProviders) > 1) grid-cols-2 @endif gap-4">
+            @foreach($visibleProviders as $key => $provider)
                 <x-filament::button
                     :color="$provider->getColor()"
                     :outlined="$provider->getOutlined()"

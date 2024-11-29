@@ -35,7 +35,7 @@ trait Callbacks
     /**
      * @param ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): \Illuminate\Contracts\Auth\Authenticatable $callback
      */
-    public function createUserUsing(Closure $callback = null): static
+    public function createUserUsing(?Closure $callback = null): static
     {
         $this->createUserUsing = $callback;
 
@@ -99,9 +99,9 @@ trait Callbacks
     }
 
     /**
-     * @param \Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): ?(\Illuminate\Contracts\Auth\Authenticatable) $callback
+     * @param ?\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin): ?(\Illuminate\Contracts\Auth\Authenticatable) $callback
      */
-    public function resolveUserUsing(Closure $callback = null): static
+    public function resolveUserUsing(?Closure $callback = null): static
     {
         $this->resolveUserUsing = $callback;
 
@@ -125,9 +125,9 @@ trait Callbacks
     }
 
     /**
-     * @param \Closure(\DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin, \Laravel\Socialite\Contracts\User $oauthUser): bool $callback
+     * @param ?\Closure(\DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin, \Laravel\Socialite\Contracts\User $oauthUser): bool $callback
      */
-    public function authorizeUserUsing(Closure $callback = null): static
+    public function authorizeUserUsing(?Closure $callback = null): static
     {
         $this->authorizeUserUsing = $callback;
 
