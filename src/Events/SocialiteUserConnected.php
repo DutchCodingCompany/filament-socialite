@@ -5,6 +5,7 @@ namespace DutchCodingCompany\FilamentSocialite\Events;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 class SocialiteUserConnected
 {
@@ -17,6 +18,8 @@ class SocialiteUserConnected
      * @return void
      */
     public function __construct(
+        public string $provider,
+        public SocialiteUserContract $oauthUser,
         public FilamentSocialiteUserContract $socialiteUser,
     ) {
     }
