@@ -286,9 +286,9 @@ There are a few events dispatched during the authentication process:
 
 * `InvalidState(InvalidStateException $exception)`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
 * `Login(FilamentSocialiteUserContract $socialiteUser)`: When a user successfully logs in
-* `Registered(FilamentSocialiteUserContract $socialiteUser)`: When a user and socialite user is successfully registered and logged in (when enabled in config)
-* `RegistrationNotEnabled(string $provider, SocialiteUserContract $oauthUser)`: When a user tries to login with an unknown account and registration is not enabled
-* `SocialiteUserConnected(FilamentSocialiteUserContract $socialiteUser)`: When a socialite user is created for an existing user
+* `Registered(string $provider, SocialiteUserContract $oauthUser, FilamentSocialiteUserContract $socialiteUser)`: When a user and socialite user is successfully registered and logged in (when enabled in config)
+* `RegistrationNotEnabled(string $provider, SocialiteUserContract $oauthUser, ?Auhthenticatable $user)`: When a user tries to login with an unknown account and registration is not enabled
+* `SocialiteUserConnected(string $provider, SocialiteUserContract $oauthUser, FilamentSocialiteUserContract $socialiteUser)`: When a socialite user is created for an existing user
 * `UserNotAllowed(SocialiteUserContract $oauthUser)`: When a user tries to login with an email which domain is not on the allowlist
 
 ## Scopes

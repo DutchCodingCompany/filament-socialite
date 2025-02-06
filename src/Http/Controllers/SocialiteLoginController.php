@@ -101,7 +101,7 @@ class SocialiteLoginController extends Controller
         $socialiteUser = $this->plugin()->getSocialiteUserModel()::createForProvider($provider, $oauthUser, $user);
 
         // Dispatch the socialite user connected event
-        Events\SocialiteUserConnected::dispatch($socialiteUser);
+        Events\SocialiteUserConnected::dispatch($provider, $oauthUser, $socialiteUser);
 
         // Login the user
         return $this->loginUser($provider, $socialiteUser, $oauthUser);
@@ -118,7 +118,7 @@ class SocialiteLoginController extends Controller
         });
 
         // Dispatch the registered event
-        Events\Registered::dispatch($socialiteUser);
+        Events\Registered::dispatch($provider, $oauthUser, $socialiteUser);
 
         // Login the user
         return $this->loginUser($provider, $socialiteUser, $oauthUser);
