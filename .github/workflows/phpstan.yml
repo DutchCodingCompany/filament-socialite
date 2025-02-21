@@ -3,10 +3,10 @@ name: PHPStan
 on:
   push:
     paths:
-      - **.php
-      - .github/workflows/phpstan.yml
-      - phpstan.neon.dist
-      - phpstan.laravel-10.neon.dist
+      - '**.php'
+      - '.github/workflows/phpstan.yml'
+      - 'phpstan.neon.dist'
+      - 'phpstan.laravel-10.neon.dist'
   pull_request:
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
             phpstan_neon: phpstan.neon.dist
           - laravel: 12.*
             testbench: 10.*
-            phpstan_neon: '8.2'
+            phpstan_neon: phpstan.neon.dist
         exclude:
           - laravel: 11.*
             php: 8.1
