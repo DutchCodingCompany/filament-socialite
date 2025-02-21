@@ -49,10 +49,7 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
             },
         );
 
-        if (
-            version_compare(app()->version(), '11.0', '>=')
-            && method_exists(VerifyCsrfToken::class, 'except')
-        ) {
+        if (version_compare(app()->version(), '11.0', '>=')) {
             VerifyCsrfToken::except([
                 '*/oauth/callback/*',
                 'oauth/callback/*',
