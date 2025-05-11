@@ -27,7 +27,7 @@ class TestTenantUser extends TestUser implements HasTenants
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTeam, static>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\DutchCodingCompany\FilamentSocialite\Tests\Fixtures\TestTeam, $this>
      */
     public function teams(): BelongsToMany
     {

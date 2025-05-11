@@ -37,12 +37,6 @@ parameters:
 			path: src/View/Components/Buttons.php
 
 		-
-			message: '#^Method DutchCodingCompany\\FilamentSocialite\\Tests\\Fixtures\\TestTenantUser\:\:teams\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<DutchCodingCompany\\FilamentSocialite\\Tests\\Fixtures\\TestTeam, static\(DutchCodingCompany\\FilamentSocialite\\Tests\\Fixtures\\TestTenantUser\)\> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<DutchCodingCompany\\FilamentSocialite\\Tests\\Fixtures\\TestTeam, \$this\(DutchCodingCompany\\FilamentSocialite\\Tests\\Fixtures\\TestTenantUser\)\>\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/Fixtures/TestTenantUser.php
-
-		-
 			message: '#^PHPDoc tag @property for property DutchCodingCompany\\FilamentSocialite\\Tests\\Fixtures\\TestTenantUser\:\:\$teams contains generic class Illuminate\\Support\\Collection but does not specify its types\: TKey, TValue$#'
 			identifier: missingType.generics
 			count: 1
