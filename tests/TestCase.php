@@ -32,13 +32,15 @@ class TestCase extends Orchestra
     protected string $userModelClass = TestUser::class;
 
     /**
-     * @var array{0: ?string, 1?: ?string, 2?: ?string}
+     * @var array{0: ?class-string<\Illuminate\Database\Eloquent\Model>, 1?: ?string, 2?: ?string}
      */
     protected array $tenantArguments = [null];
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        Filament::setCurrentPanel(self::getPanelName());
 
         Factory::guessFactoryNamesUsing(
             fn (

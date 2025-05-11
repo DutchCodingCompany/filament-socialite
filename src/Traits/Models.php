@@ -2,18 +2,16 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Traits;
 
-use App\Models\User;
 use DutchCodingCompany\FilamentSocialite\Exceptions\ImplementationException;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use DutchCodingCompany\FilamentSocialite\Models\SocialiteUser;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 trait Models
 {
     /**
      * @var class-string<\Illuminate\Contracts\Auth\Authenticatable>
      */
-    protected string $userModelClass = User::class;
+    protected string $userModelClass = \App\Models\User::class;
 
     /**
      * @var class-string<\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser>
@@ -22,15 +20,10 @@ trait Models
 
     /**
      * @param class-string<\Illuminate\Contracts\Auth\Authenticatable> $value
-     * @throws ImplementationException
      */
     public function userModelClass(string $value): static
     {
-        if (! is_a($value, Authenticatable::class, true)) {
-            throw new ImplementationException('The user model class must implement the "\Illuminate\Contracts\Auth\Authenticatable" interface.');
-        }
-
-        $this->userModelClass = $value;
+       $this->userModelClass = $value;
 
         return $this;
     }
@@ -48,10 +41,6 @@ trait Models
      */
     public function socialiteUserModelClass(string $value): static
     {
-        if (! is_a($value, FilamentSocialiteUserContract::class, true)) {
-            throw new ImplementationException('The socialite user model class must implement the "\DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser" interface.');
-        }
-
         $this->socialiteUserModelClass = $value;
 
         return $this;
