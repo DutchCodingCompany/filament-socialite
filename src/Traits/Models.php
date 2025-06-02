@@ -23,7 +23,7 @@ trait Models
      */
     public function userModelClass(string $value): static
     {
-       $this->userModelClass = $value;
+        $this->userModelClass = $value;
 
         return $this;
     }
