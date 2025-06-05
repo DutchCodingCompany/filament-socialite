@@ -2,6 +2,12 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+
+## [3.0.0-alpha1 - 2025-06-05](https://github.com/DutchCodingCompany/filament-socialite/compare/2.4.0...3.0.0-alpha1)
+
+## What's Changed
+* Filament V4 support by @erikgaal in https://github.com/DutchCodingCompany/filament-socialite/pull/131
+
 ## [2.4.0 - 2025-02-25](https://github.com/DutchCodingCompany/filament-socialite/compare/2.3.1...2.4.0)
 
 ## What's Changed
