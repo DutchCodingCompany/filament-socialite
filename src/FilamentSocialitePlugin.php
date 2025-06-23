@@ -123,7 +123,7 @@ class FilamentSocialitePlugin implements Plugin
 
     public function getSlug(): string
     {
-        return $this->slug ?? Str::slug($this->getPanelId());
+        return $this->slug ?? rtrim($this->getPanel()->getPath(), '/');
     }
 
     public function rememberLogin(bool $value): static
