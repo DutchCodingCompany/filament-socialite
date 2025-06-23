@@ -1,4 +1,17 @@
 # Upgrade Guide
+## `2.x.x` to `3.x.x` (Filament v4.x)
+
+### Slug
+In v3 of the plugin, the panel's configured path is used instead of it's ID when generating the callback URLs.  
+In order to revert to previous behaviour, use slug to override the behaviour:
+  ```php
+  ->plugin(
+      FilamentSocialitePlugin::make()
+          ->slug('admin') // change this to the panel's ID
+          // other config for plugin
+  )
+  ```
+
 ## `1.x.x` to `2.x.x` (Filament v3.x)
 
 For version 2 we refactored most of the plugin to be more consistent with the Filament naming conventions. We've also moved some of the callbacks to the plugin, so they are configurable per panel.

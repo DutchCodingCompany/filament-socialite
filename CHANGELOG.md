@@ -2,8 +2,20 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [3.0.0-beta2 - 2025-06-23](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.0-alpha1...3.0.0-beta2)
 
-## [3.0.0-alpha1 - 2025-06-05](https://github.com/DutchCodingCompany/filament-socialite/compare/2.4.0...3.0.0-alpha1)
+## What's Changed
+* BREAKING CHANGE: Implement fix for slug issue https://github.com/DutchCodingCompany/filament-socialite/issues/127  
+  The package now uses `path` instead of `id` as default prefix as it should have done. In order to revert to previous behaviour, use slug to override the behaviour:
+  ```php
+  ->plugin(
+      FilamentSocialitePlugin::make()
+          ->slug('admin') // change this to the panel's ID
+          // other config for plugin
+  )
+  ```
+
+## [3.0.0-alpha1 - 2025-06-05](https://github.com/DutchCodingCompany/filament-socialite/compare/2.4.0...3.0.0-alpha1) / [3.0.0-beta1 - 2025-06-05](https://github.com/DutchCodingCompany/filament-socialite/compare/2.4.0...3.0.0-beta1)
 
 ## What's Changed
 * Filament V4 support by @erikgaal in https://github.com/DutchCodingCompany/filament-socialite/pull/131

@@ -16,7 +16,8 @@ Add OAuth2 login through Laravel Socialite to Filament. OAuth1 (eg. Twitter) is 
 
 | Filament version                                                                                                                                               | Package version | Readme                                                                               |
 |----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|--------------------------------------------------------------------------------------|
-| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | 2.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/main/README.md) |
+| [^4.0.0-beta7](https://github.com/filamentphp/filament/releases/tag/v4.0.0-beta7)                                                                              | 3.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/main/README.md) |
+| [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | 2.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/2.x/README.md) |
 | [^3.2.44](https://github.com/filamentphp/filament/releases/tag/v3.2.44) (if using [SPA mode](https://filamentphp.com/docs/3.x/panels/configuration#spa-mode))  | ^1.3.1          |                                                                                      |
 | 3.x                                                                                                                                                            | 1.x.x           | [Link](https://github.com/DutchCodingCompany/filament-socialite/blob/1.x/README.md)  |
 | 2.x                                                                                                                                                            | 0.x.x           |                                                                                      |
@@ -65,7 +66,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
                 ->scopes(['...'])
                 ->with(['...']),
         ])
-        // (optional) Override the panel slug to be used in the oauth routes. Defaults to the panel ID.
+        // (optional) Override the panel slug to be used in the oauth routes. Defaults to the panel's configured path.
         ->slug('admin')
         // (optional) Enable/disable registration of new (socialite-) users.
         ->registration(true)
@@ -96,23 +97,6 @@ https://example.com/oauth/callback/github
 ```
 
 If in doubt, run `php artisan route:list` to see which routes are available to you.
-
-### CSRF protection
-_(Only applicable to Laravel 10.x users can ignore this section)_
-
-If your third-party provider calls the OAuth callback using a `POST` request, you need to add the callback route to the
-exception list in your `VerifyCsrfToken` middleware. This can be done by adding the url to the `$except` array:
-
-```php
-protected $except = [
-    '*/oauth/callback/*',
-    'oauth/callback/*',
-];
-````
-
-For Laravel 11.x (or newer) users, this exception is automatically added by our service provider.
-
-See [Socialite Providers](https://socialiteproviders.com/) for additional Socialite providers.
 
 ### Icons
 
@@ -231,7 +215,7 @@ use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 
 ### Change login redirect
 
-When your panel has [multi-tenancy](https://filamentphp.com/docs/3.x/panels/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/3.x/panels/tenancy#setting-the-default-tenant).
+When your panel has [multi-tenancy](https://filamentphp.com/docs/4.x/users/tenancy) enabled, after logging in, the user will be redirected to their [default tenant](https://filamentphp.com/docs/4.x/users/tenancy#setting-the-default-tenant).
 If you want to change this behavior, you can call the 'redirectAfterLoginUsing' method on the `FilamentSocialitePlugin`.
 
 ```php
@@ -243,41 +227,6 @@ FilamentSocialitePlugin::make()
     ->redirectAfterLoginUsing(function (string $provider, FilamentSocialiteUserContract $socialiteUser, FilamentSocialitePlugin $plugin) {
         // Change the redirect behaviour here.
     });
-```
-
-### Filament Fortify
-
-This component can also be added while using the [Fortify plugin](https://filamentphp.com/plugins/fortify) plugin.
-
-```php
-## in Service Provider file
-public function boot()
-{
-    //...
-    
-    Filament::registerRenderHook(
-        'filament-fortify.login.end',
-        fn (): string => Blade::render('<x-filament-socialite::buttons />'),
-    );
-}
-```
-
-### Filament Breezy
-
-This component can also be added while using the [Breezy plugin](https://filamentphp.com/plugins/jeffgreco-breezy) plugin.
-
-You can publish the login page for **Filament Breezy** by running:
-
-```bash
-php artisan vendor:publish --tag="filament-breezy-views"
-```
-
-Which produces a login page at `resources/views/vendor/filament-breezy/login.blade.php`.
-
-You can then add the following snippet in your form:
-
-```html
-<x-filament-socialite::buttons />
 ```
 
 ## Events
