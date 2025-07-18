@@ -4,6 +4,7 @@
 .phpunit.result.cache
 build
 composer.lock
+package-lock.json
 coverage
 docs
 phpstan.neon

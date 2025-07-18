@@ -4,6 +4,8 @@ namespace DutchCodingCompany\FilamentSocialite;
 
 use DutchCodingCompany\FilamentSocialite\View\Components\Buttons;
 use Filament\Facades\Filament;
+use Filament\Support\Assets\Css;
+use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Blade;
@@ -32,6 +34,10 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
     {
         Blade::componentNamespace('DutchCodingCompany\FilamentSocialite\View\Components', 'filament-socialite');
         Blade::component('buttons', Buttons::class);
+
+        FilamentAsset::register([
+            Css::make('filament-socialite-styles', __DIR__ . '/../resources/dist/plugin.css')->loadedOnRequest(),
+        ], package: 'filament-socialite');
 
         FilamentView::registerRenderHook(
             'panels::auth.login.form.after',
