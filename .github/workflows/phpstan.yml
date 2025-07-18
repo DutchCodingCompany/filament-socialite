@@ -6,7 +6,6 @@ on:
       - '**.php'
       - '.github/workflows/phpstan.yml'
       - 'phpstan.neon.dist'
-      - 'phpstan.laravel-10.neon.dist'
   pull_request:
 
 jobs:
