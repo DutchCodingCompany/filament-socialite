@@ -2,6 +2,11 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [3.0.0-beta3 - 2025-07-18](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.0-beta2...3.0.0-beta3)
+
+## What's Changed
+* Include compiled styles
+  
 ## [3.0.0-beta2 - 2025-06-23](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.0-alpha1...3.0.0-beta2)
 
 ## What's Changed
