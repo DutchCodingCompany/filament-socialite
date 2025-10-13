@@ -13,6 +13,7 @@ class Buttons extends Component
 
     public function __construct(
         public bool $showDivider = true,
+        public bool $showButtonsBeforeLogin = false,
     ) {
         $this->plugin = FilamentSocialitePlugin::current();
     }

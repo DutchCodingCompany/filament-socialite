@@ -4,6 +4,7 @@ namespace DutchCodingCompany\FilamentSocialite;
 
 use DutchCodingCompany\FilamentSocialite\View\Components\Buttons;
 use Filament\Facades\Filament;
+use Filament\Panel;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentView;
@@ -39,21 +40,29 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
             Css::make('filament-socialite-styles', __DIR__.'/../resources/dist/plugin.css')->loadedOnRequest(),
         ], package: 'filament-socialite');
 
-        FilamentView::registerRenderHook(
-            'panels::auth.login.form.after',
-            static function (): ?string {
-                $panel = Filament::getCurrentPanel();
+        collect(Filament::getPanels())->each(function (Panel $panel) {
 
-                if (! $panel?->hasPlugin('filament-socialite')) {
-                    return null;
+            if (!$panel->hasPlugin('filament-socialite')) {
+                return;
+            }
+
+            /** @var \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin */
+            $plugin = $panel->getPlugin('filament-socialite');
+            $hook = 'panels::auth.login.form.after';
+            $showButtonsBeforeLogin = 'false';
+            if ($plugin->getButtonsBeforeLogin()) {
+                $hook = 'panels::auth.login.form.before';
+                $showButtonsBeforeLogin = 'true';
+            }
+            FilamentView::registerRenderHook(
+                $hook,
+                function () use ($panel, $plugin, $showButtonsBeforeLogin): ?string {
+                    return Blade::render(
+                        '<x-filament-socialite::buttons :show-divider="'.($plugin->getShowDivider() ? 'true' : 'false').'" :show-buttons-before-login="'.$showButtonsBeforeLogin.'"/>'
+                    );
                 }
-
-                /** @var \DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin $plugin */
-                $plugin = $panel->getPlugin('filament-socialite');
-
-                return Blade::render('<x-filament-socialite::buttons :show-divider="'.($plugin->getShowDivider() ? 'true' : 'false').'" />');
-            },
-        );
+            );
+        });
 
         if (
             version_compare(app()->version(), '11.0', '>=')

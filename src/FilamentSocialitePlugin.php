@@ -44,6 +44,8 @@ class FilamentSocialitePlugin implements Plugin
 
     protected bool $showDivider = true;
 
+    protected bool $buttonsBeforeLogin = false;
+
     public function __construct(
         protected Repository $config,
         protected Factory $auth,
@@ -190,6 +192,18 @@ class FilamentSocialitePlugin implements Plugin
     public function getShowDivider(): bool
     {
         return $this->showDivider;
+    }
+
+    public function buttonsBeforeLogin(): static
+    {
+        $this->buttonsBeforeLogin = true;
+
+        return $this;
+    }
+
+    public function getButtonsBeforeLogin(): bool
+    {
+        return $this->buttonsBeforeLogin;
     }
 
     public function getPanel(): Panel
