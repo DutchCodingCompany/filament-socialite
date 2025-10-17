@@ -2,14 +2,13 @@
 
 namespace DutchCodingCompany\FilamentSocialite\View\Components;
 
-use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
-use DutchCodingCompany\FilamentSocialite\Provider;
 use Illuminate\Support\MessageBag;
 use Illuminate\View\Component;
 
 class Divider extends Component
 {
-    public function __construct() {
+    public function __construct()
+    {
     }
 
     /**
@@ -19,7 +18,9 @@ class Divider extends Component
     {
         $messageBag = new MessageBag();
 
-        return view('filament-socialite::components.divider', [
+        /** @phpstan-var view-string $viewName */
+        $viewName = 'filament-socialite::components.divider';
+        return view($viewName, [
             'messageBag' => $messageBag,
         ]);
     }

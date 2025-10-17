@@ -54,9 +54,10 @@ class FilamentSocialiteServiceProvider extends PackageServiceProvider
                 $hook = 'panels::auth.login.form.before';
                 $showButtonsBeforeLogin = 'true';
             }
+
             FilamentView::registerRenderHook(
                 $hook,
-                function () use ($panel, $plugin, $showButtonsBeforeLogin): ?string {
+                function () use ($plugin, $showButtonsBeforeLogin): string {
                     return Blade::render(
                         '<x-filament-socialite::buttons :show-divider="'.($plugin->getShowDivider() ? 'true' : 'false').'" :show-buttons-before-login="'.$showButtonsBeforeLogin.'"/>'
                     );
