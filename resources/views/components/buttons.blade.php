@@ -1,6 +1,6 @@
 <div
-        x-data="{}"
-        x-load-css="[@js(\Filament\Support\Facades\FilamentAsset::getStyleHref('filament-socialite-styles', package: 'filament-socialite'))]"
+    x-data="{}"
+    x-load-css="[@js(\Filament\Support\Facades\FilamentAsset::getStyleHref('filament-socialite-styles', package: 'filament-socialite'))]"
 >
     <div class="flex flex-col gap-y-6">
         @if ($messageBag->isNotEmpty())
