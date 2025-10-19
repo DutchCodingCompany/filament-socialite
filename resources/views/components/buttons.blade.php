@@ -1,6 +1,6 @@
 <div
-    x-data="{}"
-    x-load-css="[@js(\Filament\Support\Facades\FilamentAsset::getStyleHref('filament-socialite-styles', package: 'filament-socialite'))]"
+        x-data="{}"
+        x-load-css="[@js(\Filament\Support\Facades\FilamentAsset::getStyleHref('filament-socialite-styles', package: 'filament-socialite'))]"
 >
     <div class="flex flex-col gap-y-6">
         @if ($messageBag->isNotEmpty())
@@ -11,7 +11,7 @@
 
         @if (count($visibleProviders))
             @if($showDivider && !$showButtonsBeforeLogin)
-                <x-filament-socialite::divider/>
+                @include('filament-socialite::components.divider')
             @endif
 
             <div class="grid @if(count($visibleProviders) > 1) grid-cols-2 @endif gap-4">
@@ -29,7 +29,7 @@
                 @endforeach
             </div>
             @if($showDivider && $showButtonsBeforeLogin)
-                <x-filament-socialite::divider/>
+                @include('filament-socialite::components.divider')
             @endif
         @else
             <span></span>
