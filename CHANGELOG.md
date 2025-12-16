@@ -2,6 +2,14 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [3.0.1 - 2025-12-16](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.0...3.0.1)
+
+## What's Changed
+- Bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/DutchCodingCompany/filament-socialite/pull/135
+- Bump stefanzweifel/git-auto-commit-action from 6 to 7 by @dependabot[bot] in https://github.com/DutchCodingCompany/filament-socialite/pull/139
+- Bump actions/checkout from 5 to 6 by @dependabot[bot] in https://github.com/DutchCodingCompany/filament-socialite/pull/141
+- Add foreign key constraint with cascade behaviour. by @chrillep in https://github.com/DutchCodingCompany/filament-socialite/pull/143
+  - **NOTE**: this will not change existing `socialite_users` tables. Please **consider adding** the constraint in a separate migration yourself 
 
 ## [3.0.0 - 2025-08-11](https://github.com/DutchCodingCompany/filament-socialite/compare/2.4.0...3.0.0)
 - Tag major version
