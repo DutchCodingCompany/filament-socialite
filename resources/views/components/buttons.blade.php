@@ -19,7 +19,7 @@
                 </div>
             @endif
 
-            <div class="grid @if(count($visibleProviders) > 1) grid-cols-2 @endif gap-4">
+            <div class="grid @if(count($visibleProviders) > 1) grid-cols-2 @endif gap-4 fi-ac fi-width-full">
                 @foreach($visibleProviders as $key => $provider)
                     <x-filament::button
                         :color="$provider->getColor()"
