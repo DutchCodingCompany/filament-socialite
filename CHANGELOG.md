@@ -6,6 +6,7 @@ All notable changes to `filament-socialite` will be documented in this file.
 
 ## What's Changed
 - Add support for filament v5 by @dododedodonl in https://github.com/DutchCodingCompany/filament-socialite/pull/147
+- Bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 by @dependabot[bot] in https://github.com/DutchCodingCompany/filament-socialite/pull/145
 
 ## [3.0.1 - 2025-12-16](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.0...3.0.1)
 
