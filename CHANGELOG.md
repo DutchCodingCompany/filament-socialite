@@ -2,6 +2,11 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [3.1.0 - 2026-01-19](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.1...3.1.0)
+
+## What's Changed
+- Add support for filament v5 by @dododedodonl in https://github.com/DutchCodingCompany/filament-socialite/pull/147
+
 ## [3.0.1 - 2025-12-16](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.0...3.0.1)
 
 ## What's Changed
