@@ -2,7 +2,6 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
-use Closure;
 use DutchCodingCompany\FilamentSocialite\Events\InvalidState;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Provider;
@@ -59,6 +58,7 @@ class SocialiteStatelessLoginTest extends TestCase
         string $email,
         string $callbackRoute,
         ?string $overrideState = null,
+        ?string $event = null,
     ): void {
         Event::fake();
 
@@ -93,7 +93,9 @@ class SocialiteStatelessLoginTest extends TestCase
             ->getJson(route($callbackRoute, ['provider' => 'github', 'state' => $state]))
             ->assertStatus(302);
 
-        Event::assertNotDispatched(InvalidState::class);
+        if ($event !== null) {
+            Event::assertNotDispatched($event);
+        }
 
         $this->assertDatabaseHas('socialite_users', [
             'provider' => 'github',
