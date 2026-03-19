@@ -2,6 +2,12 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [3.2.0 - 2026-03-19](https://github.com/DutchCodingCompany/filament-socialite/compare/3.1.0...3.2.0)
+
+## What's Changed
+* Add return type declarations to migration methods by @phh in https://github.com/DutchCodingCompany/filament-socialite/pull/149
+* Support laravel 13 https://github.com/DutchCodingCompany/filament-socialite/pull/150
+
 ## [3.1.0 - 2026-01-19](https://github.com/DutchCodingCompany/filament-socialite/compare/3.0.1...3.1.0)
 
 ## What's Changed
