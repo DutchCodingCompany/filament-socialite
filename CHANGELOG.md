@@ -2,6 +2,12 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [3.2.1 - 2026-04-14](https://github.com/DutchCodingCompany/filament-socialite/compare/3.2.0...3.2.1)
+
+## What's Changed
+* fix: update state retrieval method in PanelFromUrlQuery middleware by @fului in https://github.com/DutchCodingCompany/filament-socialite/pull/153
+* Bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 by @dependabot[bot] in https://github.com/DutchCodingCompany/filament-socialite/pull/151
+
 ## [3.2.0 - 2026-03-19](https://github.com/DutchCodingCompany/filament-socialite/compare/3.1.0...3.2.0)
 
 ## What's Changed
