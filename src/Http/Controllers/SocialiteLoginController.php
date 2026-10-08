@@ -8,7 +8,9 @@ use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Support\Concerns\EvaluatesClosures;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +63,11 @@ class SocialiteLoginController extends Controller
                 : $driver->user();
         } catch (InvalidStateException $e) {
             Events\InvalidState::dispatch($e);
+        } catch (GuzzleException | HttpClientException $e) {
+            // The provider refused the request, e.g. the user denied access or the
+            // provider is unreachable. Send the user back to the login form instead
+            // of showing an error page.
+            Events\OauthRequestFailed::dispatch($provider, $e);
         }
 
         return null;

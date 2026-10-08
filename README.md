@@ -235,6 +235,7 @@ FilamentSocialitePlugin::make()
 There are a few events dispatched during the authentication process:
 
 * `InvalidState(InvalidStateException $exception)`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
+* `OauthRequestFailed(string $provider, GuzzleException|HttpClientException $exception)`: When the request to the provider fails while retrieving the oauth (socialite) user, for example because the user denied access or the provider is unreachable. The user is sent back to the login form.
 * `Login(FilamentSocialiteUserContract $socialiteUser)`: When a user successfully logs in
 * `Registered(string $provider, SocialiteUserContract $oauthUser, FilamentSocialiteUserContract $socialiteUser)`: When a user and socialite user is successfully registered and logged in (when enabled in config)
 * `RegistrationNotEnabled(string $provider, SocialiteUserContract $oauthUser, ?Auhthenticatable $user)`: When a user tries to login with an unknown account and registration is not enabled
