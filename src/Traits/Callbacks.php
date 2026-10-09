@@ -53,11 +53,11 @@ trait Callbacks
             FilamentSocialitePlugin $plugin,
         ) {
             /**
-             * @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $query
+             * @var class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $userModelClass
              */
-            $query = (new $this->userModelClass())->query();
+            $userModelClass = $this->userModelClass;
 
-            return $query->create([
+            return $userModelClass::query()->create([
                 'name' => $oauthUser->getName(),
                 'email' => $oauthUser->getEmail(),
             ]);
