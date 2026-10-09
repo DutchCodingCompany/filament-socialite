@@ -2,9 +2,9 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Events;
 
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Http\Client\HttpClientException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Queue\SerializesModels;
 
 class OauthRequestFailed
@@ -19,7 +19,7 @@ class OauthRequestFailed
      */
     public function __construct(
         public string $provider,
-        public GuzzleException | HttpClientException $exception,
+        public ClientException | RequestException $exception,
     ) {
     }
 }
