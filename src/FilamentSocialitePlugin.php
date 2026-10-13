@@ -33,6 +33,8 @@ class FilamentSocialitePlugin implements Plugin
 
     protected bool $rememberLogin = false;
 
+    protected bool $handleOauthClientErrors = false;
+
     /**
      * @phpstan-var (\Closure(string $provider, \Laravel\Socialite\Contracts\User $oauthUser, ?\Illuminate\Contracts\Auth\Authenticatable $user): bool) | bool
      */
@@ -136,6 +138,23 @@ class FilamentSocialitePlugin implements Plugin
     public function getRememberLogin(): bool
     {
         return $this->rememberLogin;
+    }
+
+    /**
+     * Send the user back to the login form when the provider answers with a client
+     * error (4xx) while retrieving the oauth user, e.g. because they denied access.
+     * Server and connection errors are still thrown.
+     */
+    public function handleOauthClientErrors(bool $value = true): static
+    {
+        $this->handleOauthClientErrors = $value;
+
+        return $this;
+    }
+
+    public function getHandleOauthClientErrors(): bool
+    {
+        return $this->handleOauthClientErrors;
     }
 
     /**

@@ -8,7 +8,9 @@ use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use DutchCodingCompany\FilamentSocialite\Http\Middleware\PanelFromUrlQuery;
 use DutchCodingCompany\FilamentSocialite\Models\Contracts\FilamentSocialiteUser as FilamentSocialiteUserContract;
 use Filament\Support\Concerns\EvaluatesClosures;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -61,9 +63,23 @@ class SocialiteLoginController extends Controller
                 : $driver->user();
         } catch (InvalidStateException $e) {
             Events\InvalidState::dispatch($e);
+        } catch (ClientException | RequestException $e) {
+            // The provider refused the request, e.g. because the user denied access.
+            // When enabled, send the user back to the login form instead of an error
+            // page. Server errors still surface, as they do without the option.
+            if (! $this->plugin()->getHandleOauthClientErrors() || ! $this->isClientError($e)) {
+                throw $e;
+            }
+
+            Events\OauthClientError::dispatch($provider, $e);
         }
 
         return null;
+    }
+
+    protected function isClientError(ClientException | RequestException $e): bool
+    {
+        return $e instanceof ClientException || $e->response->clientError();
     }
 
     protected function retrieveSocialiteUser(string $provider, SocialiteUserContract $oauthUser): ?FilamentSocialiteUserContract
