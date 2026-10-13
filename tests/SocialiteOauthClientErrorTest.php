@@ -2,7 +2,7 @@
 
 namespace DutchCodingCompany\FilamentSocialite\Tests;
 
-use DutchCodingCompany\FilamentSocialite\Events\OauthRequestFailed;
+use DutchCodingCompany\FilamentSocialite\Events\OauthClientError;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -18,7 +18,7 @@ use Laravel\Socialite\Two\AbstractProvider;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Throwable;
 
-class SocialiteOauthRequestFailedTest extends TestCase
+class SocialiteOauthClientErrorTest extends TestCase
 {
     #[DataProvider('clientErrorProvider')]
     public function testClientErrorRedirectsToLoginWhenEnabled(Throwable $exception): void
@@ -31,8 +31,8 @@ class SocialiteOauthRequestFailedTest extends TestCase
             ->assertRedirect(route("filament.{$this::getPanelName()}.auth.login"));
 
         Event::assertDispatched(
-            OauthRequestFailed::class,
-            fn (OauthRequestFailed $event) => $event->provider === 'github' && $event->exception === $exception,
+            OauthClientError::class,
+            fn (OauthClientError $event) => $event->provider === 'github' && $event->exception === $exception,
         );
 
         $this->assertDatabaseCount('socialite_users', 0);
@@ -45,15 +45,12 @@ class SocialiteOauthRequestFailedTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        try {
-            $this->callbackFailingWith($exception);
+        $this->assertThrows(
+            fn () => $this->callbackFailingWith($exception),
+            fn (Throwable $thrown) => $thrown === $exception,
+        );
 
-            $this->fail('The client error should have been thrown.');
-        } catch (Throwable $thrown) {
-            $this->assertSame($exception, $thrown);
-        }
-
-        Event::assertNotDispatched(OauthRequestFailed::class);
+        Event::assertNotDispatched(OauthClientError::class);
     }
 
     #[DataProvider('serverErrorProvider')]
@@ -65,15 +62,12 @@ class SocialiteOauthRequestFailedTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        try {
-            $this->callbackFailingWith($exception);
+        $this->assertThrows(
+            fn () => $this->callbackFailingWith($exception),
+            fn (Throwable $thrown) => $thrown === $exception,
+        );
 
-            $this->fail('The server error should have been thrown.');
-        } catch (Throwable $thrown) {
-            $this->assertSame($exception, $thrown);
-        }
-
-        Event::assertNotDispatched(OauthRequestFailed::class);
+        Event::assertNotDispatched(OauthClientError::class);
     }
 
     /**

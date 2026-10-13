@@ -67,17 +67,17 @@ class SocialiteLoginController extends Controller
             // The provider refused the request, e.g. because the user denied access.
             // When enabled, send the user back to the login form instead of an error
             // page. Server errors still surface, as they do without the option.
-            if (! $this->plugin()->getHandleOauthClientErrors() || ! static::isClientError($e)) {
+            if (! $this->plugin()->getHandleOauthClientErrors() || ! $this->isClientError($e)) {
                 throw $e;
             }
 
-            Events\OauthRequestFailed::dispatch($provider, $e);
+            Events\OauthClientError::dispatch($provider, $e);
         }
 
         return null;
     }
 
-    protected static function isClientError(ClientException | RequestException $e): bool
+    protected function isClientError(ClientException | RequestException $e): bool
     {
         return $e instanceof ClientException || $e->response->clientError();
     }

@@ -235,7 +235,7 @@ FilamentSocialitePlugin::make()
 There are a few events dispatched during the authentication process:
 
 * `InvalidState(InvalidStateException $exception)`: When trying to retrieve the oauth (socialite) user, an invalid state was encountered
-* `OauthRequestFailed(string $provider, ClientException|RequestException $exception)`: When the provider answers with a client error (4xx) while retrieving the oauth (socialite) user, for example because the user denied access. Only dispatched when `handleOauthClientErrors()` is enabled.
+* `OauthClientError(string $provider, ClientException|RequestException $exception)`: When the provider answers with a client error (4xx) while retrieving the oauth (socialite) user, for example because the user denied access. Only dispatched when `handleOauthClientErrors()` is enabled.
 * `Login(FilamentSocialiteUserContract $socialiteUser)`: When a user successfully logs in
 * `Registered(string $provider, SocialiteUserContract $oauthUser, FilamentSocialiteUserContract $socialiteUser)`: When a user and socialite user is successfully registered and logged in (when enabled in config)
 * `RegistrationNotEnabled(string $provider, SocialiteUserContract $oauthUser, ?Auhthenticatable $user)`: When a user tries to login with an unknown account and registration is not enabled
@@ -305,15 +305,14 @@ When the provider answers with a client error (4xx) while retrieving the oauth u
 ```php
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
 
-$panel->plugin(
+->plugin(
     FilamentSocialitePlugin::make()
-        // (required) Add providers corresponding with providers in `config/services.php`.
-        ->providers([...])
+        // ...
         ->handleOauthClientErrors()
 );
 ```
 
-The `OauthRequestFailed` event is dispatched with the exception. Server errors (5xx) and connection errors are still thrown, so they reach your exception handler.
+The `OauthClientError` event is dispatched with the exception. Server errors (5xx) and connection errors are still thrown, so they reach your exception handler.
 
 ## Stateless Authentication
 You can add `stateless` parameters to the provider configuration in the config/services.php config file, for example:

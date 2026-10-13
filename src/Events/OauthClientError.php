@@ -7,7 +7,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Queue\SerializesModels;
 
-class OauthRequestFailed
+class OauthClientError
 {
     use Dispatchable;
     use SerializesModels;
