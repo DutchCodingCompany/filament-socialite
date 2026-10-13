@@ -53,11 +53,11 @@ trait Callbacks
             FilamentSocialitePlugin $plugin,
         ) {
             /**
-             * @var class-string<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $userModelClass
+             * @var \Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable $model
              */
-            $userModelClass = $this->userModelClass;
+            $model = (new $this->userModelClass());
 
-            return $userModelClass::query()->create([
+            return $model->query()->create([
                 'name' => $oauthUser->getName(),
                 'email' => $oauthUser->getEmail(),
             ]);
@@ -114,7 +114,7 @@ trait Callbacks
     public function getResolveUserUsing(): Closure
     {
         return $this->resolveUserUsing ?? function (string $provider, SocialiteUserContract $oauthUser, FilamentSocialitePlugin $plugin) {
-            /** @var \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable> $model */
+            /** @var \Illuminate\Database\Eloquent\Model&\Illuminate\Contracts\Auth\Authenticatable $model */
             $model = (new $this->userModelClass());
 
             return $model->where(
