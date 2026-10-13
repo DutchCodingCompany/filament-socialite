@@ -2,6 +2,11 @@
 
 All notable changes to `filament-socialite` will be documented in this file.
 
+## [3.3.0 - 2026-10-13](https://github.com/DutchCodingCompany/filament-socialite/compare/3.2.1...3.3.0)
+
+## What's Changed
+* Redirect to login when the provider request fails by @jyrkidn in https://github.com/DutchCodingCompany/filament-socialite/pull/157
+
 ## [3.2.1 - 2026-04-14](https://github.com/DutchCodingCompany/filament-socialite/compare/3.2.0...3.2.1)
 
 ## What's Changed
